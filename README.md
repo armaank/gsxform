@@ -8,11 +8,14 @@
  
  
 ## TODO
+* update/clean env, setup requirements.txt for pip
+* add release management (long term)
+* 
 
 ## Developer Instructions
 * follow [NumPy dev
   workflow](https://numpy.org/doc/1.14/dev/gitwash/development_workflow.html) naming convention
-* remember to run `conda env export > env.yml` 
+* 
  
  
 ## Installation
