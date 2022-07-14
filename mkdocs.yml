@@ -1,0 +1,40 @@
+#site_name: "gsxform: "
+#site_url: 
+#
+#docs_dir: docs/
+#
+#theme:
+#  name: material
+#  # palette:
+#  #   primary: teal
+#  #   accent: teal
+#  icon:
+#    logo: "fontawesome/solid/book"
+#  features:
+#    - instant
+#    - tabs
+#  language: en
+#
+## We customize the navigation by hand to control the order
+## in which pages show up.
+#nav:
+#  - Home: index.md
+#
+#plugins:
+#  - search
+#  - mknotebooks:
+#      execute: true
+#      write_markdown: true
+#      allow_errors: false
+#      timeout: 1200
+#      binder: true
+#      binder_service_name: "gh"
+#      binder_branch: "master"
+#      binder_ui: "lab"
+#
+#extra_css:
+#  - stylesheets/custom.css
+#
+#repo_name: "armaank/gsxform"
+#repo_url: "https://github.com/armaank/gsxform"
+#

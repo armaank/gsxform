@@ -5,7 +5,7 @@ repos:
     hooks:
     - id: black
       language_version: python3.9
-      args: [--line-length=88]
+      args: [--line-length=88, --exclude="setup.py"]
 -   repo: https://gitlab.com/pycqa/flake8
     rev: 3.9.2
     hooks:
@@ -14,10 +14,9 @@ repos:
     rev: v0.961
     hooks:
       - id: mypy
-        exclude: ^tests/
         args: [--strict, --ignore-missing-imports]
 -   repo: https://github.com/pycqa/pydocstyle
-    rev: 6.1.1  # pick a git hash / tag to point to
+    rev: 6.1.1
     hooks:
         - id: pydocstyle
           args: [--convention=numpy, --match=gsxform/*.py]
