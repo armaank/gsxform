@@ -4,14 +4,12 @@ TODO:
 
 """
 
-from typing import Tuple 
+from typing import Tuple
 
-import numpy as np
 import torch
 
 
-
-def adjacency_to_laplacian(W: torch.Tensor) -> torch.Tensor: 
+def adjacency_to_laplacian(W: torch.Tensor) -> torch.Tensor:
     """convert adjacency matrix into the graph Laplacian
 
     Parameters
@@ -30,6 +28,7 @@ def adjacency_to_laplacian(W: torch.Tensor) -> torch.Tensor:
 
     return L
 
+
 def normalize_adjacency(W: torch.Tensor) -> torch.Tensor:
     """normalize adjacency matrix
 
@@ -44,17 +43,17 @@ def normalize_adjacency(W: torch.Tensor) -> torch.Tensor:
         batch of normalized adjacency matricies
 
     """
-    
+
     # build degree vector (diag(L) is the same as W.sum(1)
     d = W.sum(1)
     # normalize
     D_invsqrt = torch.diag_embed(1.0 / torch.sqrt(torch.max(torch.ones(d.size()), d)))
     W_norm = D_invsqrt.matmul(W).matmul(D_invsqrt)
 
-    return W_norm 
-    
+    return W_norm
 
-def normalize_laplacian(L: torch.Tensor) -> torch.Tensor
+
+def normalize_laplacian(L: torch.Tensor) -> torch.Tensor:
     """normalize graph Laplacian
 
     Parameters
@@ -76,6 +75,7 @@ def normalize_laplacian(L: torch.Tensor) -> torch.Tensor
 
     return L_norm
 
+
 def compute_spectra(W: torch.Tensor) -> Tuple(torch.Tensor, torch.Tensor):
     """computes spectra of graph laplacian from its adjacency matrix
 
@@ -87,10 +87,10 @@ def compute_spectra(W: torch.Tensor) -> Tuple(torch.Tensor, torch.Tensor):
     Returns
     -------
     Tuple(torch.Tensor, torch.Tensor)
-        Batch of eigenvalues and eigenvectors of the graph laplacian 
+        Batch of eigenvalues and eigenvectors of the graph laplacian
     """
 
-    # compute laplacian 
+    # compute laplacian
     L = adjacency_to_laplacian(W)
     # normalize laplacian
     L_norm = normalize_laplacian(L)
