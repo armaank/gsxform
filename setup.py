@@ -1,6 +1,6 @@
 import pathlib
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 ROOT = pathlib.Path(__file__).resolve().parent
 
@@ -16,7 +16,7 @@ CLASSIFIERS = [
 
 
 def get_version() -> str:
-    return "0.0.0"
+    return "0.1.0"
 
 
 if __name__ == "__main__":
@@ -30,6 +30,6 @@ if __name__ == "__main__":
         author_email="kohli@cooper.edu",
         license="BSD 3-Clause",
         classifiers=CLASSIFIERS,
-        packages=None,
-        version=None,
+        packages=find_packages(),
+        version=get_version(),
     )

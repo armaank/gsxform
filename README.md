@@ -2,15 +2,14 @@
  Wavelet scattering transforms on graphs via PyTorch
  
  ---
- 
- [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
  [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
  
  
 ## TODO
-* update/clean env, setup requirements.txt for pip
 * add release management (long term)
-* 
+* add badge for code cov, tests, docs(passing)
 
 ## Developer Instructions
 * follow [NumPy dev
