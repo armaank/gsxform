@@ -15,3 +15,7 @@ repos:
       - id: mypy
         exclude: ^tests/
         args: [--strict, --ignore-missing-imports]
+-   repo: https://github.com/pycqa/pydocstyle
+    rev: 6.1.1  # pick a git hash / tag to point to
+    hooks:
+        - id: pydocstyle
