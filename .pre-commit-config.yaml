@@ -5,6 +5,7 @@ repos:
     hooks:
     - id: black
       language_version: python3.9
+      args: [--line-length=88]
 -   repo: https://gitlab.com/pycqa/flake8
     rev: 3.9.2
     hooks:
@@ -19,3 +20,4 @@ repos:
     rev: 6.1.1  # pick a git hash / tag to point to
     hooks:
         - id: pydocstyle
+          args: [--convention=numpy]
