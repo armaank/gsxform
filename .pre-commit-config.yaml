@@ -20,4 +20,4 @@ repos:
     rev: 6.1.1  # pick a git hash / tag to point to
     hooks:
         - id: pydocstyle
-          args: [--convention=numpy]
+          args: [--convention=numpy, --match=gsxform/*.py]
