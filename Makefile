@@ -16,16 +16,17 @@ help:
 	@grep -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[1;34mmake %-10s\033[0m%s\n", $$1, $$2}'
 
 .PHONY: conda
-conda: # Set up a conda environment
+conda: # Setup conda environment
 	@printf "Creating conda environment...\n"
+	${CONDA} config --set restore_free_channel true
 	${CONDA} env create -f env.yml
 	${CONDA} activate env-gsxform
 	${CONDA} deactivate
 
-.PHONY: conda-export
-conda-export: # Export conda environment
+.PHONY: export-conda
+export-conda: # Export conda environment
 	@printf "Exporting conda environment...\n"
-	${CONDA} env export > env.yml
+	${CONDA} env export --from-history -n gsxform -f environment.yml
 
 .PHONY: setup
 setup: # Setup dev environment 
@@ -35,13 +36,7 @@ setup: # Setup dev environment
 	pre-commit install
 	@printf "Setup pre-commit hooks...\n"
 
-.PHONY: pip-export
-conda-export: # Export conda environment
+.PHONY: export-pip
+export-pip: # Export pip environment
 	@printf "Exporting pip environment...\n"
 	${CONDA} pip list --format=freeze > requirements.txt
-
-
-
-
-
-
