@@ -5,6 +5,8 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
+      - uses: actions/checkout@v1
       - name: Setup env
         run: make setup
+      - run: echo "Set up development environment successfully"  
 # add additional configs here for make test, code cov computation
