@@ -1,14 +1,24 @@
 .DEFAULT_GOAL = help
 
-PYTHON := python3
-PIP := pip3
-CONDA := conda
-SHELL := bash
-
 .ONESHELL:
 .SHELLFLAGS := -eu -o pipefail -c
 .DELETE_ON_ERROR:
 MAKEFLAGS += --no-builtin-rules
+
+PYTHON := python3
+PIP := pip3
+SHELL := bash
+CONDA := $(conda info --base)
+
+OS := $(uname -s)
+ifeq ($(OS),Darwin)        # Mac OS X
+	CONDA_ENV := env_osx.yml
+endif
+ifeq ($(OS),Linux)
+	CONDA_ENV := env_linux.yml
+endif
+
+CONDA_ACTIVATE = source $(CONDA)/etc/profile.d/conda.sh ; $(CONDA) activate ; $(CONDA) activate
 
 .PHONY: help
 help:
@@ -18,20 +28,18 @@ help:
 .PHONY: conda
 conda: # Setup conda environment
 	@printf "Creating conda environment...\n"
-	${CONDA} config --set restore_free_channel true
-	${CONDA} env create -f env.yml
-	${CONDA} activate env-gsxform
-	${CONDA} deactivate
+	#${CONDA} config --set restore_free_channel true
+	$(conda info --base) env create -f $(CONDA_ENV)
 
 .PHONY: export-conda
 export-conda: # Export conda environment
 	@printf "Exporting conda environment...\n"
-	${CONDA} env export --no-builds > env.yml
+	$(CONDA) env export --no-builds > $(CONDA_ENV)
 
 .PHONY: setup
 setup: # Setup dev environment 
 	@printf "Setting up dev environment...\n"
-	${CONDA} env activate env-gsxform
+	$(CONDA_ACTIVATE) env-gsxform
 	@printf "Activated conda environment...\n"
 	pre-commit install
 	@printf "Setup pre-commit hooks...\n"
@@ -39,4 +47,4 @@ setup: # Setup dev environment
 .PHONY: export-pip
 export-pip: # Export pip environment
 	@printf "Exporting pip environment...\n"
-	${CONDA} pip list --format=freeze > requirements.txt
+	$(PIP) list --format=freeze > requirements.txt

@@ -1,0 +1,40 @@
+name: env-gsxform
+channels:
+  - defaults
+dependencies:
+  - ca-certificates=2022.4.26
+  - certifi=2022.6.15
+    #  - libcxx=12.0.0
+  - libffi=3.3
+  - ncurses=6.3
+  - openssl=1.1.1q
+  - pip=22.1.2
+  - python=3.9.12
+  - readline=8.1.2
+  - setuptools=61.2.0
+  - sqlite=3.38.5
+  - tk=8.6.12
+  - tzdata=2022a
+  - wheel=0.37.1
+  - xz=5.2.5
+  - zlib=1.2.12
+  - pip:
+    - cfgv==3.3.1
+    - distlib==0.3.5
+    - filelock==3.7.1
+    - identify==2.5.1
+    - mypy==0.961
+    - mypy-extensions==0.4.3
+    - nodeenv==1.7.0
+    - platformdirs==2.5.2
+    - pre-commit==2.20.0
+    - pydocstyle==6.1.1
+    - pyyaml==6.0
+    - six==1.16.0
+    - snowballstemmer==2.2.0
+    - toml==0.10.2
+    - tomli==2.0.1
+    - torch==1.12.0
+    - typing-extensions==4.3.0
+    - virtualenv==20.15.1
+prefix: /opt/anaconda3/envs/env-gsxform
