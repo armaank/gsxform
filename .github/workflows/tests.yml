@@ -7,9 +7,10 @@ jobs:
       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
       - uses: actions/checkout@v1
       - name: Setup env
-        run: echo "Setting up conda environment..."
-        run: make conda
-        run: echo "Setting up development environment..."
-        run: make setup
-      - run: echo "Set up sucessfull"  
+        run: |
+          echo "Setting up conda environment..."
+          make conda
+          echo "Setting up development environment..."
+          make setup
+          echo "Set up sucessfull"  
 # add additional configs here for make test, code cov computation
