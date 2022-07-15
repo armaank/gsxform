@@ -1,16 +1,19 @@
 .DEFAULT_GOAL = help
 
+PYTHON := python3
+PIP := pip3
+SHELL := bash
+CONDA := conda
+
 .ONESHELL:
 .SHELLFLAGS := -eu -o pipefail -c
 .DELETE_ON_ERROR:
 MAKEFLAGS += --no-builtin-rules
 
-PYTHON := python3
-PIP := pip3
-SHELL := bash
-CONDA := $(conda info --base)
+CONDA_BASE := $(shell conda info --base)
 
-OS := $(uname -s)
+OS := $(shell uname -s)
+
 ifeq ($(OS),Darwin)        # Mac OS X
 	CONDA_ENV := env_osx.yml
 endif
@@ -18,7 +21,7 @@ ifeq ($(OS),Linux)
 	CONDA_ENV := env_linux.yml
 endif
 
-CONDA_ACTIVATE = source $(CONDA)/etc/profile.d/conda.sh ; $(CONDA) activate ; $(CONDA) activate
+CONDA_ACTIVATE = source $(CONDA_BASE)/etc/profile.d/conda.sh ; $(CONDA) activate ; $(CONDA) activate
 
 .PHONY: help
 help:
@@ -28,8 +31,7 @@ help:
 .PHONY: conda
 conda: # Setup conda environment
 	@printf "Creating conda environment...\n"
-	#${CONDA} config --set restore_free_channel true
-	$(conda info --base) env create -f $(CONDA_ENV)
+	$(CONDA) env create -f $(CONDA_ENV)
 
 .PHONY: export-conda
 export-conda: # Export conda environment
