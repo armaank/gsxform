@@ -1,9 +1,9 @@
 name: tests
 on: [push]
 jobs:
-    test:
-        runs-on: ubuntu-latest
-        steps: echo "The job was automatically triggered by a ${{ github.event_name }} event."
-        - name: Setup env
-          run: make setup
+  test:
+    runs-on: ubuntu-latest
+    steps: echo "The job was automatically triggered by a ${{ github.event_name }} event."
+      - name: Setup env
+        run: make setup
 # add additional configs here for make test, code cov computation
