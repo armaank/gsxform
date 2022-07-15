@@ -26,7 +26,7 @@ conda: # Setup conda environment
 .PHONY: export-conda
 export-conda: # Export conda environment
 	@printf "Exporting conda environment...\n"
-	${CONDA} env export --from-history -n gsxform -f environment.yml
+	${CONDA} env export --no-builds > env.yml
 
 .PHONY: setup
 setup: # Setup dev environment 
