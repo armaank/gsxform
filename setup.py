@@ -31,5 +31,4 @@ if __name__ == "__main__":
         license="BSD 3-Clause",
         classifiers=CLASSIFIERS,
         packages=find_packages(),
-        version=get_version(),
     )
