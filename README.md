@@ -13,10 +13,8 @@
 * add code coverage
 * add unit tests for `graph.py`
 ### TODO Sat. July 16th
-* ditch conda, fix makefile, ensure cross platform support
 * work with spectral scattering and diffusion scattering transforms
 * test the above, replicate previous results
-* write unit tests
 
 
 ## Developer Instructions
