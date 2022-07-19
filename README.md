@@ -30,7 +30,7 @@ The most up-to-date version of gsxform can be installed from github
 ```bash
 git clone https://github.com/armaank/gsxform.git
 make conda
-make setup
+source scripts/setup.sh
 ```
 
 ## Acknowledgements 

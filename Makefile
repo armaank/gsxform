@@ -21,8 +21,6 @@ ifeq ($(OS),Linux)
 	CONDA_ENV := env_linux.yml
 endif
 
-CONDA_ACTIVATE = source $(CONDA_BASE)/etc/profile.d/conda.sh ; $(CONDA) activate ; $(CONDA) activate
-
 .PHONY: help
 help:
 	@printf "Usage:\n"
@@ -37,14 +35,6 @@ conda: # Setup conda environment
 export-conda: # Export conda environment
 	@printf "Exporting conda environment...\n"
 	$(CONDA) env export --no-builds > $(CONDA_ENV)
-
-.PHONY: setup
-setup: # Setup dev environment 
-	@printf "Setting up dev environment...\n"
-	$(CONDA_ACTIVATE) env-gsxform
-	@printf "Activated conda environment...\n"
-	pre-commit install
-	@printf "Setup pre-commit hooks...\n"
 
 .PHONY: export-pip
 export-pip: # Export pip environment
