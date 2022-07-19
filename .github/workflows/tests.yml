@@ -11,6 +11,8 @@ jobs:
           echo "Setting up conda environment..."
           make conda
           echo "Setting up development environment..."
+          export BASE_CONDA=`conda info --base`
+          soure $BASE_CONDA/etc/profile.d/conda.sh
           source scripts/setup.sh
           echo "Set up sucessfull"  
 # add additional configs here for make test, code cov computation
