@@ -43,7 +43,7 @@ export-pip: # Export pip environment
 
 .PHONY: tests
 tests: # run tests
-	pytest -v gsxform tests --doctest-modules --html=report.html --self-contained-html --cov=./ --cov-report=xml
+	python -m pytest -v gsxform tests --doctest-modules --html=report.html --self-contained-html --cov=./ --cov-report=xml
 
 .PHONY: clean
 clean: # clean project directory
