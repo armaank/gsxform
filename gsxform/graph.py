@@ -1,6 +1,9 @@
 """graph utility functions.
 
 Note: diag(L) == W.sum(1)
+
+TODO:
+    - write unit tests
 """
 
 from typing import Tuple
@@ -64,7 +67,9 @@ def normalize_laplacian(L: torch.Tensor) -> torch.Tensor:
         Batch of normalized graph Laplacians.
     """
     # build degree vector
-    d = torch.diag(L)
+    # batch diagonal
+    # (https://pytorch.org/docs/stable/generated/torch.diagonal.html#torch.diagonal)
+    d = torch.diagonal(L, dim1=-2, dim2=-1)
     # normalize
     D_invsqrt = torch.diag_embed(1.0 / torch.sqrt(torch.max(torch.ones(d.size()), d)))
     L_norm = D_invsqrt.matmul(L).matmul(D_invsqrt)
