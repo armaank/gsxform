@@ -49,9 +49,24 @@ export-pip: # Export pip environment
 
 .PHONY: tests
 tests: # run tests
+	@printf "Running tests...\n"
 	$(PYTHON) -m pytest -v gsxform tests --doctest-modules --html=report.html --self-contained-html --cov=./ --cov-report=xml
 
 .PHONY: clean
 clean: # clean project directory
 	rm report.html coverage.xml
 	rm -rf __pycache__/ ./gsxform/__pycache__/ ./tests/____pycache__/ 
+	rm -rf gsxform.egg-info/
+	rm -rf site/
+
+.PHONY: docs
+docs: # make doc site
+	@printf "Building doc site..\n"
+	$(PIP) install -e . 
+	mkdocs build
+
+
+
+
+
+
