@@ -31,6 +31,12 @@ conda: # Setup conda environment
 	@printf "Creating conda environment...\n"
 	$(CONDA) env create -f $(CONDA_ENV)
 
+.PHONY: setup-pip
+setup-pip: # Setup pip environment w/o venv 
+	@printf "Installing Python dependencies...\n"
+	$(PIP) install -U pip
+	$(PIP) install -r requirements.txt
+
 .PHONY: export-conda
 export-conda: # Export conda environment
 	@printf "Exporting conda environment...\n"

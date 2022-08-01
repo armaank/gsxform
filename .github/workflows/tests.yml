@@ -9,12 +9,8 @@ jobs:
       - name: Setup env
         shell: bash -l {0}
         run: |
-          echo "Setting up conda environment..."
-          make conda
           echo "Setting up development environment..."
-          export BASE_CONDA=`conda info --base`
-          source $BASE_CONDA/etc/profile.d/conda.sh
-          source scripts/setup.sh
+          make setup-pip
           echo "Set up sucessfull"  
       - name: run tests
         shell: bash -l {0}
