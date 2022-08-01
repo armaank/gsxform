@@ -1,4 +1,7 @@
 """Implementations of kernel functions used to build graph wavelets
+
+TODO:
+    - add references
 """
 
 from typing import Callable, Union

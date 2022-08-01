@@ -15,4 +15,14 @@ jobs:
           source $BASE_CONDA/etc/profile.d/conda.sh
           source scripts/setup.sh
           echo "Set up sucessfull"  
-# add additional configs here for make test, code cov computation
+       - name: run tests
+         run: make tests
+       - name: compute and upload codecov
+         uses: codecov/codecov-action@v1
+         with:
+            token: ${{ secrets.CODECOV_TOKEN }}
+            file: ./coverage.xml
+            name: codecov-umbrella
+            fail_ci_if_error: true
+
+            # add additional configs here for make test, code cov computation

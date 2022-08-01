@@ -5,12 +5,13 @@ TODO:
     - consider making wavelet class
         - get_kernel, matmul, append pattern
         - could add checks
+    - add references
 """
 from typing import Callable, Union
 
 import torch
 
-import kernels
+from .kernel import hann_kernel, spline_kernel
 
 
 def diffusion_wavelets(T: torch.Tensor, J: torch.Tensor) -> torch.Tensor:
@@ -56,14 +57,16 @@ def spline_wavelets(
     V: torch.Tensor,
     E: torch.Tensor,
     J: int,
-    alpha: float,
-    beta: float,
-    x1: float,
-    x2: float,
+    alpha: int,
+    beta: int,
+    x1: int,
+    x2: int,
     K: int,
     gamma: float,
 ) -> torch.Tensor:
     """compute cubic spline wavelets
+
+    TODO: double check types for kernel params
 
     Parameters
     ----------
@@ -74,13 +77,13 @@ def spline_wavelets(
         diagonal matrix of eigenvalues of the graph Laplacian
     J: int
         nuumber of scales
-    alpha: float
+    alpha: int
         spline kernel parameter
-    beta: float
+    beta: int
         spline kernel parameter
-    x1: float
+    x1: int
         spline kernel parameter
-    x2: float
+    x2: ing
         spline kernel parameter
     K: int
         design parameter used to scale the maximum eigenvalue
@@ -117,7 +120,7 @@ def spline_wavelets(
     # compute wavelet filter bank
     for jj in range(1, J):
 
-        psi_j = kernels.spline_kernels(t[jj - 1] * eigs, alpha, beta, x1, x2)
+        psi_j = spline_kernel(t[jj - 1] * eigs, alpha, beta, x1, x2)
         psi_j = torch.matmul(torch.matmul(V, torch.diag(psi_j)), V_adj).reshape(1, N, N)
 
         psi = torch.cat((psi, psi_j), axis=0)
@@ -176,7 +179,7 @@ def hann_wavelets(
     for jj in range(0, J - 1):
 
         # no warping, K is fixed to 1
-        psi_j = kernels.hann_kernel(eigs - t[jj], R, eig_max)
+        psi_j = hann_kernel(eigs - t[jj], J, R, eig_max)
         psi_j = torch.matmul(torch.matmul(V, torch.diag(psi_j)), V_adj).reshape(1, N, N)
         psi = torch.cat((psi, psi_j), axis=0)
 

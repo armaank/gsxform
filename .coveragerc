@@ -1,0 +1,4 @@
+[run]
+omit =
+    # Exclude tests files from coverage computation
+    tests/test_*.py

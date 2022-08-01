@@ -40,3 +40,12 @@ export-conda: # Export conda environment
 export-pip: # Export pip environment
 	@printf "Exporting pip environment...\n"
 	$(PIP) list --format=freeze > requirements.txt
+
+.PHONY: tests
+tests: # run tests
+	pytest -v gsxform tests --doctest-modules --html=report.html --self-contained-html --cov=./ --cov-report=xml
+
+.PHONY: clean
+clean: # clean project directory
+	rm report.html coverage.xml
+	rm -rf __pycache__/ ./gsxform/__pycache__/ ./tests/____pycache__/ 
