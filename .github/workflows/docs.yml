@@ -1,0 +1,34 @@
+name: Build documentation site
+
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup env
+        run: | 
+            echo "Setting up development environment..."
+            make setup-pip
+            echo "Set up successful"
+      - name: Build documentation
+        run: |
+          echo "Building docs..."  
+          make docs
+      - name: Deploy website
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.GHPAGES_TOKEN }}
+          publish_dir: ./site
+          publish_branch: gh-pages
+          allow_empty_commit: false
+          keep_files: false
+          force_orphan: true
+          enable_jekyll: false
+          disable_nojekyll: false
