@@ -4,6 +4,6 @@
     :docstring:
 ::: gsxform.wavelets.spline_wavelets
     :docstring:
-::: gsxform.graph.hann_wavelets
+::: gsxform.wavelets.hann_wavelets
     :docstring:
    
