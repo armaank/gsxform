@@ -10,8 +10,8 @@ theme:
     repo: fontawesome/brands/git-alt
   features:
     - navigation.instant
-      #- navigation.tabs
-    - toc.integrate
+    - navigation.tabs
+      #- toc.integrate
   language: en
 
 nav:
