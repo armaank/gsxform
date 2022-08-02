@@ -1,6 +1,6 @@
 # Graph kernel functions API documentation
 
-::: gsxform.kernels.hann_kernel
+::: gsxform.kernel.hann_kernel
     :docstring:
-::: gsxform.kernels.spline_kernel
+::: gsxform.kernel.spline_kernel
     :docstring:
