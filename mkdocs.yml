@@ -1,4 +1,4 @@
-site_name: gsxform
+site_name: gsxform: Wavelet scattering transforms on graphs
 site_url: https://armaank.github.io/gsxform
 
 docs_dir: docs/
@@ -10,7 +10,7 @@ theme:
     repo: fontawesome/brands/git-alt
   features:
     - navigation.instant
-    - navigation.tabs
+      #- navigation.tabs
     - toc.integrate
     - 
   language: en
