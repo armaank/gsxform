@@ -2,9 +2,9 @@
  Wavelet scattering transforms on graphs via PyTorch
  
  ---
-[![tests](https://github.com/armaank/gsxform/actions/workflows/tests.yml/badge.svg)](https://github.com/armaank/gsxform/actions/workflows/tests.yml)
+[![tests](https://github.com/armaank/gsxform/workflows/tests/badge.svg)](https://github.com/armaank/gsxform/actions/workflows/tests.yml)
 [![codecov](https://codecov.io/gh/armaank/gsxform/branch/main/graph/badge.svg?token=AUFSGAPB4O)](https://codecov.io/gh/armaank/gsxform)
-[![docs](https://github.com/armaank/gsxform/actions/workflows/docs.yml/badge.svg)](https://github.com/armaank/gsxform/actions/workflows/docs.yml)
+[![docs](https://github.com/armaank/gsxform/workflows/docs/badge.svg)](https://github.com/armaank/gsxform/actions/workflows/docs.yml)
 [![code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![license](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)

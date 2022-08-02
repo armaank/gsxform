@@ -6,11 +6,15 @@ docs_dir: docs/
 theme:
   name: material
   icon:
-    logo: "fontawesome/solid/book"
+    logo: fontawesome/solid/book
+    repo: fontawesome/brands/git-alt
   features:
-    - instant
-    - tabs
+    - navigation.instant
+    - navigation.tabs
+    - toc.integrate
+    - 
   language: en
+
 nav:
   - Home: index.md
   - API Reference:
@@ -29,3 +33,4 @@ markdown_extensions:
   - mkautodoc
 repo_name: armaank/gsxform
 repo_url: https://github.com/armaank/gsxform
+
