@@ -31,7 +31,7 @@ def hann_kernel(
         Scaling factor in Eq. 9 from Shuman et. al. 2 < R < M
     gamma: float
         maximum eigenvalue
-     K: float, default=1
+    K: float, default=1
         Scaling factor in Eq. 9 from Shuman et. al. K < R/2
     omega: Union[Callable, None], default=None
         Optional warping function

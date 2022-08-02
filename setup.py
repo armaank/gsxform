@@ -1,8 +1,13 @@
+import codecs
+import os
 import pathlib
 
 from setuptools import setup, find_packages
+from typing import List
 
 ROOT = pathlib.Path(__file__).resolve().parent
+REQUIREMENTS = os.path.join(ROOT, "requirements.txt")
+README = os.path.join(ROOT, "docs", "index.md")
 
 CLASSIFIERS = [
     "Development Status :: 3 - Alpha",
@@ -13,6 +18,16 @@ CLASSIFIERS = [
     "Topic :: Scientific/Engineering",
     "Topic :: Scientific/Engineering :: Mathematics",
 ]
+
+
+def get_requirements() -> List[str]:
+    with codecs.open(REQUIREMENTS) as f:
+        return f.read().splitlines()
+
+
+def get_long_description() -> str:
+    with codecs.open(README, "rt") as f:
+        return f.read()
 
 
 def get_version() -> str:
@@ -31,4 +46,7 @@ if __name__ == "__main__":
         license="BSD 3-Clause",
         classifiers=CLASSIFIERS,
         packages=find_packages(),
+        install_requires=get_requirements(),
+        long_description=get_long_description(),
+        include_package_data=True,
     )

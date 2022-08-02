@@ -10,7 +10,7 @@ theme:
     repo: fontawesome/brands/git-alt
   features:
     #- navigation.instant
-    - navigation.tabs
+    #- navigation.tabs
     #- toc.integrate
     - navigation.indexes
     - navigation.sections
@@ -24,22 +24,42 @@ theme:
 
 nav:
   - Home: index.md
+  - Installation: install.md
   - API Reference:
     - Graph utilities: graph.md
     - Wavelet utilities:
-        Kernel functions: kernel.md
-        Graph wavelet transforms: wavelets.md
+        - Kernel functions: kernel.md
+        - Graph wavelet transforms: wavelets.md
+  - About gsxform: about.md
 
 extra_css:
     - css/custom.css
 plugins:
   - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [gsxform]
+          import:
+          - https://docs.python.org/3/objects.inv
+          - https://mkdocstrings.github.io/objects.inv
+          - https://mkdocstrings.github.io/griffe/objects.inv
+          options:
+            docstring_style: numpy
+            docstring_options:
+              ignore_init_summary: yes
+            merge_init_into_class: yes
+            separate_signature: yes
+            show_source: no
+            show_root_full_path: no
+
 markdown_extensions:
   - admonition
-  - codehilite
-  - mkautodoc
+    #- codehilite
+    #- mkautodoc
   - toc:
       permalink: true
+
 repo_name: armaank/gsxform
 repo_url: https://github.com/armaank/gsxform
 

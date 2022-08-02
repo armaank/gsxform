@@ -54,3 +54,17 @@ def test_normalize_laplacian():  # type: ignore
     is_nan = torch.isnan(L_norm)
 
     assert not torch.any(is_nan)
+
+
+def test_compute_spectra():  # type: ignore
+    """Test graph.compute_spectra for shape."""
+
+    x = torch.rand((16, 10, 10))
+
+    W_adj = create_adj(x)
+
+    E, V = graph.compute_spectra(W_adj)
+
+    assert E.size() == (16, 10)
+
+    assert V.size() == x.size()

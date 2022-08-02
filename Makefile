@@ -54,10 +54,12 @@ tests: # run tests
 
 .PHONY: clean
 clean: # clean project directory
+	@printf "cleaning project...\n"
 	rm report.html coverage.xml
 	rm -rf __pycache__/ ./gsxform/__pycache__/ ./tests/____pycache__/ 
 	rm -rf gsxform.egg-info/
 	rm -rf site/
+	rm -rf dist/
 
 .PHONY: docs
 docs: # make doc site

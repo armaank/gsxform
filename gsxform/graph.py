@@ -80,10 +80,12 @@ def normalize_laplacian(L: torch.Tensor) -> torch.Tensor:
 def compute_spectra(W: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
     """Compute spectra of graph Laplacian from its adjacency matrix.
 
+    TODO: double check if UPLO should be L, or R
+
     Parameters
     ----------
     W: torch.Tensor
-       Batch of graph adjacency matricies.
+        Batch of graph adjacency matricies.
 
     Returns
     -------
@@ -95,6 +97,7 @@ def compute_spectra(W: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
     # normalize laplacian
     L_norm = normalize_laplacian(L)
     # perform eigen decomp
-    E, V = torch.symeig(L_norm, eigenvectors=True)
+    # depreciated: E, V = torch.symeig(L_norm, eigenvectors=True)
+    E, V = torch.linalg.eigh(L_norm, UPLO="L")
 
     return E, V
