@@ -11,7 +11,15 @@ theme:
   features:
     - navigation.instant
     - navigation.tabs
-      #- toc.integrate
+    #- toc.integrate
+    - navigation.indexes
+    - navigation.sections
+    - navigation.top
+    - navigation.tracking
+    - toc.follow
+    - search.highlight
+    - search.share
+    - search.suggest
   language: en
 
 nav:
@@ -30,6 +38,8 @@ markdown_extensions:
   - admonition
   - codehilite
   - mkautodoc
+  - toc:
+      permalink: true
 repo_name: armaank/gsxform
 repo_url: https://github.com/armaank/gsxform
 
