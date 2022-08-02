@@ -1,4 +1,4 @@
-site_name: gsxform: Wavelet scattering transforms on graphs
+site_name: "gsxform: Wavelet scattering transforms on graphs"
 site_url: https://armaank.github.io/gsxform
 
 docs_dir: docs/
@@ -12,7 +12,6 @@ theme:
     - navigation.instant
       #- navigation.tabs
     - toc.integrate
-    - 
   language: en
 
 nav:
