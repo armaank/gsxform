@@ -9,7 +9,7 @@ theme:
     logo: fontawesome/solid/book
     repo: fontawesome/brands/git-alt
   features:
-    - navigation.instant
+    #- navigation.instant
     - navigation.tabs
     #- toc.integrate
     - navigation.indexes
