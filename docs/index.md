@@ -25,6 +25,10 @@ Behavior can potentially be unstable and consistency is not garunteed.
 * finalize scattering base class
 * un-lock repo 
 * make single-letter variables more clear
+* clean up readme, add additional formatting
+* clean up dependencies
+* spell chekc
+* change name to gisgraph?
  ---
 
 ## Installation

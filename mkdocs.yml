@@ -34,6 +34,8 @@ nav:
 
 extra_css:
     - css/custom.css
+# see https://mkdocstrings.github.io/python/usage/#supported-docstrings-styles
+# for options
 plugins:
   - search
   - mkdocstrings:
@@ -47,15 +49,17 @@ plugins:
           options:
             docstring_style: numpy
             docstring_options:
-              ignore_init_summary: yes
+              ignore_init_summary: no
             merge_init_into_class: yes
             separate_signature: yes
-            show_source: no
+            show_source: yes
             show_root_full_path: no
+            show_root_heading: True
 
 markdown_extensions:
   - admonition
-    #- codehilite
+  - codehilite
+  - pymdownx.superfences
     #- mkautodoc
   - toc:
       permalink: true
