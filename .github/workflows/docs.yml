@@ -1,5 +1,8 @@
 name: Build documentation site
 
+permissions: 
+  contents: write
+
 on:
   push:
     branches:
@@ -10,8 +13,6 @@ jobs:
     defaults:
       run:
         shell: bash -l {0}
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v2
       - name: Setup env
