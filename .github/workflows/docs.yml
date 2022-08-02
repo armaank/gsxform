@@ -1,7 +1,6 @@
 name: Build documentation site
 
-permissions: 
-  contents: write-all
+permissions: write-all
 
 on:
   push:
