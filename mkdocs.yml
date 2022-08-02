@@ -14,7 +14,10 @@ theme:
 nav:
   - Home: index.md
   - API Reference:
-    - Graph Utilities: graph.md
+    - Graph utilities: graph.md
+    - Wavelet utilities:
+        Kernel functions: kernel.md
+        Graph wavelet transforms: wavelets.md
 
 extra_css:
     - css/custom.css
