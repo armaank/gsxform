@@ -3,11 +3,7 @@
 import torch
 
 from gsxform import graph
-
-
-def create_adj(x: torch.Tensor, p: float = 0.5) -> torch.Tensor:
-    """Utility function used to create random a adjacency matrix."""
-    return (x > p).float()
+from .test_utils import create_adj
 
 
 def test_adjacency_to_laplacian():  # type: ignore

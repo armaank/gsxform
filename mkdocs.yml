@@ -49,12 +49,12 @@ plugins:
           options:
             docstring_style: numpy
             docstring_options:
-              ignore_init_summary: no
+              ignore_init_summary: yes
             merge_init_into_class: yes
             separate_signature: yes
             show_source: yes
             show_root_full_path: no
-            show_root_heading: True
+            show_root_heading: yes
 
 markdown_extensions:
   - admonition
