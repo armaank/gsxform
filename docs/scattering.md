@@ -2,11 +2,5 @@
 
 ::: gsxform.scattering.ScatteringTransform
 
-# ::: gsxform.scattering.Diffusion
-
-# ::: gsxform.scattering.Spline
-
-# ::: gsxform.scattering.Hann
-
 
    
