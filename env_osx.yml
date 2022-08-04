@@ -79,4 +79,5 @@ dependencies:
     - watchdog==2.1.9
     - wcwidth==0.2.5
     - zipp==3.8.1
+    - isort
 prefix: /opt/anaconda3/envs/env-gsxform
