@@ -1,7 +1,6 @@
 # gsxform
  Wavelet scattering transforms on graphs via PyTorch
  
- ---
 [![tests](https://github.com/armaank/gsxform/workflows/tests/badge.svg)](https://github.com/armaank/gsxform/actions/workflows/tests.yml)
 [![codecov](https://codecov.io/gh/armaank/gsxform/branch/main/graph/badge.svg?token=AUFSGAPB4O)](https://codecov.io/gh/armaank/gsxform)
 [![docs](https://github.com/armaank/gsxform/workflows/docs/badge.svg)](https://github.com/armaank/gsxform/actions/workflows/docs.yml)
@@ -18,7 +17,6 @@ easily build models that use both scattering transform and neural network compon
 `gsxform` is first and foremost a research project and is being continuously refined.
 Behavior can potentially be unstable and consistency is not garunteed.
 
- ---
 ## TODO
 * add release management (long term)
 * add more tests
@@ -29,7 +27,6 @@ Behavior can potentially be unstable and consistency is not garunteed.
 * clean up dependencies
 * spell chekc
 * change name to gisgraph?
- ---
 
 ## Installation
 

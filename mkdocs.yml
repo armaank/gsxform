@@ -30,6 +30,7 @@ nav:
     - Wavelet utilities:
         - Kernel functions: kernel.md
         - Graph wavelet transforms: wavelets.md
+    - Graph scattering transforms: scattering.md
   - About gsxform: about.md
 
 extra_css:

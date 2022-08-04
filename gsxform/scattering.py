@@ -4,6 +4,7 @@ TODO:
     - write scattering base class
     - this may not even need to be a nn.Module, no params
     - fix typing for pytorch module
+    - confirm symbolic notation
 """
 from typing import Any
 
@@ -27,14 +28,14 @@ class ScatteringTransform(nn.Module):  # type: ignore
         self.L = L
 
         # TODO: check this, might be batched
-        self.N = self.W_adj.shape[0]
+        self.n_nodes = self.W_adj.shape[0]
 
         # placeholders for wavelet and pooling operator
-        # TODO: figure out better name than U
-        # self.U = None
-        # self.psi = None
+        self.lowpass: torch.Tensor = None
+        self.psi: torch.Tensor = None
+
         # non linearity
-        # self.nlin = torch.abs
+        self.nlin = torch.abs
 
     def extra_repr(self) -> str:
         return f"gsxform(N={self.N}, J={self.J}, L={self.L}"
@@ -43,14 +44,14 @@ class ScatteringTransform(nn.Module):  # type: ignore
         return f"Graph scattering transform: {self.N} nodes, {self.J} scales,\
                 {self.L} layers"
 
-    def _get_wavelets(self) -> None:
+    def get_wavelets(self) -> None:
         """compute wavelet filterbank"""
 
         raise NotImplementedError
 
         pass
 
-    def _get_pooling(self) -> None:
+    def get_pooling(self) -> None:
         """compute pooling operator"""
 
         raise NotImplementedError
@@ -61,21 +62,77 @@ class ScatteringTransform(nn.Module):  # type: ignore
         batch_size = x.shape[0]
         n_features = x.shape[1]
 
-        # phi = torch.matmul(x, self.U)
+        # compute first scattering layer, low pass filter input
+        phi = torch.matmul(x, self.lowpass)
 
         # reshape inputs for loop
-        x = x.reshape(batch_size, 1, n_features, self.N)
-        # self.U = self.U.reshape(1, 1, self.N, 1)
+        S_x = x.reshape(batch_size, 1, n_features, self.n_nodes)
+        lowpass = self.lowpass.reshape(1, 1, self.n_nodes, 1)
+        lowpass = torch.tile(
+            lowpass,
+            [
+                1,
+                self.n_nodes,
+                1,
+                1,
+            ],
+        )
+        psi = self.psi.reshape(1, self.J, self.n_nodes, self.n_nodes)
 
-        # stub, re-write this
         for ll in range(1, self.L):
-
+            S_x_ll = torch.empty([batch_size, 0, n_features, self.n_nodes])
+            # layer_output = torch.empty([batch_size, 0, n_features, self.N])
             for jj in range(self.J ** (ll - 1)):
 
-                pass
-            pass
+                x_jj = S_x[:, jj, :, :]  # intermediate repr.
+                x_jj = x_jj.reshape(batch_size, 1, n_features, self.n_nodes)
+                psi_x_jj = torch.matmul(x_jj, psi)  # wavelet filtering operation
+                S_x_jj = self.nlin(psi_x_jj)  # scattering output
+                S_x_ll = torch.cat(
+                    (S_x_ll, S_x_jj)
+                )  # concat scattering scale for the layer
 
-        return x
+                # compute scattering representation
+                phi_jj = torch.matmul(S_x_jj, lowpass)
+                # store coefficients
+                phi_jj = phi_jj.squeeze(3)
+                phi_jj = phi_jj.transpose(0, 2, 1)
+                phi = torch.cat((phi, phi_jj), axis=2)
+
+            S_x = S_x_ll.copy()  # continue iteration through the layer
+
+        return phi
+
+
+# class Diffusion(ScatteringTransform):
+#    """Diffusion scattering transform class
+#
+#    """
+#
+#    def __init__(self, ):
+#        pass
+
+
+# class Spline(ScatteringTransform):
+#    """Cubic spline scattering transform class
+#
+#    """
+
+
+#   def __init__(self, ):
+
+#        pass
+
+
+# class Hann(ScatteringTransform):
+#    """Tight Hann scattering transform class
+#    """
+
+
+#    def __init__(self, ):
+
+
+#        pass
 
 
 # class DiffusionScattering(nn.Module):
