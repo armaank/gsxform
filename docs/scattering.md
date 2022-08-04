@@ -2,5 +2,6 @@
 
 ::: gsxform.scattering.ScatteringTransform
 
+::: gsxform.scattering.Diffusion
 
    

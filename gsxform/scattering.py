@@ -11,8 +11,8 @@ from typing import Any
 import torch
 from torch import nn
 
-# import graphs
-# import wavelets
+from .graph import normalize_adjacency
+from .wavelets import diffusion_wavelets
 
 
 class ScatteringTransform(nn.Module):  # type: ignore
@@ -104,13 +104,37 @@ class ScatteringTransform(nn.Module):  # type: ignore
         return phi
 
 
-# class Diffusion(ScatteringTransform):
-#    """Diffusion scattering transform class
-#
-#    """
-#
-#    def __init__(self, ):
-#        pass
+class Diffusion(ScatteringTransform):
+    """Diffusion scattering transform class"""
+
+    def __init__(self, W_adj: torch.Tensor, J: int, L: int, **kwargs: Any) -> None:
+        # super().__init__(W_adj: torch.Tensor, J: int, L:int)
+
+        self.psi = self.get_wavelets()
+        self.lowpass = self.get_lowpass()
+
+        pass
+
+    def get_wavelets(self) -> torch.Tensor:
+        """subclass method used to get wavelet filter bank"""
+
+        W_norm = normalize_adjacency(self.W_adj)
+
+        # compute diffusion matrix
+        T = 1 / 2 * (torch.eye(self.num_nodes) + W_norm)
+        # compute wavelet operator
+        psi = diffusion_wavelets(T, self.J)
+
+        return psi
+
+    def get_lowpass(self) -> torch.Tensor:
+        """subclass method used to get lowpass pooling operator"""
+
+        # compute lowpass operator
+        d = self.W_adj.sum(1)
+        lowpass = d / torch.norm(d, 1)
+
+        return lowpass
 
 
 # class Spline(ScatteringTransform):
