@@ -25,6 +25,8 @@ theme:
 nav:
   - Home: index.md
   - Installation: install.md
+  - Examples:
+    - Basic Plot: examples/example.ipynb
   - API Reference:
     - Graph utilities: graph.md
     - Wavelet utilities:

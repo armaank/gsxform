@@ -20,8 +20,9 @@ Behavior can potentially be unstable and consistency is not garunteed.
 ## TODO
 * add release management (long term)
 * add more tests
-* finalize scattering base class
 * un-lock repo 
+* add examples with data to test things out
+* update docs
 * make single-letter variables more clear
 * clean up readme, add additional formatting
 * clean up dependencies
