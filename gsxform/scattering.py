@@ -1,18 +1,23 @@
 """generic base classes for scattering transform operations
 
 TODO:
-    - write scattering base class
     - this may not even need to be a nn.Module, no params
     - fix typing for pytorch module
     - confirm symbolic notation
+    - add references
+    - think more carefully about what should go where wrt torch batching, init
+    - add compute moments to base scattering class
+    - pass wavelet parameters via kwargs/args
+    - add docs
 """
 from typing import Any
 
+import numpy as np
 import torch
 from torch import nn
 
-from .graph import normalize_adjacency
-from .wavelets import diffusion_wavelets
+from .graph import compute_spectra, normalize_adjacency
+from .wavelets import diffusion_wavelets, hann_wavelets, spline_wavelets
 
 
 class ScatteringTransform(nn.Module):  # type: ignore
@@ -48,8 +53,6 @@ class ScatteringTransform(nn.Module):  # type: ignore
         """compute wavelet filterbank"""
 
         raise NotImplementedError
-
-        pass
 
     def get_pooling(self) -> None:
         """compute pooling operator"""
@@ -137,76 +140,73 @@ class Diffusion(ScatteringTransform):
         return lowpass
 
 
-# class Spline(ScatteringTransform):
-#    """Cubic spline scattering transform class
-#
-#    """
+class Spline(ScatteringTransform):
+    """Spline, monic polynomial scattering transform class"""
+
+    def __init__(self, W_adj: torch.Tensor, J: int, L: int, **kwargs: Any) -> None:
+        # super().__init__(W_adj: torch.Tensor, J: int, L:int)
+        self.alpha = 2
+        self.beta = 2
+        self.K = 2
+        self.psi = self.get_wavelets()  # alpha=2, beta=2, K=2)
+        self.lowpass = self.get_lowpass()
+
+        pass
+
+    def get_wavelets(self) -> torch.Tensor:
+        """subclass method used to get wavelet filter bank"""
+
+        # compute gft
+        E, V = compute_spectra(self.W_adj)
+        eig_max = torch.max(torch.diag(E))
+
+        x1 = torch.diag(E)[np.floor(self.num_nodes / 4)]
+        x2 = torch.diag(E)[np.ciel(3 * self.num_nodes / 4)]
+
+        # compute wavelet operator
+        psi = spline_wavelets(
+            V, E, self.J, self.alpha, self.beta, x1, x2, self.K, eig_max
+        )
+
+        return psi
+
+    def get_lowpass(self) -> torch.Tensor:
+        """subclass method used to get lowpass pooling operator"""
+
+        # compute lowpass operator
+        lowpass = 1 / self.num_nodes * torch.ones(self.num_nodes)
+
+        return lowpass
 
 
-#   def __init__(self, ):
+class TightHann(ScatteringTransform):
+    """Tight Hann scattering transform class"""
 
-#        pass
+    def __init__(self, W_adj: torch.Tensor, J: int, L: int, **kwargs: Any) -> None:
+        # super().__init__(W_adj: torch.Tensor, J: int, L:int)
+        self.R = 3
+        self.warp = None
+        self.psi = self.get_wavelets()
+        self.lowpass = self.get_lowpass()
 
+        pass
 
-# class Hann(ScatteringTransform):
-#    """Tight Hann scattering transform class
-#    """
+    def get_wavelets(self) -> torch.Tensor:
+        """subclass method used to get wavelet filter bank"""
 
+        # compute gft
+        E, V = compute_spectra(self.W_adj)
+        eig_max = torch.max(torch.diag(E))
 
-#    def __init__(self, ):
+        # compute wavelet operator
+        psi = hann_wavelets(V, E, self.J, self.R, eig_max, self.warp)
 
+        return psi
 
-#        pass
+    def get_lowpass(self) -> torch.Tensor:
+        """subclass method used to get lowpass pooling operator"""
 
+        # compute lowpass operator
+        lowpass = 1 / self.num_nodes * torch.ones(self.num_nodes)
 
-# class DiffusionScattering(nn.Module):
-#    def __init__(self, W_adj:torch.Tensor, J:int, L:int):
-#        super(DiffusionScattering, self).__init__()
-#
-#        # adjacency matrix
-#        self.W_adj = W_adj
-#        # number of scales
-#        self.J = J
-#        # number of layers
-#        self.L = L
-#
-#        # TODO: check this, might be batched
-#        self.N = self.W_adj.shape[0]
-#
-#        # degree vector
-#        self.d = W_adj.sum(1)
-#
-#        pass
-#
-#    def get_wavelets(self) -> None:
-#
-#        W_norm = graph.normalize_adjacency(self.W_adj)
-#
-#        # diffusion operator
-#        self.T = 1/2 * (torch.eye(self.N) + W_norm)
-#
-#        # pooling operator
-#
-#        self.U = d / torch.linalg.norm(d, 1)
-#
-#        self.psi = wavelets.diffusion_wavelets(self.T, self.J)
-#
-#        pass
-#
-#    def forward(self, x:torch.Tensor) -> torch.Transform:
-#
-#        return x
-#
-#
-# class SplineScattering(nn.Module):
-#    def __init__(self, W_adj:torch.Tensor, J:int, L:int, alpha, beta, k, norm):
-#        super(SplineScattering, self).__init__()
-#
-#        self.W_adj = W_adj
-#        self.J = J
-#        self.L = L
-#
-#        self.N = self.W_adj.shape[0]
-#
-#        pass
-#
+        return lowpass
