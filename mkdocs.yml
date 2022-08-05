@@ -58,6 +58,15 @@ plugins:
             show_source: yes
             show_root_full_path: no
             show_root_heading: yes
+  - mknotebooks:
+      execute: false
+      write_markdown: true
+      allow_errors: true
+      timeout: 1200
+      #binder: true
+      #binder_service_name: "gh"
+      #binder_branch: "master"
+      #binder_ui: "lab"
 
 markdown_extensions:
   - admonition
