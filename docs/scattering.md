@@ -4,4 +4,8 @@
 
 ::: gsxform.scattering.Diffusion
 
+::: gsxform.scattering.Spline
+
+::: gsxform.scattering.TightHann
+
    
