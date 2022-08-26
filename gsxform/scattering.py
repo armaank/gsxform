@@ -231,7 +231,9 @@ class Spline(ScatteringTransform):
 
         # compute gft
         E, V = compute_spectra(self.W_adj)
-        eig_max = torch.max(torch.diag(E))
+        E = torch.diag_embed(E)
+        print(E.shape)
+        eig_max = torch.max(torch.diagonal(E))
         print(E.shape)
         print(V.shape)
         print(E[:, 2].shape)
@@ -290,7 +292,6 @@ class TightHann(ScatteringTransform):
 
         # compute gft
         E, V = compute_spectra(self.W_adj)
-        print(E.shape)
         eig_max = torch.max(torch.diagonal(E))
 
         # compute wavelet operator
