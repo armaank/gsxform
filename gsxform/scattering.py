@@ -239,9 +239,10 @@ class Spline(ScatteringTransform):
         # print(E.shape)
         # print(V.shape)
         # print(E[:, 2].shape)
-        x1 = e[np.floor(self.n_nodes / 4).astype(np.int)]
+        # compute w/o batch dim
+        x1 = e[:, np.floor(self.n_nodes / 4).astype(np.int)]
         print(x1)
-        x2 = e[np.ceil(3 * self.n_nodes / 4).astype(np.int)]
+        x2 = e[:, np.ceil(3 * self.n_nodes / 4).astype(np.int)]
 
         # compute wavelet operator
         psi = spline_wavelets(
