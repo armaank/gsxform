@@ -86,8 +86,6 @@ def spline_kernel(
     torch.Tensor
         the values of the parameterized spline kernel for values of x
     """
-    print(x)
-    print(x.shape)
     # x = x[0]
     x = x.squeeze()
     # alternatively, x.flatten?
@@ -113,13 +111,9 @@ def spline_kernel(
     b1 = x < x1
     b2 = (x >= x1) * (x < x2)
     b3 = x >= x2
-    print(x)
-    print(x.shape)
 
     # shape changed to 1 to ignore batch size?
     g = np.zeros(x.shape[0])
-    print(g.shape)
-    print(alpha)
 
     g[b1] = (x1 ** (-alpha)) * (x[b1] ** alpha)
     g[b2] = s[1] + 2 * s[2] * x[b2] + 3 * s[3] * x[b2] ** 2
