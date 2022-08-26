@@ -51,7 +51,8 @@ class ScatteringTransform(nn.Module):  # type: ignore
         self.L = L
 
         # TODO: check this, might be batched
-        self.n_nodes = self.W_adj.shape[0]
+        self.n_nodes = self.W_adj.shape[1]
+        assert self.W_adj.shape[1] == self.W_adj.shape[2]
 
         # placeholders for wavelet and pooling operator
         self.lowpass: torch.Tensor = None
@@ -150,7 +151,7 @@ class Diffusion(ScatteringTransform):
         """
         # super().__init__(Diffusion, self)  # W_adj, J, L)
         super().__init__(W_adj, J, L)
-
+        self.n_nodes = self.W_adj.shape[1]
         self.psi = self.get_wavelets()
         self.lowpass = self.get_lowpass()
 
