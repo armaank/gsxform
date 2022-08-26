@@ -230,15 +230,18 @@ class Spline(ScatteringTransform):
         """
 
         # compute gft
-        E, V = compute_spectra(self.W_adj)
-        E = torch.diag_embed(E)
+        e, V = compute_spectra(self.W_adj)
+        print(e)
+        print(e.shape)
+        E = torch.diag_embed(e)
         print(E.shape)
-        eig_max = torch.max(torch.diagonal(E))
-        print(E.shape)
-        print(V.shape)
-        print(E[:, 2].shape)
-        x1 = torch.diagonal(E)[np.floor(self.n_nodes / 4).astype(np.int)]
-        x2 = torch.diagonal(E)[np.ceil(3 * self.n_nodes / 4).astype(np.int)]
+        eig_max = torch.max(e)
+        # print(E.shape)
+        # print(V.shape)
+        # print(E[:, 2].shape)
+        x1 = e[np.floor(self.n_nodes / 4).astype(np.int)]
+        print(x1)
+        x2 = e[np.ceil(3 * self.n_nodes / 4).astype(np.int)]
 
         # compute wavelet operator
         psi = spline_wavelets(
