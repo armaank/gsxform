@@ -191,7 +191,10 @@ def hann_wavelets(
 
         # no warping, K is fixed to 1
         psi_j = hann_kernel(eigs - t[jj], J, R, eig_max)
-        psi_j = torch.matmul(torch.matmul(V, torch.diag(psi_j)), V_adj).reshape(1, N, N)
+        print(psi_j.shape)
+        psi_j = torch.matmul(torch.matmul(V, torch.diagonal(psi_j)), V_adj).reshape(
+            1, N, N
+        )
         psi = torch.cat((psi, psi_j), axis=0)
 
     return psi
