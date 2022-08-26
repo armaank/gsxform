@@ -137,6 +137,8 @@ class ScatteringTransform(nn.Module):  # type: ignore
                 )  # concat scattering scale for the layer
 
                 # compute scattering representation
+                print(S_x_jj.shape)
+                print(lowpass.shape)
                 phi_jj = torch.matmul(S_x_jj, lowpass)
                 # store coefficients
                 phi_jj = phi_jj.squeeze(3)
