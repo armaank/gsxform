@@ -145,7 +145,7 @@ class ScatteringTransform(nn.Module):  # type: ignore
                 phi_jj = phi_jj.permute(0, 2, 1)
                 phi = torch.cat((phi, phi_jj), axis=2)
 
-            S_x = S_x_ll.copy()  # continue iteration through the layer
+            S_x = S_x_ll.clone()  # continue iteration through the layer
 
         return phi
 
