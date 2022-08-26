@@ -94,7 +94,12 @@ class ScatteringTransform(nn.Module):  # type: ignore
 
         """
 
-        batch_size = x.shape[0]
+        if len(x) == 2:
+            # assume single graph input, not batched...
+            batch_size = 1
+        else:
+            batch_size = x.shape[0]
+
         n_features = x.shape[1]
 
         # compute first scattering layer, low pass filter input
