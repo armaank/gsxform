@@ -7,6 +7,14 @@
 #    compute_spectra,
 # )
 # from .kernel import hann_kernel, spline_kernel
-from .wavelets import diffusion_wavelets, spline_wavelets, hann_wavelets
+from .scattering import Diffusion, Spline, TightHann
+from .wavelets import diffusion_wavelets, hann_wavelets, spline_wavelets
 
-__all__ = ["diffusion_wavelets", "spline_wavelets", "hann_wavelets"]
+__all__ = [
+    "diffusion_wavelets",
+    "spline_wavelets",
+    "hann_wavelets",
+    "Diffusion",
+    "Spline",
+    "TightHann",
+]
