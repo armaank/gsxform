@@ -99,7 +99,6 @@ def spline_wavelets(
 
     # get eigenvalues from square matrix
     eigs = torch.diagonal(E)  # check this
-    print(eigs.shape)
     # compute hermentian transpose of eigenvectors
     V_adj = V.adjoint()
 
@@ -115,37 +114,26 @@ def spline_wavelets(
     # compute zero-eth order filter
     psi_0 = torch.exp((-(eigs / 0.6 * eig_min)) ** 4)
     psi_0 = psi_0.squeeze()
-    print("testing...")
-    print(psi_0.shape)
     # psi_0 = torch.matmul(torch.matmul(V, torch.diagonal(psi_0)), V_adj)
     # psi_0 = torch.matmul(V, )
 
     # reshape for loop
-    psi = torch.empty([1, N, N])
+    psi = torch.empty([0, N, N])
 
     # compute wavelet filter bank
     for jj in range(0, J - 1):  # check loop bounds
 
         psi_j = spline_kernel(t[jj] * eigs, alpha, beta, x1, x2).to(torch.float)
-        print(psi_j.shape)
-        print(torch.diag_embed(psi_j).shape)
-        print(V.dtype)
         psi_j = torch.matmul(torch.matmul(V, torch.diag_embed(psi_j)), V_adj).reshape(
             1, N, N
         )
 
         psi = torch.cat((psi, psi_j), axis=0)
     # compute zero-eth order
-    print("done...")
-    print(psi.shape)
-    print(V.shape)
-    print(torch.diag_embed(torch.max(torch.abs(psi)) * psi_0).shape)
     psi_0 = torch.matmul(
         torch.matmul(V, torch.diag_embed(torch.max(torch.abs(psi)) * psi_0)), V_adj
     ).reshape(1, N, N)
-    print(psi_0.shape)
     psi = torch.concat((psi_0, psi), axis=0)
-    print(psi.shape)
     # psi_0 = torch.matmul(
     #    torch.matmul(V, torch.diag(torch.max(torch.abs(psi)) * psi_0)), V_adj
     # )
