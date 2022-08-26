@@ -126,7 +126,7 @@ def spline_wavelets(
     # compute wavelet filter bank
     for jj in range(0, J - 1):  # check loop bounds
 
-        psi_j = spline_kernel(t[jj - 1] * eigs, alpha, beta, x1, x2).to(torch.float)
+        psi_j = spline_kernel(t[jj] * eigs, alpha, beta, x1, x2).to(torch.float)
         print(psi_j.shape)
         print(torch.diag_embed(psi_j).shape)
         print(V.dtype)
