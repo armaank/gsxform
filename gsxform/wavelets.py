@@ -109,11 +109,11 @@ def spline_wavelets(
     t = torch.logspace(np.log10(x2 / eig_min), np.log10(x2 / eig_max), J - 1)
 
     # init wavelet matrix
-    print(x1)
     N = V.shape[2]  # realized that this was off?
 
     # compute zero-eth order filter
     psi_0 = torch.exp((-(eigs / 0.6 * eig_min)) ** 4)
+    print("testing...")
     print(psi_0.shape)
     # psi_0 = torch.matmul(torch.matmul(V, torch.diagonal(psi_0)), V_adj)
     # psi_0 = torch.matmul(V, )
@@ -125,7 +125,6 @@ def spline_wavelets(
     for jj in range(0, J - 1):  # check loop bounds
 
         psi_j = spline_kernel(t[jj - 1] * eigs, alpha, beta, x1, x2).to(torch.float)
-        print(psi_j.dtype)
         print(psi_j.shape)
         print(torch.diag_embed(psi_j).shape)
         print(V.dtype)

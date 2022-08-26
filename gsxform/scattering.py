@@ -102,7 +102,6 @@ class ScatteringTransform(nn.Module):  # type: ignore
         batch_size = x.shape[0]
 
         n_features = x.shape[1]
-        print(self.psi.shape)
 
         lowpass = self.lowpass.reshape([1, self.n_nodes, 1])
 
@@ -137,8 +136,6 @@ class ScatteringTransform(nn.Module):  # type: ignore
                 )  # concat scattering scale for the layer
 
                 # compute scattering representation
-                print(S_x_jj.shape)
-                print(lowpass.shape)
                 phi_jj = torch.matmul(S_x_jj, lowpass)
                 # store coefficients
                 phi_jj = phi_jj.squeeze(3)
@@ -231,10 +228,7 @@ class Spline(ScatteringTransform):
 
         # compute gft
         e, V = compute_spectra(self.W_adj)
-        print(e)
-        print(e.shape)
         E = torch.diag_embed(e)
-        print(E.shape)
         eig_max = torch.max(e)
         # print(E.shape)
         # print(V.shape)
