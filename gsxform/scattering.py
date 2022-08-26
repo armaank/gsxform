@@ -1,7 +1,6 @@
 """generic base classes for scattering transform operations
 
 TODO:
-    - this may not even need to be a nn.Module, no params
     - fix typing for pytorch module
     - confirm symbolic notation
     - add references
@@ -94,11 +93,6 @@ class ScatteringTransform(nn.Module):  # type: ignore
 
         """
 
-        # if len(x) == 2:
-        # assume single graph input, not batched...
-        #    batch_size = 1
-        #    x = x.transpose() # x is transposed...
-        # else:
         batch_size = x.shape[0]
 
         n_features = x.shape[1]
@@ -157,9 +151,8 @@ class Diffusion(ScatteringTransform):
         ----------
 
         """
-        # super().__init__(Diffusion, self)  # W_adj, J, L)
         super().__init__(W_adj, J, L)
-        # self.n_nodes = self.W_adj.shape[1]
+
         self.psi = self.get_wavelets()
         self.lowpass = self.get_lowpass()
 
@@ -209,6 +202,7 @@ class Spline(ScatteringTransform):
 
         """
         super().__init__(W_adj, J, L)
+
         self.alpha = 2
         self.beta = 2
         self.K = 2
@@ -230,9 +224,7 @@ class Spline(ScatteringTransform):
         e, V = compute_spectra(self.W_adj)
         E = torch.diag_embed(e)
         eig_max = torch.max(e)
-        # print(E.shape)
-        # print(V.shape)
-        # print(E[:, 2].shape)
+
         # compute w/o batch dim
         x1 = e[:, np.floor(self.n_nodes / 4).astype(np.int)]
         x2 = e[:, np.ceil(3 * self.n_nodes / 4).astype(np.int)]

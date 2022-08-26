@@ -44,7 +44,7 @@ def hann_kernel(
 
     """
 
-    # number of filters (scales). folowing convention of
+    # number of filters (scales). following convention of
     # Shuman et, al
     M = J
     assert 2 < R < M
@@ -76,7 +76,7 @@ def spline_kernel(
         kernel parameter.
     beta: int, default = 2
         kernel parameter. Setting alpha=beta is convention
-    x1: int, defualt = 1
+    x1: int, default = 1
         kernel parameter.
     x2: int, default = 2
         kernel parameter.
@@ -106,13 +106,12 @@ def spline_kernel(
     # solving for polynomial coeffs
     s = torch.linalg.solve(coeffs, constraints)
 
-    # defining monic spline peacemeal according to eq. 65 of
+    # defining monic spline piecemeal according to eq. 65 of
     # Hammond et. al along three boundaries
     b1 = x < x1
     b2 = (x >= x1) * (x < x2)
     b3 = x >= x2
 
-    # shape changed to 1 to ignore batch size?
     g = np.zeros(x.shape[0])
 
     g[b1] = (x1 ** (-alpha)) * (x[b1] ** alpha)
