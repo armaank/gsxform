@@ -9,6 +9,7 @@ TODO:
 """
 from typing import Callable, Union
 
+import numpy as np
 import torch
 
 from .kernel import hann_kernel, spline_kernel
@@ -105,7 +106,7 @@ def spline_wavelets(
     eig_min = gamma / K
 
     # scales based on eigenvalue spread
-    t = torch.logspace(torch.log10(x2 / eig_min), torch.log10(x2 / eig_max), J - 1)
+    t = torch.logspace(np.log10(x2 / eig_min), np.log10(x2 / eig_max), J - 1)
 
     # init wavelet matrix
     N = V.shape[0]
