@@ -121,7 +121,7 @@ def spline_wavelets(
     psi = torch.empty([1, N, N])
 
     # compute wavelet filter bank
-    for jj in range(1, J):  # check loop bounds
+    for jj in range(0, J - 1):  # check loop bounds
 
         psi_j = spline_kernel(t[jj - 1] * eigs, alpha, beta, x1, x2).to(torch.float)
         print(psi_j.dtype)
@@ -135,9 +135,13 @@ def spline_wavelets(
         psi = torch.cat((psi, psi_j), axis=0)
     # compute zero-eth order
     psi_0 = torch.matmul(
-        torch.matmul(V, torch.diag(torch.max(torch.abs(psi)) * psi_0)), V_adj
-    )
+        torch.matmul(V, torch.diag_embed(torch.max(torch.abs(psi)) * psi_0)), V_adj
+    ).reshape(1, N, N)
     psi = torch.concat((psi_0, psi), axis=0)
+    # psi_0 = torch.matmul(
+    #    torch.matmul(V, torch.diag(torch.max(torch.abs(psi)) * psi_0)), V_adj
+    # )
+    # psi = torch.concat((psi_0, psi), axis=0)
     return psi
 
 
