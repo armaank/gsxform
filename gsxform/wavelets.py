@@ -200,4 +200,11 @@ def hann_wavelets(
         )
         psi = torch.cat((psi, psi_j), axis=0)
 
+    # computing final filter, need to double check this
+    psi_J = hann_kernel(eigs - t[J - 1], J, R, eig_max)  # check this arthimatic
+    psi_J = torch.matmul(torch.matmul(V, torch.diag_embed(psi_J)), V_adj).reshape(
+        1, N, N
+    )
+    psi = torch.cat((psi, psi_J), axis=0)
+
     return psi
