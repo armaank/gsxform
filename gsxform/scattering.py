@@ -151,7 +151,7 @@ class Diffusion(ScatteringTransform):
         """
         # super().__init__(Diffusion, self)  # W_adj, J, L)
         super().__init__(W_adj, J, L)
-        self.n_nodes = self.W_adj.shape[1]
+        # self.n_nodes = self.W_adj.shape[1]
         self.psi = self.get_wavelets()
         self.lowpass = self.get_lowpass()
 
@@ -169,7 +169,7 @@ class Diffusion(ScatteringTransform):
         W_norm = normalize_adjacency(self.W_adj)
 
         # compute diffusion matrix
-        T = 1 / 2 * (torch.eye(self.num_nodes) + W_norm)
+        T = 1 / 2 * (torch.eye(self.n_nodes) + W_norm)
         # compute wavelet operator
         psi = diffusion_wavelets(T, self.J)
 
@@ -222,8 +222,8 @@ class Spline(ScatteringTransform):
         E, V = compute_spectra(self.W_adj)
         eig_max = torch.max(torch.diag(E))
 
-        x1 = torch.diag(E)[np.floor(self.num_nodes / 4)]
-        x2 = torch.diag(E)[np.ciel(3 * self.num_nodes / 4)]
+        x1 = torch.diag(E)[np.floor(self.n_nodes / 4)]
+        x2 = torch.diag(E)[np.ciel(3 * self.n_nodes / 4)]
 
         # compute wavelet operator
         psi = spline_wavelets(
@@ -242,7 +242,7 @@ class Spline(ScatteringTransform):
         """
 
         # compute lowpass operator
-        lowpass = 1 / self.num_nodes * torch.ones(self.num_nodes)
+        lowpass = 1 / self.n_nodes * torch.ones(self.n_nodes)
 
         return lowpass
 
@@ -295,6 +295,6 @@ class TightHann(ScatteringTransform):
         """
 
         # compute lowpass operator
-        lowpass = 1 / self.num_nodes * torch.ones(self.num_nodes)
+        lowpass = 1 / self.n_nodes * torch.ones(self.n_nodes)
 
         return lowpass
