@@ -102,6 +102,7 @@ class ScatteringTransform(nn.Module):  # type: ignore
         batch_size = x.shape[0]
 
         n_features = x.shape[1]
+
         lowpass = self.lowpass.reshape([1, self.n_nodes, 1])
         print(x.shape)
         print(lowpass.shape)
@@ -132,7 +133,7 @@ class ScatteringTransform(nn.Module):  # type: ignore
                 psi_x_jj = torch.matmul(x_jj, psi)  # wavelet filtering operation
                 S_x_jj = self.nlin(psi_x_jj)  # scattering output
                 S_x_ll = torch.cat(
-                    (S_x_ll, S_x_jj)
+                    (S_x_ll, S_x_jj), axis=1
                 )  # concat scattering scale for the layer
 
                 # compute scattering representation
