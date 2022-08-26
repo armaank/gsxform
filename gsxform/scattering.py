@@ -41,7 +41,7 @@ class ScatteringTransform(nn.Module):  # type: ignore
         **kwargs: Any
             Additional keyword arguments
         """
-        # super(ScatteringTransform, self).__init__()
+        super(ScatteringTransform, self).__init__()
 
         # adjacency matrix
         self.W_adj = W_adj
@@ -62,10 +62,10 @@ class ScatteringTransform(nn.Module):  # type: ignore
         self.nlin = torch.abs
 
     def extra_repr(self) -> str:
-        return f"gsxform(N={self.N}, J={self.J}, L={self.L}"
+        return f"gsxform(N={self.n_nodes}, J={self.J}, L={self.L}"
 
     def __str__(self) -> str:
-        return f"Graph scattering transform: {self.N} nodes, {self.J} scales,\
+        return f"Graph scattering transform: {self.n_nodes} nodes, {self.J} scales,\
                 {self.L} layers"
 
     def get_wavelets(self) -> None:
