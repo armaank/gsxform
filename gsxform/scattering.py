@@ -102,6 +102,8 @@ class ScatteringTransform(nn.Module):  # type: ignore
 
         n_features = x.shape[1]
         lowpass = self.lowpass.reshape([1, self.n_nodes, 1])
+        print(x.shape)
+        print(lowpass.shape)
         # compute first scattering layer, low pass filter input
         phi = torch.matmul(x, lowpass)
 
