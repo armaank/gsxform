@@ -136,11 +136,14 @@ def spline_wavelets(
 
         psi = torch.cat((psi, psi_j), axis=0)
     # compute zero-eth order
+    print("done...")
+    print(psi.shape)
     print(V.shape)
     print(torch.diag_embed(torch.max(torch.abs(psi)) * psi_0).shape)
     psi_0 = torch.matmul(
         torch.matmul(V, torch.diag_embed(torch.max(torch.abs(psi)) * psi_0)), V_adj
     ).reshape(1, N, N)
+    print(psi_0.shape)
     psi = torch.concat((psi_0, psi), axis=0)
     print(psi.shape)
     # psi_0 = torch.matmul(
