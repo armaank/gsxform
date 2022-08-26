@@ -100,4 +100,8 @@ def compute_spectra(W: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
     # depreciated: E, V = torch.symeig(L_norm, eigenvectors=True)
     # come out in ascending order,
     E, V = torch.linalg.eigh(L_norm, UPLO="L")
+    idx = torch.arange(0, W.shape[0])
+    E = E[idx]
+    print(E.shape)
+    E = torch.diag(E)
     return E, V
