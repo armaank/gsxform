@@ -94,11 +94,12 @@ class ScatteringTransform(nn.Module):  # type: ignore
 
         """
 
-        if len(x) == 2:
-            # assume single graph input, not batched...
-            batch_size = 1
-        else:
-            batch_size = x.shape[0]
+        # if len(x) == 2:
+        # assume single graph input, not batched...
+        #    batch_size = 1
+        #    x = x.transpose() # x is transposed...
+        # else:
+        batch_size = x.shape[0]
 
         n_features = x.shape[1]
         lowpass = self.lowpass.reshape([1, self.n_nodes, 1])
