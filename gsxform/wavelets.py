@@ -123,7 +123,7 @@ def spline_wavelets(
     # compute wavelet filter bank
     for jj in range(1, J):  # check loop bounds
 
-        psi_j = spline_kernel(t[jj - 1] * eigs, alpha, beta, x1, x2)
+        psi_j = spline_kernel(t[jj - 1] * eigs, alpha, beta, x1, x2).double()
         print(psi_j.dtype)
         psi_j = torch.matmul(torch.matmul(V, torch.diag_embed(psi_j)), V_adj).reshape(
             1, N, N
