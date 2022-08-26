@@ -124,5 +124,5 @@ def spline_kernel(
     g[b1] = (x1 ** (-alpha)) * (x[b1] ** alpha)
     g[b2] = s[1] + 2 * s[2] * x[b2] + 3 * s[3] * x[b2] ** 2
     g[b3] = x2 ** (beta) * (x[b3] ** (-beta))
-
+    g = g.astype("float")
     return torch.from_numpy(g)
