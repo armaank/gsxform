@@ -170,15 +170,16 @@ def hann_wavelets(
 
     """
     # get eigenvalues from square matrix
+    eigs = E  # not square matrix, [batchsize, num_nodes]
     # eigs = torch.diag(E)
-    eigs = torch.diagonal(E, dim1=-2, dim2=-1)
+    # eigs = torch.diagonal(E, dim1=-2, dim2=-1)
     print(E.shape)
     print(eigs.shape)
     # eigs = torch.diag
     # compute hermentian transpose of eigenvectors
     V_adj = V.adjoint()
 
-    eig_max = gamma
+    eig_max = gamma  # might want to compute this here?
 
     # scales based on uniform translates
     t = torch.arange(1, J + 1) * eig_max / (J + 1 - R)
