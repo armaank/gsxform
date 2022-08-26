@@ -41,7 +41,7 @@ class ScatteringTransform(nn.Module):  # type: ignore
         **kwargs: Any
             Additional keyword arguments
         """
-        super(ScatteringTransform, self).__init__()
+        # super(ScatteringTransform, self).__init__()
 
         # adjacency matrix
         self.W_adj = W_adj
@@ -148,7 +148,8 @@ class Diffusion(ScatteringTransform):
         ----------
 
         """
-        super().__init__(W_adj, J, L)
+        # super().__init__(Diffusion, self)  # W_adj, J, L)
+        super().__init(W_adj, J, L)
 
         self.psi = self.get_wavelets()
         self.lowpass = self.get_lowpass()
