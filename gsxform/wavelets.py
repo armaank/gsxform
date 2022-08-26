@@ -113,10 +113,11 @@ def spline_wavelets(
 
     # compute zero-eth order filter
     psi_0 = torch.exp((-(eigs / 0.6 * eig_min)) ** 4)
-    psi_0 = torch.matmul(torch.matmul(V, torch.diagonal(psi_0)), V_adj)
+    # psi_0 = torch.matmul(torch.matmul(V, torch.diagonal(psi_0)), V_adj)
+    # psi_0 = torch.matmul(V, )
 
     # reshape for loop
-    psi = psi_0.reshape([1, N, N])
+    psi = torch.empty([1, N, N])
 
     # compute wavelet filter bank
     for jj in range(1, J):
@@ -127,7 +128,11 @@ def spline_wavelets(
         )
 
         psi = torch.cat((psi, psi_j), axis=0)
-
+    # compute zero-eth order
+    psi_0 = torch.matmul(
+        torch.matmul(V, torch.diag(torch.max(torch.abs(psi)) * psi_0)), V_adj
+    )
+    psi = torch.concat((psi_0, psi), axis=0)
     return psi
 
 
