@@ -290,7 +290,8 @@ class TightHann(ScatteringTransform):
 
         # compute gft
         E, V = compute_spectra(self.W_adj)
-        eig_max = torch.max(torch.diag(E))
+        print(E.shape)
+        eig_max = torch.max(torch.diagonal(E))
 
         # compute wavelet operator
         psi = hann_wavelets(V, E, self.J, self.R, eig_max, self.warp)
