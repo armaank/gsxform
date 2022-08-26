@@ -88,7 +88,7 @@ def spline_kernel(
     """
     print(x)
     print(x.shape)
-    x = x[-1]
+    x = x[0]
     # alternatively, x.flatten?
     # print(x.shape)
     coeffs = torch.Tensor(
