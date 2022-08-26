@@ -142,6 +142,7 @@ def spline_wavelets(
         torch.matmul(V, torch.diag_embed(torch.max(torch.abs(psi)) * psi_0)), V_adj
     ).reshape(1, N, N)
     psi = torch.concat((psi_0, psi), axis=0)
+    print(psi.shape)
     # psi_0 = torch.matmul(
     #    torch.matmul(V, torch.diag(torch.max(torch.abs(psi)) * psi_0)), V_adj
     # )
