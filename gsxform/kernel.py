@@ -86,6 +86,8 @@ def spline_kernel(
     torch.Tensor
         the values of the parameterized spline kernel for values of x
     """
+    print(x)
+    print(x.shape)
     x = x[-1]
     # alternatively, x.flatten?
     # print(x.shape)
