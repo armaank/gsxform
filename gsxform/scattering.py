@@ -211,7 +211,7 @@ class Spline(ScatteringTransform):
         ----------
 
         """
-        # super().__init__(W_adj: torch.Tensor, J: int, L:int)
+        super().__init__(W_adj, J, L)
         self.alpha = 2
         self.beta = 2
         self.K = 2
@@ -269,7 +269,7 @@ class TightHann(ScatteringTransform):
 
         """
 
-        # super().__init__(W_adj: torch.Tensor, J: int, L:int)
+        super().__init__(W_adj, J, L)
         self.R = 3
         self.warp = None
         self.psi = self.get_wavelets()
