@@ -32,7 +32,7 @@ def diffusion_wavelets(T: torch.Tensor, J: torch.Tensor) -> torch.Tensor:
     """
 
     # number of nodes
-    N = T.shape[0]
+    N = T.shape[1]  # batch in first layer, might need to change this?
     I_N = torch.eye(N)
 
     # compute zero-eth order (J=0) wavelet filter
