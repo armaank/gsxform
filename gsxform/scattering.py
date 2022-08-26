@@ -234,8 +234,9 @@ class Spline(ScatteringTransform):
         eig_max = torch.max(torch.diag(E))
         print(E.shape)
         print(V.shape)
-        x1 = torch.diag(E)[np.floor(self.n_nodes / 4).astype(np.int)]
-        x2 = torch.diag(E)[np.ciel(3 * self.n_nodes / 4).astype(np.int)]
+        print(E[:, 1].shape)
+        x1 = torch.diag(E[:, 1])[np.floor(self.n_nodes / 4).astype(np.int)]
+        x2 = torch.diag(E[:, 1])[np.ciel(3 * self.n_nodes / 4).astype(np.int)]
 
         # compute wavelet operator
         psi = spline_wavelets(

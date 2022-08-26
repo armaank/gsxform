@@ -100,7 +100,4 @@ def compute_spectra(W: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
     # depreciated: E, V = torch.symeig(L_norm, eigenvectors=True)
     # come out in ascending order,
     E, V = torch.linalg.eigh(L_norm, UPLO="L")
-    print(E.shape)
-    E = torch.diag(E.squeeze())  # might not work for batched tensors?
-
     return E, V
