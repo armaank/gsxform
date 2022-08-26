@@ -97,7 +97,7 @@ def spline_wavelets(
     """
 
     # get eigenvalues from square matrix
-    eigs = torch.diag(E)
+    eigs = torch.diagonal(E)  # check this
     # compute hermentian transpose of eigenvectors
     V_adj = V.adjoint()
 
