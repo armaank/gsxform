@@ -101,6 +101,6 @@ def compute_spectra(W: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
     # come out in ascending order,
     E, V = torch.linalg.eigh(L_norm, UPLO="L")
     print(E.shape)
-    E = torch.diag(E)
+    E = torch.diag(E.squeeze())  # might not work for batched tensors?
 
     return E, V
