@@ -237,14 +237,12 @@ class Spline(ScatteringTransform):
         print(E.shape)
         print(V.shape)
         print(E[:, 2].shape)
-        x1 = torch.diagonal(E)[np.floor(self.n_nodes / 4).astype(np.int)].astype(np.int)
-        x2 = torch.diagonal(E)[np.ceil(3 * self.n_nodes / 4).astype(np.int)].astpye(
-            np.int
-        )
+        x1 = torch.diagonal(E)[np.floor(self.n_nodes / 4).astype(np.int)]
+        x2 = torch.diagonal(E)[np.ceil(3 * self.n_nodes / 4).astype(np.int)]
 
         # compute wavelet operator
         psi = spline_wavelets(
-            V, E, self.J, self.alpha, self.beta, x1, x2, self.K, eig_max
+            V, E, self.J, self.alpha, self.beta, int(x1), int(x2), self.K, eig_max
         )
 
         return psi
