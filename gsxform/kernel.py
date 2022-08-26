@@ -108,10 +108,10 @@ def spline_kernel(
     b2 = (x >= x1) * (x < x2)
     b3 = x >= x2
 
-    # shape changed to 1 for batch size
-    g = np.zeros(x.shape[1])
+    # shape changed to 1 to ignore batch size?
+    g = np.zeros(x.shape[0])
 
-    g[b1] = x1 ** (-alpha) * (x[b1] ** alpha)
+    g[b1] = (x1 ** (-alpha)) * (x[b1] ** alpha)
     g[b2] = s[1] + 2 * s[2] * x[b2] + 3 * s[3] * x[b2] ** 2
     g[b3] = x2 ** (beta) * (x[b3] ** (-beta))
 
