@@ -109,6 +109,7 @@ def spline_wavelets(
     t = torch.logspace(np.log10(x2 / eig_min), np.log10(x2 / eig_max), J - 1)
 
     # init wavelet matrix
+    print(x1)
     N = V.shape[0]
 
     # compute zero-eth order filter
