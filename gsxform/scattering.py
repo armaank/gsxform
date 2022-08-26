@@ -148,7 +148,7 @@ class Diffusion(ScatteringTransform):
         ----------
 
         """
-        # super().__init__(W_adj: torch.Tensor, J: int, L:int)
+        super().__init__(W_adj, J, L)
 
         self.psi = self.get_wavelets()
         self.lowpass = self.get_lowpass()
