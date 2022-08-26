@@ -173,8 +173,6 @@ def hann_wavelets(
     eigs = E  # not square matrix, [batchsize, num_nodes]
     # eigs = torch.diag(E)
     # eigs = torch.diagonal(E, dim1=-2, dim2=-1)
-    print(E.shape)
-    print(eigs.shape)
     # eigs = torch.diag
     # compute hermentian transpose of eigenvectors
     V_adj = V.adjoint()
@@ -196,7 +194,7 @@ def hann_wavelets(
 
         # no warping, K is fixed to 1
         psi_j = hann_kernel(eigs - t[jj], J, R, eig_max)
-        print(psi_j.shape)
+
         psi_j = torch.matmul(torch.matmul(V, torch.diag_embed(psi_j)), V_adj).reshape(
             1, N, N
         )

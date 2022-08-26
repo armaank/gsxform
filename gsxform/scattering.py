@@ -102,6 +102,7 @@ class ScatteringTransform(nn.Module):  # type: ignore
         batch_size = x.shape[0]
 
         n_features = x.shape[1]
+        print(self.psi.shape)
 
         lowpass = self.lowpass.reshape([1, self.n_nodes, 1])
         print(x.shape)
