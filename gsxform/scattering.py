@@ -116,7 +116,7 @@ class ScatteringTransform(nn.Module):  # type: ignore
             lowpass,
             [
                 1,
-                self.n_nodes,
+                self.J,
                 1,
                 1,
             ],
