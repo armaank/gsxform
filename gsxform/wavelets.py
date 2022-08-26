@@ -185,7 +185,9 @@ def hann_wavelets(
     t = torch.arange(1, J + 1) * eig_max / (J + 1 - R)
 
     # init wavelet matrix
-    N = V.shape[0]
+    N = V.shape[2]
+
+    assert V.shape[1] == V.shape[2]
 
     psi = torch.empty([0, N, N])
 
