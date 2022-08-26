@@ -232,7 +232,8 @@ class Spline(ScatteringTransform):
         # compute gft
         E, V = compute_spectra(self.W_adj)
         eig_max = torch.max(torch.diag(E))
-
+        print(E.shape)
+        print(V.shape)
         x1 = torch.diag(E)[np.floor(self.n_nodes / 4).astype(np.int)]
         x2 = torch.diag(E)[np.ciel(3 * self.n_nodes / 4).astype(np.int)]
 
