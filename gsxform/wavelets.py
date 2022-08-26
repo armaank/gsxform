@@ -171,7 +171,7 @@ def hann_wavelets(
     """
     # get eigenvalues from square matrix
     # eigs = torch.diag(E)
-    eigs = torch.diagonal(E)
+    eigs = torch.diagonal(E, dim1=-2, dim2=-1)
     print(E.shape)
     print(eigs.shape)
     # eigs = torch.diag
