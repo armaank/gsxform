@@ -142,7 +142,7 @@ class ScatteringTransform(nn.Module):  # type: ignore
                 phi_jj = torch.matmul(S_x_jj, lowpass)
                 # store coefficients
                 phi_jj = phi_jj.squeeze(3)
-                phi_jj = phi_jj.transpose(0, 2, 1)
+                phi_jj = phi_jj.permute(0, 2, 1)
                 phi = torch.cat((phi, phi_jj), axis=2)
 
             S_x = S_x_ll.copy()  # continue iteration through the layer
