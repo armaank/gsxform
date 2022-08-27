@@ -97,14 +97,14 @@ class ScatteringTransform(nn.Module):  # type: ignore
 
         n_features = x.shape[1]
 
-        lowpass = self.lowpass.reshape([1, self.n_nodes, 1])
+        lowpass = self.lowpass.reshape([batch_size, self.n_nodes, 1])
 
         # compute first scattering layer, low pass filter input
         phi = torch.matmul(x, lowpass)
 
         # reshape inputs for loop
         S_x = x.reshape(batch_size, 1, n_features, self.n_nodes)
-        lowpass = lowpass.reshape(1, 1, self.n_nodes, 1)
+        lowpass = lowpass.reshape(batch_size, 1, self.n_nodes, 1)
         lowpass = torch.tile(
             lowpass,
             [
@@ -114,7 +114,7 @@ class ScatteringTransform(nn.Module):  # type: ignore
                 1,
             ],
         )
-        psi = self.psi.reshape(1, self.J, self.n_nodes, self.n_nodes)
+        psi = self.psi.reshape(batch_size, self.J, self.n_nodes, self.n_nodes)
 
         for ll in range(1, self.L):
             S_x_ll = torch.empty([batch_size, 0, n_features, self.n_nodes])
@@ -226,12 +226,20 @@ class Spline(ScatteringTransform):
         eig_max = torch.max(e)
 
         # compute w/o batch dim
-        x1 = e[:, np.floor(self.n_nodes / 4).astype(np.int)]
-        x2 = e[:, np.ceil(3 * self.n_nodes / 4).astype(np.int)]
+        x1 = e[:, np.floor(self.n_nodes / 4).astype(np.int32)]
+        x2 = e[:, np.ceil(3 * self.n_nodes / 4).astype(np.int32)]
 
         # compute wavelet operator
         psi = spline_wavelets(
-            V, E, self.J, self.alpha, self.beta, x1.item(), x2.item(), self.K, eig_max
+            V,
+            E,
+            self.J,
+            self.alpha,
+            self.beta,
+            x1.tolist()[0],
+            x2.tolist()[0],
+            self.K,
+            eig_max,
         )
 
         return psi
@@ -247,6 +255,9 @@ class Spline(ScatteringTransform):
 
         # compute lowpass operator
         lowpass = 1 / self.n_nodes * torch.ones(self.n_nodes)
+        # batched
+        batch_size = self.W_adj.shape[0]
+        lowpass = lowpass.unsqueeze(0).repeat(batch_size, 1, 1)
 
         return lowpass
 
@@ -300,5 +311,8 @@ class TightHann(ScatteringTransform):
 
         # compute lowpass operator
         lowpass = 1 / self.n_nodes * torch.ones(self.n_nodes)
+        # batched
+        batch_size = self.W_adj.shape[0]
+        lowpass = lowpass.unsqueeze(0).repeat(batch_size, 1, 1)
 
         return lowpass

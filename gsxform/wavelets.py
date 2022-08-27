@@ -41,7 +41,9 @@ def diffusion_wavelets(T: torch.Tensor, J: torch.Tensor) -> torch.Tensor:
     psi_0 = I_N - T
 
     # reshape for loop
-    psi = psi_0.reshape(1, N, N)
+    # changed to batch size, ....
+    b = T.shape[0]
+    psi = psi_0.reshape(b, N, N)
 
     for jj in range(1, J):
         # compute jth diffusion operator (wavelet kernel)
@@ -49,7 +51,7 @@ def diffusion_wavelets(T: torch.Tensor, J: torch.Tensor) -> torch.Tensor:
         # compute jth wavelet filter
         psi_j = torch.matmul(T_j, (I_N - T_j))
         # append wavelets
-        psi = torch.cat((psi, psi_j.reshape(1, N, N)), axis=0)
+        psi = torch.cat((psi, psi_j.reshape(b, N, N)), axis=0)
 
     return psi
 
@@ -179,6 +181,7 @@ def hann_wavelets(
 
     # init wavelet matrix
     N = V.shape[2]
+    b = V.shape[0]
 
     assert V.shape[1] == V.shape[2]
 
@@ -191,14 +194,14 @@ def hann_wavelets(
         psi_j = hann_kernel(eigs - t[jj], J, R, eig_max)
 
         psi_j = torch.matmul(torch.matmul(V, torch.diag_embed(psi_j)), V_adj).reshape(
-            1, N, N
+            b, N, N
         )
         psi = torch.cat((psi, psi_j), axis=0)
 
     # computing final filter, need to double check this
     psi_J = hann_kernel(eigs - t[J - 1], J, R, eig_max)  # check this indexing
     psi_J = torch.matmul(torch.matmul(V, torch.diag_embed(psi_J)), V_adj).reshape(
-        1, N, N
+        b, N, N
     )
     psi = torch.cat((psi, psi_J), axis=0)
 
