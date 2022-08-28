@@ -5,9 +5,9 @@
 `gsxform` is an effort to provide readable, flexible and computationally efficient
 implementations of graph scattering transform algorithms.
 
-More explictly, this is a project started as to asist reserach into the effectiveness
+More explicitly, this is a project started as to assist research into the effectiveness
 of graph scattering transforms, and models constructed with these transforms as in
-contest with more conventional graph neural network approaches. 
+contest with more conventional graph neural network approaches.
 
 ## Licence 
 The original code of this repository is released under the

@@ -2,7 +2,7 @@
 
 `gsxform` is written without complex dependencies, it can be installed using `pip` or
 from source. Currently, `gsxform` has only been tested with Python3.9, previous versions
-of Python are not explictly supported. 
+of Python are not explicitly supported.
 
 ### Using `pip`
 
@@ -34,7 +34,7 @@ source scripts/setup.sh
 ```
 
 Please follow the [NumPy development
-workflow](https://numpy.org/doc/1.14/dev/gitwash/development_workflow.html) naming 
+workflow](https://numpy.org/doc/1.14/dev/gitwash/development_workflow.html) naming
 convention for pull requests. The test suite is run and the documentation site is
 published automatically on every push to the `main` branch via Github Actions
 
@@ -48,7 +48,7 @@ make tests
 ### Documentation
 
 
-To preview documentation lcoally, from the root project directory execute:
+To preview documentation locally, from the root project directory execute:
 ```bash
 make docs
 ```

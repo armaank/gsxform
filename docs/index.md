@@ -27,7 +27,7 @@ Behavior can potentially be unstable and consistency is not guaranteed.
 * make single-letter variables more clear
 * clean up readme, add additional formatting
 * clean up dependencies
-* spell chekc
+* spell check
 * change name to gisgraph?
 
 ## Installation
