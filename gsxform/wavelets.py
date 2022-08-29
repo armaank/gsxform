@@ -7,8 +7,6 @@ TODO:
         - could add checks
     - add references
 """
-from typing import Callable, Union
-
 import numpy as np
 import torch
 
@@ -144,7 +142,7 @@ def hann_wavelets(
     J: int,
     R: int,
     gamma: float,
-    warp: Union[Callable[[torch.Tensor], torch.Tensor], None] = None,
+    warp: bool,
 ) -> torch.Tensor:
     """compute tight hann wavelets
 
@@ -161,8 +159,8 @@ def hann_wavelets(
         scale factor used in eq. 9 of Shuman et. al
     gamma: float:
         maximum eigenvalue
-    warp: Union[Callable[[torch.Tensor], torch.Tensor], None], default=None
-        optional warping function
+    warp: bool:
+        optional adapt wavelets to spectrum
 
     Returns
     -------
@@ -173,15 +171,17 @@ def hann_wavelets(
     eigs = E
     # compute hermentian transpose of eigenvectors
     V_adj = V.adjoint()
-
-    eig_max = gamma  # might want to compute this here?
-
-    # scales based on uniform translates
-    t = torch.arange(1, J + 1) * eig_max / (J + 1 - R)
-
     # init wavelet matrix
     N = V.shape[2]
     b = V.shape[0]
+
+    eig_max = gamma  # might want to compute this here?
+    if warp:
+        eigs = torch.log(eigs)  # check numerical stability
+        eig_max = torch.log(eig_max)
+        power = torch.zeros((b, N))  # scaled by power spectra
+    # scales based on uniform translates
+    t = torch.arange(1, J + 1) * eig_max / (J + 1 - R)
 
     assert V.shape[1] == V.shape[2]
 
@@ -192,17 +192,26 @@ def hann_wavelets(
 
         # no warping, K is fixed to 1
         psi_j = hann_kernel(eigs - t[jj], J, R, eig_max)
+        if warp:
+            power += torch.abs(psi_j) ** 2
 
         psi_j = torch.matmul(torch.matmul(V, torch.diag_embed(psi_j)), V_adj).reshape(
             b, N, N
         )
         psi = torch.cat((psi, psi_j), axis=0)
-
+    if warp:
+        psi_J = R * 0.25 + R / 2 * 0.25 - power
+        psi_J = torch.sqrt(psi_J)
+        psi_J = torch.matmul(torch.matmul(V, torch.diag_embed(psi_J)), V_adj).reshape(
+            b, N, N
+        )
+        psi = torch.cat((psi_J, psi), axis=0)
     # computing final filter, need to double check this
-    psi_J = hann_kernel(eigs - t[J - 1], J, R, eig_max)  # check this indexing
-    psi_J = torch.matmul(torch.matmul(V, torch.diag_embed(psi_J)), V_adj).reshape(
-        b, N, N
-    )
-    psi = torch.cat((psi, psi_J), axis=0)
+    else:
+        psi_J = hann_kernel(eigs - t[J - 1], J, R, eig_max)  # check this indexing
+        psi_J = torch.matmul(torch.matmul(V, torch.diag_embed(psi_J)), V_adj).reshape(
+            b, N, N
+        )
+        psi = torch.cat((psi, psi_J), axis=0)
 
     return psi

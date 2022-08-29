@@ -28,7 +28,7 @@ def test_diffusion():  # type: ignore
             assert phi.shape[0:2] == torch.Size([16, 100])
 
 
-def test_tightann():  # type: ignore
+def test_tighthann():  # type: ignore
     """test scattering.TightHann class"""
 
     # input graph, 100 nodes, batch of 16
@@ -43,6 +43,36 @@ def test_tightann():  # type: ignore
             phi = txform(x)
             #
             assert phi.shape[0:2] == torch.Size([16, 100])
+
+
+def test_geometric():  # type: ignore
+    """test scattering.Geometric class"""
+
+    g = torch.rand((16, 1000, 1000))
+    x = torch.rand((16, 100, 1000))  # batch_size, n_features, n_nodes
+    W_adj = create_adj(g)
+
+    # testing variations:
+    for jj in [4, 5]:  # check constrains on 2 due to R, M
+        for ll in [2, 3, 4]:  # check constrain on 2 due to R and M
+            txform = scattering.Geometric(W_adj, jj, ll, 4)
+            phi = txform(x)
+    assert phi.shape[0:2] == torch.Size([16, 100])
+
+
+def test_warp():  # type: ignore
+    """test scattering.TightHann class w/ warping"""
+
+    # input graph, 100 nodes, batch of 16
+    g = torch.rand((16, 1000, 1000))
+    x = torch.rand((16, 100, 1000))  # batch_size, n_features, n_nodes
+    W_adj = create_adj(g)
+
+    # testing variations:
+    txform = scattering.TightHann(W_adj, 4, 3, warp=True)
+    phi = txform(x)
+    #
+    assert phi.shape[0:2] == torch.Size([16, 100])
 
 
 # def test_spline(): # type: ignore
