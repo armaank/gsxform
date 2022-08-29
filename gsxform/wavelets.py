@@ -178,6 +178,7 @@ def hann_wavelets(
     eig_max = gamma  # might want to compute this here?
     if warp:
         eigs = torch.log(eigs)  # check numerical stability
+        eigs[torch.isnan(eigs)] = -1e12  # infinity equals this number
         eig_max = torch.log(eig_max)
         power = torch.zeros((b, N))  # scaled by power spectra
     # scales based on uniform translates

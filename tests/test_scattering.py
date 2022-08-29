@@ -27,6 +27,8 @@ def test_diffusion():  # type: ignore
             #
             assert phi.shape[0:2] == torch.Size([16, 100])
 
+            assert not torch.isnan(phi).any()
+
 
 def test_tighthann():  # type: ignore
     """test scattering.TightHann class"""
@@ -41,8 +43,10 @@ def test_tighthann():  # type: ignore
         for ll in [2, 3, 4]:  # check constrain on 2 due to R and M
             txform = scattering.TightHann(W_adj, jj, ll)
             phi = txform(x)
-            #
+
             assert phi.shape[0:2] == torch.Size([16, 100])
+
+            assert not torch.isnan(phi).any()
 
 
 def test_geometric():  # type: ignore
@@ -57,6 +61,9 @@ def test_geometric():  # type: ignore
         for ll in [2, 3, 4]:  # check constrain on 2 due to R and M
             txform = scattering.Geometric(W_adj, jj, ll, 4)
             phi = txform(x)
+
+            assert not torch.isnan(phi).any()
+
     assert phi.shape[0:2] == torch.Size([16, 100])
 
 
@@ -71,8 +78,11 @@ def test_warp():  # type: ignore
     # testing variations:
     txform = scattering.TightHann(W_adj, 4, 3, warp=True)
     phi = txform(x)
+
     #
     assert phi.shape[0:2] == torch.Size([16, 100])
+
+    assert not torch.isnan(phi).any()
 
 
 # def test_spline(): # type: ignore
