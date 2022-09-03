@@ -7,17 +7,17 @@ from .graph import (
     normalize_laplacian,
 )
 from .kernel import hann_kernel, spline_kernel
-from .scattering import Diffusion, Geometric, TightHann
-from .wavelets import diffusion_wavelets, hann_wavelets, spline_wavelets
+from .scattering import Diffusion  # , Geometric, TightHann
+from .wavelets import diffusion_wavelets, spline_wavelets  # ,tighthann_wavelets
 
 __all__ = [
     "diffusion_wavelets",
     "spline_wavelets",
-    "hann_wavelets",
+    # "tighthann_wavelets",
     "Diffusion",
-    "Spline",
-    "TightHann",
-    "Geometric",
+    # "Spline",
+    # "TightHann",
+    # "Geometric",
     "hann_kernel",
     "spline_kernel",
     "adjacency_to_laplacian",

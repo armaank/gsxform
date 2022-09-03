@@ -14,8 +14,8 @@ from typing import Any
 import torch
 from torch import nn
 
-from .graph import compute_spectra, normalize_adjacency
-from .wavelets import diffusion_wavelets, hann_wavelets
+# from .graph import compute_spectra, normalize_adjacency
+from .wavelets import diffusion_wavelets
 
 
 class ScatteringTransform(nn.Module):  # type: ignore
@@ -53,8 +53,8 @@ class ScatteringTransform(nn.Module):  # type: ignore
         assert self.W_adj.shape[1] == self.W_adj.shape[2]
 
         # placeholders for wavelet and pooling operator
-        self.lowpass: torch.Tensor = None
-        self.psi: torch.Tensor = None
+        # self.lowpass: torch.Tensor = None
+        # self.psi: torch.Tensor = None
 
         # non linearity, make this an arg
         self.nlin = torch.abs
@@ -66,13 +66,13 @@ class ScatteringTransform(nn.Module):  # type: ignore
         return f"Graph scattering transform: {self.n_nodes} nodes, {self.J} scales,\
                 {self.L} layers"
 
-    def get_wavelets(self) -> None:
+    def get_wavelets(self) -> torch.Tensor:
         """Compute wavelet filterbank. Subclasses are required to
         implement this method"""
 
         raise NotImplementedError
 
-    def get_pooling(self) -> None:
+    def get_pooling(self) -> torch.Tensor:
         """Compute pooling operator. Subclasses are required to implement this method"""
 
         raise NotImplementedError
@@ -96,43 +96,50 @@ class ScatteringTransform(nn.Module):  # type: ignore
 
         n_features = x.shape[1]
 
-        lowpass = self.lowpass.reshape([batch_size, self.n_nodes, 1])
+        # lowpass = self.lowpass.reshape([batch_size, self.n_nodes, 1])
+        lowpass = self.get_lowpass()
+        psi = self.get_wavelets()
 
         # compute first scattering layer, low pass filter input
-        phi = torch.matmul(x, lowpass)
+        phi = torch.matmul(x, lowpass.unsqueeze(2))
 
         # reshape inputs for loop
-        S_x = x.reshape(batch_size, 1, n_features, self.n_nodes)
-        lowpass = lowpass.reshape(batch_size, 1, self.n_nodes, 1)
-        lowpass = torch.tile(
-            lowpass,
-            [
-                1,
-                self.J,
-                1,
-                1,
-            ],
-        )
-        psi = self.psi.reshape(batch_size, self.J, self.n_nodes, self.n_nodes)
+        # S_x = x.reshape(batch_size, 1, n_features, self.n_nodes)
+        # lowpass = lowpass.reshape(batch_size, 1, self.n_nodes, 1)
+        # lowpass = torch.tile(
+        #    lowpass,
+        #    [
+        #        1,
+        #        self.J,
+        #        1,
+        #        1,
+        #    ],
+        # )
+        # psi = self.psi.reshape(batch_size, self.J, self.n_nodes, self.n_nodes)
+        S_x = x.unsqueeze(1)
+        lowpass = lowpass.unsqueeze(1).unsqueeze(3).repeat(1, self.n_scales, 1, 1)
 
         for ll in range(1, self.L):
             S_x_ll = torch.empty([batch_size, 0, n_features, self.n_nodes])
             # layer_output = torch.empty([batch_size, 0, n_features, self.N])
             for jj in range(self.J ** (ll - 1)):
 
-                x_jj = S_x[:, jj, :, :]  # intermediate repr.
-                x_jj = x_jj.reshape(batch_size, 1, n_features, self.n_nodes)
+                x_jj = S_x[:, jj, :, :].unsqueeze(1)  # intermediate repr.
+                # x_jj = x_jj.reshape(batch_size, 1, n_features, self.n_nodes)
                 psi_x_jj = torch.matmul(x_jj, psi)  # wavelet filtering operation
+
                 S_x_jj = self.nlin(psi_x_jj)  # scattering output
                 S_x_ll = torch.cat(
                     (S_x_ll, S_x_jj), axis=1
                 )  # concat scattering scale for the layer
 
                 # compute scattering representation
-                phi_jj = torch.matmul(S_x_jj, lowpass)
+                phi_jj = torch.transpose(
+                    (torch.matmul(S_x_jj, lowpass).squeeze(3)), 2, 1
+                )
                 # store coefficients
-                phi_jj = phi_jj.squeeze(3)
-                phi_jj = phi_jj.permute(0, 2, 1)
+                # phi_jj = phi_jj.squeeze(3)
+                # phi_jj = phi_jj.permute(0, 2, 1)
                 phi = torch.cat((phi, phi_jj), axis=2)
 
             S_x = S_x_ll.clone()  # continue iteration through the layer
@@ -152,8 +159,8 @@ class Diffusion(ScatteringTransform):
         """
         super().__init__(W_adj, J, L)
 
-        self.psi = self.get_wavelets()
-        self.lowpass = self.get_lowpass()
+        # self.psi = self.get_wavelets()
+        # self.lowpass = self.get_lowpass()
 
         pass
 
@@ -166,12 +173,12 @@ class Diffusion(ScatteringTransform):
 
         """
 
-        W_norm = normalize_adjacency(self.W_adj)
+        # W_norm = normalize_adjacency(self.W_adj)
 
         # compute diffusion matrix
-        T = 1 / 2 * (torch.eye(self.n_nodes) + W_norm)
+        # T = 1 / 2 * (torch.eye(self.n_nodes) + W_norm)
         # compute wavelet operator
-        psi = diffusion_wavelets(T, self.J)
+        psi = diffusion_wavelets(self.W_adj, self.J)
 
         return psi
 
@@ -190,161 +197,161 @@ class Diffusion(ScatteringTransform):
         return lowpass
 
 
-class TightHann(ScatteringTransform):
-    """Tight Hann scattering transform class"""
+# class TightHann(ScatteringTransform):
+#     """Tight Hann scattering transform class"""
 
-    def __init__(
-        self,
-        W_adj: torch.Tensor,
-        J: int,
-        L: int,
-        R: int = 3,
-        warp: bool = False,
-        **kwargs: Any,
-    ) -> None:
-        """Initilize tight-hann scattering transform
+#     def __init__(
+#         self,
+#         W_adj: torch.Tensor,
+#         J: int,
+#         L: int,
+#         R: int = 3,
+#         warp: bool = False,
+#         **kwargs: Any,
+#     ) -> None:
+#         """Initilize tight-hann scattering transform
 
-        Parameters
-        ----------
+#         Parameters
+#         ----------
 
-        """
+#         """
 
-        super().__init__(W_adj, J, L)
-        self.R = R
-        self.warp = warp
-        self.psi = self.get_wavelets()
-        self.lowpass = self.get_lowpass()
+#         super().__init__(W_adj, J, L)
+#         self.R = R
+#         self.warp = warp
+#         self.psi = self.get_wavelets()
+#         self.lowpass = self.get_lowpass()
 
-        pass
+#         pass
 
-    def get_wavelets(self) -> torch.Tensor:
-        """subclass method used to get wavelet filter bank
-
-
-        Returns
-        -------
-
-        """
-
-        # compute gft
-        E, V = compute_spectra(self.W_adj)
-        eig_max = torch.max(torch.diagonal(E))
-
-        # compute wavelet operator w/o warping
-        psi = hann_wavelets(V, E, self.J, self.R, eig_max, self.warp)
-
-        return psi
-
-    def get_lowpass(self) -> torch.Tensor:
-        """subclass method used to get lowpass pooling operator
+#     def get_wavelets(self) -> torch.Tensor:
+#         """subclass method used to get wavelet filter bank
 
 
-        Returns
-        -------
+#         Returns
+#         -------
+
+#         """
+
+#         # compute gft
+#         E, V = compute_spectra(self.W_adj)
+#         eig_max = torch.max(torch.diagonal(E))
+
+#         # compute wavelet operator w/o warping
+#         psi = hann_wavelets(V, E, self.J, self.R, eig_max, self.warp)
+
+#         return psi
+
+#     def get_lowpass(self) -> torch.Tensor:
+#         """subclass method used to get lowpass pooling operator
 
 
-        """
-
-        # compute lowpass operator
-        lowpass = 1 / self.n_nodes * torch.ones(self.n_nodes)
-        # batched
-        batch_size = self.W_adj.shape[0]
-        lowpass = lowpass.unsqueeze(0).repeat(batch_size, 1, 1)
-
-        return lowpass
+#         Returns
+#         -------
 
 
-class Geometric(ScatteringTransform):
-    """Geometric Scattering. Overrides some base class functionality..."""
+#         """
 
-    def __init__(
-        self, W_adj: torch.Tensor, J: int, L: int, Q: int, **kwargs: Any
-    ) -> None:
-        """Initilize geometric scattering transform
+#         # compute lowpass operator
+#         lowpass = 1 / self.n_nodes * torch.ones(self.n_nodes)
+#         # batched
+#         batch_size = self.W_adj.shape[0]
+#         lowpass = lowpass.unsqueeze(0).repeat(batch_size, 1, 1)
 
-        Parameters
-        ----------
+#         return lowpass
 
-        """
-        super().__init__(W_adj, J, L)
 
-        self.psi = self.get_wavelets()
-        self.lowpass = None
-        self.Q = Q
+# class Geometric(ScatteringTransform):
+#     """Geometric Scattering. Overrides some base class functionality..."""
 
-        pass
+#     def __init__(
+#         self, W_adj: torch.Tensor, J: int, L: int, Q: int, **kwargs: Any
+#     ) -> None:
+#         """Initilize geometric scattering transform
 
-    def get_wavelets(self) -> torch.Tensor:
+#         Parameters
+#         ----------
 
-        # W_norm = normalize_adjacency(self.W_adj)
+#         """
+#         super().__init__(W_adj, J, L)
 
-        # compute diffusion matrix
-        # T = 1 / 2 * (torch.eye(self.n_nodes) + W_norm)
-        # build degree vector
-        d = self.W_adj.sum(1)
-        # normalize
-        D_invsqrt = torch.diag_embed(
-            1.0 / torch.sqrt(torch.max(torch.ones(d.size()), d))
-        )
-        P = (
-            1 / 2 * (torch.eye(self.n_nodes) + torch.matmul(self.W_adj, D_invsqrt))
-        )  # lazy walk tensor
-        # compute wavelet operator
-        psi = diffusion_wavelets(P, self.J)
+#         self.psi = self.get_wavelets()
+#         self.lowpass = None
+#         self.Q = Q
 
-        return psi
+#         pass
 
-    def get_moments(self, x: torch.Tensor) -> torch.Tensor:
+#     def get_wavelets(self) -> torch.Tensor:
 
-        Sx = torch.sum(x, axis=3)
-        Sx = torch.unsqueeze(Sx, 3)
-        for qq in range(2, self.Q + 1):
+#         # W_norm = normalize_adjacency(self.W_adj)
 
-            Q_qq = torch.sum(x**qq, axis=3)
-            Q_qq = torch.unsqueeze(Q_qq, axis=3)
-            Sx = torch.concat((Sx, Q_qq), axis=3)
+#         # compute diffusion matrix
+#         # T = 1 / 2 * (torch.eye(self.n_nodes) + W_norm)
+#         # build degree vector
+#         d = self.W_adj.sum(1)
+#         # normalize
+#         D_invsqrt = torch.diag_embed(
+#             1.0 / torch.sqrt(torch.max(torch.ones(d.size()), d))
+#         )
+#         P = (
+#             1 / 2 * (torch.eye(self.n_nodes) + torch.matmul(self.W_adj, D_invsqrt))
+#         )  # lazy walk tensor
+#         # compute wavelet operator
+#         psi = diffusion_wavelets(P, self.J)
 
-        return Sx
+#         return psi
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """overrides parent method"""
-        batch_size = x.shape[0]
+#     def get_moments(self, x: torch.Tensor) -> torch.Tensor:
 
-        n_features = x.shape[1]
+#         Sx = torch.sum(x, axis=3)
+#         Sx = torch.unsqueeze(Sx, 3)
+#         for qq in range(2, self.Q + 1):
 
-        # lowpass = self.lowpass.reshape([batch_size, self.n_nodes, 1])
+#             Q_qq = torch.sum(x**qq, axis=3)
+#             Q_qq = torch.unsqueeze(Q_qq, axis=3)
+#             Sx = torch.concat((Sx, Q_qq), axis=3)
 
-        # compute first scattering layer, low pass filter input
-        phi = self.get_moments(torch.unsqueeze(x, 1))
-        phi = torch.squeeze(phi, 1)
-        # reshape inputs for loop
-        S_x = x.reshape(batch_size, 1, n_features, self.n_nodes)
-        psi = self.psi.reshape(batch_size, self.J, self.n_nodes, self.n_nodes)
+#         return Sx
 
-        for ll in range(1, self.L):
-            S_x_ll = torch.empty([batch_size, 0, n_features, self.n_nodes])
-            # layer_output = torch.empty([batch_size, 0, n_features, self.N])
-            for jj in range(self.J ** (ll - 1)):
-                x_jj = S_x[:, jj, :, :]  # intermediate repr.
-                x_jj = x_jj.reshape(batch_size, 1, n_features, self.n_nodes)
-                psi_x_jj = torch.matmul(x_jj, psi)  # wavelet filtering operation
-                S_x_jj = self.nlin(psi_x_jj)  # scattering output
+#     def forward(self, x: torch.Tensor) -> torch.Tensor:
+#         """overrides parent method"""
+#         batch_size = x.shape[0]
 
-                S_x_ll = torch.cat(
-                    (S_x_ll, S_x_jj), axis=1
-                )  # concat scattering scale for the layer
+#         n_features = x.shape[1]
 
-                # compute scattering representation
-                phi_jj = self.get_moments(S_x_jj)
-                # store coefficients
-                # phi_jj = phi_jj.squeeze(3)
-                phi_jj = phi_jj.permute(0, 2, 1, 3)
-                phi_jj = phi_jj.reshape(batch_size, n_features, self.J * self.Q)
-                phi = torch.cat((phi, phi_jj), axis=2)
+#         # lowpass = self.lowpass.reshape([batch_size, self.n_nodes, 1])
 
-            S_x = S_x_ll.clone()  # continue iteration through the layer
+#         # compute first scattering layer, low pass filter input
+#         phi = self.get_moments(torch.unsqueeze(x, 1))
+#         phi = torch.squeeze(phi, 1)
+#         # reshape inputs for loop
+#         S_x = x.reshape(batch_size, 1, n_features, self.n_nodes)
+#         psi = self.psi.reshape(batch_size, self.J, self.n_nodes, self.n_nodes)
 
-        return phi
+#         for ll in range(1, self.L):
+#             S_x_ll = torch.empty([batch_size, 0, n_features, self.n_nodes])
+#             # layer_output = torch.empty([batch_size, 0, n_features, self.N])
+#             for jj in range(self.J ** (ll - 1)):
+#                 x_jj = S_x[:, jj, :, :]  # intermediate repr.
+#                 x_jj = x_jj.reshape(batch_size, 1, n_features, self.n_nodes)
+#                 psi_x_jj = torch.matmul(x_jj, psi)  # wavelet filtering operation
+#                 S_x_jj = self.nlin(psi_x_jj)  # scattering output
+
+#                 S_x_ll = torch.cat(
+#                     (S_x_ll, S_x_jj), axis=1
+#                 )  # concat scattering scale for the layer
+
+#                 # compute scattering representation
+#                 phi_jj = self.get_moments(S_x_jj)
+#                 # store coefficients
+#                 # phi_jj = phi_jj.squeeze(3)
+#                 phi_jj = phi_jj.permute(0, 2, 1, 3)
+#                 phi_jj = phi_jj.reshape(batch_size, n_features, self.J * self.Q)
+#                 phi = torch.cat((phi, phi_jj), axis=2)
+
+#             S_x = S_x_ll.clone()  # continue iteration through the layer
+
+#         return phi
 
 
 # class Spline(ScatteringTransform):
