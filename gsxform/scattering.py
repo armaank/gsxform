@@ -33,7 +33,7 @@ class ScatteringTransform(nn.Module):  # type: ignore
         W_adj: torch.Tensor,
         n_scales: int,
         n_layers: int,
-        nlin: Callable[[torch.Tensor], torch.Tensor],
+        nlin: Callable[[torch.Tensor], torch.Tensor] = torch.abs,
         **kwargs: Any
     ) -> None:
         """Initialize scattering transform base class
@@ -163,7 +163,7 @@ class Diffusion(ScatteringTransform):
         W_adj: torch.Tensor,
         n_scales: int,
         n_layers: int,
-        nlin: Callable[[torch.Tensor], torch.Tensor],
+        nlin: Callable[[torch.Tensor], torch.Tensor] = torch.abs,
     ) -> None:
         """Initialize diffusion scattering transform
 
