@@ -6,43 +6,40 @@ TODO:
         - get_kernel, matmul, append pattern
         - could add checks
     - add references
+    - single variable names
 """
 import torch
+from einops import rearrange
 
 
-def diffusion_wavelets(W: torch.Tensor, n_scales: int) -> torch.Tensor:
+def diffusion_wavelets(T: torch.Tensor, n_scales: int) -> torch.Tensor:
+    """Compute diffusion wavelet filter bank
 
-    n_nodes = W.shape[1]
+    Computes diffusion wavelets from inputs. ADD DOCS, references
 
-    diag = W.sum(1)
-    dhalf = torch.diag_embed(1.0 / torch.sqrt(torch.max(torch.ones(diag.size()), diag)))
-    # L = torch.diag_embed(W.sum(1)) - W
-    W_norm = dhalf.matmul(W).matmul(dhalf)
-    print(W_norm.shape)
-    print(torch.eye(n_nodes).shape)
-    T = 1 / 2 * (torch.eye(n_nodes) + W_norm)
+    Parameters
+    ----------
+    T: torch.Tensor
+        Input diffusion matrix computed from adjacency matrix
+    n_scales: int
+        Number of scales to use in wavelet transform
+    """
 
-    # number of nodes
-    N = T.shape[1]  # batch in first layer, might need to change this?
-    print(N)
-    I_N = torch.eye(N)
+    # make n_node x n_node identity matrix
+    I_N = torch.eye(T.shape[1])
 
     # compute zero-eth order (J=0) wavelet filter
     # one half the normalized laplacian operator 1/2(I-D^-1/2WD^-1/2)
-    psi_0 = I_N - T
-
-    # reshape for loop
-    # changed to batch size, ....
-    b = T.shape[0]
-    psi = psi_0.reshape(b, N, N)
+    psi = I_N - T
 
     for jj in range(1, n_scales):
         # compute jth diffusion operator (wavelet kernel)
         T_j = torch.matrix_power(T, 2 ** (jj - 1))
-        # compute jth wavelet filter
-        psi_j = torch.matmul(T_j, (I_N - T_j))
+        # compute jth wavelet filter via matmul
+        psi_j = torch.einsum("b n m, b n m -> b n m", T_j, (I_N - T_j))
         # append wavelets
-        psi = torch.cat((psi, psi_j.reshape(b, N, N)), axis=0)
+        psi = torch.cat((psi, psi_j), axis=0)
 
-    psi = psi.reshape(int(psi.shape[0] / n_scales), n_scales, n_nodes, n_nodes)
+    psi = rearrange(psi, "(b ns) ni nj -> b ns ni nj", ns=n_scales)
+
     return psi

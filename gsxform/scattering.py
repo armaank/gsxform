@@ -15,7 +15,7 @@ import torch
 from einops import rearrange, reduce, repeat
 from torch import nn
 
-# from .graph import compute_spectra, normalize_adjacency
+from .graph import normalize_adjacency
 from .wavelets import diffusion_wavelets
 
 
@@ -102,8 +102,6 @@ class ScatteringTransform(nn.Module):  # type: ignore
         lowpass = self.get_lowpass()
         psi = self.get_wavelets()
 
-        print(f"psi {psi.shape}")
-
         # compute first scattering layer, low pass filter via matmul
         # p = 1, padding dimension
         phi = torch.einsum("b f n, b n p -> b f p", x, lowpass)
@@ -185,12 +183,12 @@ class Diffusion(ScatteringTransform):
 
         """
 
-        # W_norm = normalize_adjacency(self.W_adj)
+        W_norm = normalize_adjacency(self.W_adj)
 
         # compute diffusion matrix
-        # T = 1 / 2 * (torch.eye(self.n_nodes) + W_norm)
+        T = 1 / 2 * (torch.eye(self.n_nodes) + W_norm)
         # compute wavelet operator
-        psi = diffusion_wavelets(self.W_adj, self.n_scales)
+        psi = diffusion_wavelets(T, self.n_scales)
 
         return psi
 
@@ -204,11 +202,10 @@ class Diffusion(ScatteringTransform):
 
         """
 
-        # compute degree vector. n_i and n_j are equivalent, subscripts are used
-        # to disambiguate
-        d = reduce(self.W_adj, "b n_i n_j -> b n_i ", "sum")
+        # compute degree vector. ni and nj are equivalent, used to disambiguate
+        d = reduce(self.W_adj, "b ni nj -> b ni", "sum")
         # normalize
         lowpass = d / torch.norm(d, 1)
-        lowpass = rearrange(lowpass, "b n_i -> b n_i 1")
+        lowpass = rearrange(lowpass, "b ni -> b ni 1")
 
         return lowpass
