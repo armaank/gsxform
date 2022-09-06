@@ -12,7 +12,7 @@ TODO:
 from typing import Any, Callable
 
 import torch
-from einops import rearrange, reduce
+from einops import rearrange, reduce, repeat
 from torch import nn
 
 # from .graph import compute_spectra, normalize_adjacency
@@ -34,7 +34,7 @@ class ScatteringTransform(nn.Module):  # type: ignore
         n_scales: int,
         n_layers: int,
         nlin: Callable[[torch.Tensor], torch.Tensor] = torch.abs,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> None:
         """Initialize scattering transform base class
 
@@ -99,50 +99,42 @@ class ScatteringTransform(nn.Module):  # type: ignore
 
         n_features = x.shape[1]
 
-        # lowpass = self.lowpass.reshape([batch_size, self.n_nodes, 1])
         lowpass = self.get_lowpass()
         psi = self.get_wavelets()
 
-        # compute first scattering layer, low pass filter input
-        phi = torch.matmul(x, lowpass.unsqueeze(2))
+        print(f"psi {psi.shape}")
+
+        # compute first scattering layer, low pass filter via matmul
+        # p = 1, padding dimension
+        phi = torch.einsum("b f n, b n p -> b f p", x, lowpass)
 
         # reshape inputs for loop
-        # S_x = x.reshape(batch_size, 1, n_features, self.n_nodes)
-        # lowpass = lowpass.reshape(batch_size, 1, self.n_nodes, 1)
-        # lowpass = torch.tile(
-        #    lowpass,
-        #    [
-        #        1,
-        #        self.J,
-        #        1,
-        #        1,
-        #    ],
-        # )
-        # psi = self.psi.reshape(batch_size, self.J, self.n_nodes, self.n_nodes)
-        S_x = x.unsqueeze(1)
-        lowpass = lowpass.unsqueeze(1).unsqueeze(3).repeat(1, self.n_scales, 1, 1)
+        S_x = rearrange(x, "b f n -> b 1 f n")
+        lowpass = rearrange(lowpass, "b n 1 -> b 1 n 1")
+        lowpass = repeat(lowpass, "b 1 n 1 -> b (1 ns) n 1", ns=self.n_scales)
 
         for ll in range(1, self.n_layers):
+
             S_x_ll = torch.empty([batch_size, 0, n_features, self.n_nodes])
-            # layer_output = torch.empty([batch_size, 0, n_features, self.N])
+
             for jj in range(self.n_scales ** (ll - 1)):
 
-                x_jj = S_x[:, jj, :, :].unsqueeze(1)  # intermediate repr.
-                # x_jj = x_jj.reshape(batch_size, 1, n_features, self.n_nodes)
-                psi_x_jj = torch.matmul(x_jj, psi)  # wavelet filtering operation
+                # intermediate repr
+                x_jj = rearrange(S_x[:, jj, :, :], "b f n -> b 1 f n")
 
-                S_x_jj = self.nlin(psi_x_jj)  # scattering output
-                S_x_ll = torch.cat(
-                    (S_x_ll, S_x_jj), axis=1
-                )  # concat scattering scale for the layer
+                # wavelet filtering operation, matrix multiply
+                psi_x_jj = torch.einsum("b p f n, b l n n -> b l f n", x_jj, psi)
 
-                # compute scattering representation
-                phi_jj = torch.transpose(
-                    (torch.matmul(S_x_jj, lowpass).squeeze(3)), 2, 1
-                )
-                # store coefficients
-                # phi_jj = phi_jj.squeeze(3)
-                # phi_jj = phi_jj.permute(0, 2, 1)
+                # application of non-linearity, yields scattering output
+                S_x_jj = self.nlin(psi_x_jj)
+
+                # concat scattering scale for the layer
+                S_x_ll = torch.cat((S_x_ll, S_x_jj), axis=1)
+
+                # compute scattering representation, matrix multiply
+                phi_jj = torch.einsum("b l f n, b l n p -> b l f p", S_x_jj, lowpass)
+                phi_jj = rearrange(phi_jj, "b l f 1 -> b f l")
+
                 phi = torch.cat((phi, phi_jj), axis=2)
 
             S_x = S_x_ll.clone()  # continue iteration through the layer
@@ -212,7 +204,8 @@ class Diffusion(ScatteringTransform):
 
         """
 
-        # compute degree vector
+        # compute degree vector. n_i and n_j are equivalent, subscripts are used
+        # to disambiguate
         d = reduce(self.W_adj, "b n_i n_j -> b n_i ", "sum")
         # normalize
         lowpass = d / torch.norm(d, 1)
