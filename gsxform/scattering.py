@@ -9,9 +9,10 @@ TODO:
     - pass wavelet parameters via kwargs/args
     - add docs
 """
-from typing import Any
+from typing import Any, Callable
 
 import torch
+from einops import rearrange, reduce
 from torch import nn
 
 # from .graph import compute_spectra, normalize_adjacency
@@ -19,15 +20,26 @@ from .wavelets import diffusion_wavelets
 
 
 class ScatteringTransform(nn.Module):  # type: ignore
-    """ScatteringTransform base class. Inherets from PyTorch nn.Module"""
+    """ScatteringTransform base class. Inherits from PyTorch nn.Module
+
+    This class implements the base logic to compute graph scattering
+    transforms with an arbitrary pooling and wavelet transform
+    operators.
+
+    """
 
     def __init__(
-        self, W_adj: torch.Tensor, n_scales: int, n_layers: int, **kwargs: Any
+        self,
+        W_adj: torch.Tensor,
+        n_scales: int,
+        n_layers: int,
+        nlin: Callable[[torch.Tensor], torch.Tensor],
+        **kwargs: Any
     ) -> None:
-        """Initilize scattering transform base class
+        """Initialize scattering transform base class
 
         This is a base class, and implements only the logic to compute
-        an arbitrary scattering transform. the methods `get_wavelets` and
+        an arbitrary scattering transform. The methods `get_wavelets` and
         `get_pooling` must be implemented by subclasses.
 
         Parameters
@@ -38,6 +50,8 @@ class ScatteringTransform(nn.Module):  # type: ignore
             Number of scales to use in wavelet transform
         n_layers: int
             Number of layers in the scattering transform
+        nlin: Callable
+            Non-linearity used in the scattering transform. Defaults to torch.abs
         **kwargs: Any
             Additional keyword arguments
         """
@@ -50,31 +64,18 @@ class ScatteringTransform(nn.Module):  # type: ignore
         # number of layers
         self.n_layers = n_layers
 
-        # TODO: check this, might be batched
         self.n_nodes = self.W_adj.shape[1]
         assert self.W_adj.shape[1] == self.W_adj.shape[2]
 
-        # placeholders for wavelet and pooling operator
-        # self.lowpass: torch.Tensor = None
-        # self.psi: torch.Tensor = None
-
-        # non linearity, make this an arg
-        self.nlin = torch.abs
-
-    def extra_repr(self) -> str:
-        return f"gsxform(N={self.n_nodes}, J={self.n_scales}, L={self.n_layers}"
-
-    def __str__(self) -> str:
-        return f"Graph scattering transform: {self.n_nodes} nodes, {self.n_scales} scales,\
-                {self.n_layers} layers"
+        self.nlin = nlin
 
     def get_wavelets(self) -> torch.Tensor:
-        """Compute wavelet filterbank. Subclasses are required to
+        """Compute wavelet operator. Subclasses are required to
         implement this method"""
 
         raise NotImplementedError
 
-    def get_pooling(self) -> torch.Tensor:
+    def get_lowpass(self) -> torch.Tensor:
         """Compute pooling operator. Subclasses are required to implement this method"""
 
         raise NotImplementedError
@@ -150,30 +151,45 @@ class ScatteringTransform(nn.Module):  # type: ignore
 
 
 class Diffusion(ScatteringTransform):
-    """Diffusion scattering transform."""
+    """Diffusion scattering transform.
+
+    Subclass of `ScatteringTransform, implements `get_wavelets` and `get_lowpass`
+    methods.
+
+    """
 
     def __init__(
-        self, W_adj: torch.Tensor, n_scales: int, n_layers: int, **kwargs: Any
+        self,
+        W_adj: torch.Tensor,
+        n_scales: int,
+        n_layers: int,
+        nlin: Callable[[torch.Tensor], torch.Tensor],
     ) -> None:
-        """Initilize diffusion scattering transform
+        """Initialize diffusion scattering transform
 
         Parameters
         ----------
+        W_adj: torch.Tensor
+            Weighted adjacency matrix
+        n_scales: int
+            Number of scales to use in wavelet transform
+        n_layers: int
+            Number of layers in the scattering transform
+        nlin: Callable[torch.Tensor]
+            Non-linearity used in the scattering transform. Defaults to torch.abs
 
         """
-        super().__init__(W_adj, n_scales, n_layers)
-
-        # self.psi = self.get_wavelets()
-        # self.lowpass = self.get_lowpass()
-
-        pass
+        super().__init__(W_adj, n_scales, n_layers, nlin)
 
     def get_wavelets(self) -> torch.Tensor:
-        """subclass method used to get wavelet filter bank
+        """Subclass method used to get wavelet filter bank
 
+        This method returns diffusion wavelets
 
         Returns
         -------
+        psi: torch.Tensor
+            diffusion wavelet operator
 
         """
 
@@ -191,11 +207,15 @@ class Diffusion(ScatteringTransform):
 
         Returns
         -------
+        lowpass: torch.Tensor
+            lowpass pooling operator
 
         """
 
-        # compute lowpass operator
-        d = self.W_adj.sum(1)
+        # compute degree vector
+        d = reduce(self.W_adj, "b n_i n_j -> b n_i ", "sum")
+        # normalize
         lowpass = d / torch.norm(d, 1)
+        lowpass = rearrange(lowpass, "b n_i -> b n_i 1")
 
         return lowpass
