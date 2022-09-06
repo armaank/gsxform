@@ -2,7 +2,6 @@
 
 ::: gsxform.wavelets.diffusion_wavelets
 
-::: gsxform.wavelets.spline_wavelets
+<!-- ::: gsxform.wavelets.spline_wavelets -->
 
-::: gsxform.wavelets.hann_wavelets
-   
+<!-- >::: gsxform.wavelets.hann_wavelets -->
