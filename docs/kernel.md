@@ -1,5 +1,4 @@
 # Graph kernel functions API documentation
 
-::: gsxform.kernel.hann_kernel
+::: gsxform.kernel.TightHannKernel
 
-::: gsxform.kernel.spline_kernel

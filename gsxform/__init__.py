@@ -6,7 +6,8 @@ from .graph import (
     normalize_adjacency,
     normalize_laplacian,
 )
-from .kernel import hann_kernel, spline_kernel
+
+# from .kernel import spline_kernel #, hann_kernel
 from .scattering import Diffusion  # , Geometric, TightHann
 from .wavelets import diffusion_wavelets  # spline_wavelets  ,tighthann_wavelets
 
@@ -18,8 +19,8 @@ __all__ = [
     # "Spline",
     # "TightHann",
     # "Geometric",
-    "hann_kernel",
-    "spline_kernel",
+    # "hann_kernel",
+    # "spline_kernel",
     "adjacency_to_laplacian",
     "normalize_adjacency",
     "normalize_laplacian",

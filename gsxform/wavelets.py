@@ -8,8 +8,12 @@ TODO:
     - add references
     - single variable names
 """
+
 import torch
 from einops import rearrange
+
+from .graph import compute_spectra
+from .kernel import TightHannKernel
 
 
 def diffusion_wavelets(T: torch.Tensor, n_scales: int) -> torch.Tensor:
@@ -42,4 +46,29 @@ def diffusion_wavelets(T: torch.Tensor, n_scales: int) -> torch.Tensor:
 
     psi = rearrange(psi, "(b ns) ni nj -> b ns ni nj", ns=n_scales)
 
+    return psi
+
+
+def tighthann_wavelets(
+    W_adj: torch.Tensor, n_scales: int, kernel: TightHannKernel
+) -> torch.Tensor:
+    """Computes spectrum adapted tight hann wavelets"""
+    E, V = compute_spectra(W_adj)
+
+    V_herm = rearrange(V, "b ni nj -> b nj ni")  # hermetian transpose
+
+    # compute wavelet coeffs
+    # check loop bounds, iterators...
+    psi = torch.zeros_like(V)
+
+    for jj in range(1, n_scales):
+
+        # compute kernel, check notation here...
+        phi = torch.diag_embed(kernel.adapted_kernels(E, jj))
+        # compute jth wavelet filter via matmul
+        psi_j = torch.einsum("b n m, b n m, b n m -> b n m", V, phi, V_herm)
+        # append wavelets
+        psi = torch.cat((psi, psi_j), axis=0)
+
+    psi = rearrange(psi, "(b ns) ni nj -> b ns ni nj", ns=n_scales)
     return psi

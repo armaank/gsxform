@@ -11,12 +11,15 @@ TODO:
 """
 from typing import Any, Callable
 
+# import numpy as np
 import torch
 from einops import rearrange, reduce, repeat
+from scipy.interpolate import interp1d
 from torch import nn
 
-from .graph import normalize_adjacency
-from .wavelets import diffusion_wavelets
+from .graph import compute_spectra, normalize_adjacency
+from .kernel import TightHannKernel
+from .wavelets import diffusion_wavelets, tighthann_wavelets
 
 
 class ScatteringTransform(nn.Module):  # type: ignore
@@ -143,7 +146,7 @@ class ScatteringTransform(nn.Module):  # type: ignore
 class Diffusion(ScatteringTransform):
     """Diffusion scattering transform.
 
-    Subclass of `ScatteringTransform, implements `get_wavelets` and `get_lowpass`
+    Subclass of `ScatteringTransform`, implements `get_wavelets` and `get_lowpass`
     methods.
 
     """
@@ -209,3 +212,97 @@ class Diffusion(ScatteringTransform):
         lowpass = rearrange(lowpass, "b ni -> b ni 1")
 
         return lowpass
+
+
+class TightHann(ScatteringTransform):
+    """TightHann scattering transform.
+
+    Subclass of `ScatteringTransform`, implements `get_wavelets` and `get_lowpass`
+    methods.
+
+    """
+
+    def __init__(
+        self,
+        W_adj: torch.Tensor,
+        n_scales: int,
+        n_layers: int,
+        nlin: Callable[[torch.Tensor], torch.Tensor] = torch.abs,
+    ) -> None:
+        """Initialize diffusion scattering transform
+
+        Parameters
+        ----------
+        W_adj: torch.Tensor
+            Weighted adjacency matrix
+        n_scales: int
+            Number of scales to use in wavelet transform
+        n_layers: int
+            Number of layers in the scattering transform
+        nlin: Callable[torch.Tensor]
+            Non-linearity used in the scattering transform. Defaults to torch.abs
+
+        """
+        super().__init__(W_adj, n_scales, n_layers, nlin)
+
+        self.warp_func = self.warp_func()  # type: ignore
+
+    def warp_func(self, use: bool = True) -> torch.Tensor:
+        """Implements spectrum-adaptive warping function"""
+
+        E, V = compute_spectra(self.W_adj)
+        self.spectra, _ = torch.sort(E.reshape(-1))  # change this
+        self.max_eig = self.spectra.max()
+
+        cdf_ = torch.arange(0, len(self.spectra)) / (len(self.spectra) - 1.0)
+        intvl = int(len(self.spectra) / 5 - 1)
+
+        if use:
+            return interp1d(
+                self.spectra[0::intvl], cdf_[0::intvl], fill_value="extrapolate"
+            )
+        else:
+            return interp1d(self.spectrum, cdf_, fill_value="extrapolate")
+
+    def get_kernel(self) -> TightHannKernel:
+        """compute TightHann kernel adaptively"""
+
+        omega = lambda eig: torch.tensor(self.warp_func(eig.numpy()))
+
+        return TightHannKernel(self.n_scales, self.max_eig, omega)
+
+    def get_wavelets(self) -> torch.Tensor:
+        """Subclass method used to get wavelet filter bank
+
+        This method returns diffusion wavelets
+
+        Returns
+        -------
+        psi: torch.Tensor
+            diffusion wavelet operator
+
+        """
+
+        # compute wavelet operator
+        psi = tighthann_wavelets(self.W_adj, self.n_scales, self.get_kernel())
+
+        return psi
+
+    def get_lowpass(self) -> torch.Tensor:
+        """subclass method used to get lowpass pooling operator
+
+        TODO: check if this can be added to the base class, might not need this...
+
+        Returns
+        -------
+        lowpass: torch.Tensor
+            lowpass pooling operator
+
+        """
+
+        mu = (1 / self.W_adj.shape[1]) * torch.ones(
+            self.W_adj.shape[0], self.W_adj.shape[1]
+        )  # , device=self.device)
+        mu = rearrange(mu, "b ni -> b ni 1")  # added this ...
+
+        return mu

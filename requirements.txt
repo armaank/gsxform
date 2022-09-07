@@ -72,6 +72,7 @@ PyYAML==5.4.1
 pyyaml_env_tag==0.1
 pyzmq==23.2.0
 schema==0.7.5
+scipy==1.9.1
 setuptools==61.2.0
 six==1.16.0
 smmap==5.0.0
