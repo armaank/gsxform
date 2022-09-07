@@ -2,4 +2,4 @@
 
 ::: gsxform.wavelets.diffusion_wavelets
 
-::: gsxform.wavelets.hann_wavelets
+::: gsxform.wavelets.tighthann_wavelets
