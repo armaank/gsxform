@@ -27,6 +27,11 @@ def diffusion_wavelets(T: torch.Tensor, n_scales: int) -> torch.Tensor:
         Input diffusion matrix computed from adjacency matrix
     n_scales: int
         Number of scales to use in wavelet transform
+
+    Returns
+    -------
+    phi: torch.Tensor
+        wavelet filter bank
     """
 
     # make n_node x n_node identity matrix
@@ -52,7 +57,23 @@ def diffusion_wavelets(T: torch.Tensor, n_scales: int) -> torch.Tensor:
 def tighthann_wavelets(
     W_adj: torch.Tensor, n_scales: int, kernel: TightHannKernel
 ) -> torch.Tensor:
-    """Computes spectrum adapted tight hann wavelets"""
+    """Computes spectrum adapted tight Hann wavelets.
+
+    Parameters
+    ----------
+    W_adj: torch.Tensor
+        Input batch of adjacency matricies
+    n_scales: int
+        Number of scales to use in wavelet transform
+    kernel: TightHannKernel
+        Adaptive kernel used in wavelet transform.
+
+    Returns
+    -------
+    psi: torch.Tensor
+        wavelet filter bank
+
+    """
     E, V = compute_spectra(W_adj)
 
     V_herm = rearrange(V, "b ni nj -> b nj ni")  # hermetian transpose

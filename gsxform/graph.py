@@ -1,9 +1,4 @@
 """graph utility functions.
-
-Note: diag(L) == W.sum(1)
-
-TODO:
-    - write unit tests
 """
 
 from typing import Tuple
@@ -12,7 +7,7 @@ import torch
 
 
 def adjacency_to_laplacian(W: torch.Tensor) -> torch.Tensor:
-    """Convert adjacency matrix into the graph Laplacian.
+    """Convert a adjacency matrix into the graph Laplacian.
 
     Parameters
     ----------
@@ -31,7 +26,7 @@ def adjacency_to_laplacian(W: torch.Tensor) -> torch.Tensor:
 
 
 def normalize_adjacency(W: torch.Tensor) -> torch.Tensor:
-    """Normalize the adjacency matrix.
+    """Normalize a adjacency matrix.
 
     Parameters
     ----------
@@ -54,7 +49,7 @@ def normalize_adjacency(W: torch.Tensor) -> torch.Tensor:
 
 
 def normalize_laplacian(L: torch.Tensor) -> torch.Tensor:
-    """Normalize the graph Laplacian.
+    """Normalize a graph Laplacian.
 
     Parameters
     ----------
@@ -80,7 +75,10 @@ def normalize_laplacian(L: torch.Tensor) -> torch.Tensor:
 def compute_spectra(W: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
     """Compute spectra of graph Laplacian from its adjacency matrix.
 
-    TODO: double check if UPLO should be L, or R
+    Performs an eigendecomposition (w/o assuming additional structure)
+    using torch.linalg.eigh (previously used torch.symeig) on a normalized
+    graph laplacian. Converts from the adjacency matrix to the laplacian
+    internally.
 
     Parameters
     ----------
@@ -97,7 +95,6 @@ def compute_spectra(W: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
     # normalize laplacian
     L_norm = normalize_laplacian(L)
     # perform eigen decomp
-    # depreciated: E, V = torch.symeig(L_norm, eigenvectors=True)
     # come out in ascending order,
     E, V = torch.linalg.eigh(L_norm, UPLO="L")
 

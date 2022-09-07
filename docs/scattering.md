@@ -4,4 +4,4 @@
 
 ::: gsxform.scattering.Diffusion
 
-<!-- ::: gsxform.scattering.TightHann -->
+::: gsxform.scattering.TightHann

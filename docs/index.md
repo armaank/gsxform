@@ -14,21 +14,21 @@ to allow for GPU based computation.
 Using PyTorch, `gsxform` offers the ability to more
 easily build models that use both scattering transform and neural network components.
  
-`gsxform` is first and foremost a research project and is being continuously refined.
-Behavior can potentially be unstable and consistency is not guaranteed.
+!!! warning inline
+
+   `gsxform` is first and foremost a research project and is being continuously refined.
+    Behavior can potentially be unstable and consistency is not guaranteed.
 
 ## TODO
 
 * add release management (long term)
 * add more tests
-* un-lock repo 
+* un-lock repo
 * add examples with data to test things out
 * update docs
-* make single-letter variables more clear
 * clean up readme, add additional formatting
 * clean up dependencies
 * spell check
-* change name to gisgraph?
 
 ## Installation
 
