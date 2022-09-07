@@ -228,6 +228,7 @@ class TightHann(ScatteringTransform):
         n_scales: int,
         n_layers: int,
         nlin: Callable[[torch.Tensor], torch.Tensor] = torch.abs,
+        use_warp: bool = True,
     ) -> None:
         """Initialize diffusion scattering transform
 
@@ -241,33 +242,35 @@ class TightHann(ScatteringTransform):
             Number of layers in the scattering transform
         nlin: Callable[torch.Tensor]
             Non-linearity used in the scattering transform. Defaults to torch.abs
+        use_warp: bool
+            Use warping function. Defaults to True
 
         """
         super().__init__(W_adj, n_scales, n_layers, nlin)
+        self.use_warp = use_warp
+        self.warp = self.warp_func()
 
-        self.warp_func = self.warp_func()  # type: ignore
-
-    def warp_func(self, use: bool = True) -> torch.Tensor:
+    def warp_func(self) -> torch.Tensor:
         """Implements spectrum-adaptive warping function"""
 
         E, V = compute_spectra(self.W_adj)
         self.spectra, _ = torch.sort(E.reshape(-1))  # change this
         self.max_eig = self.spectra.max()
 
-        cdf_ = torch.arange(0, len(self.spectra)) / (len(self.spectra) - 1.0)
-        intvl = int(len(self.spectra) / 5 - 1)
+        cdf = torch.arange(0, len(self.spectra)) / (len(self.spectra) - 1.0)
+        step = int(len(self.spectra) / 5 - 1)
 
-        if use:
+        if self.use_warp:
             return interp1d(
-                self.spectra[0::intvl], cdf_[0::intvl], fill_value="extrapolate"
+                self.spectra[0::step], cdf[0::step], fill_value="extrapolate"
             )
         else:
-            return interp1d(self.spectrum, cdf_, fill_value="extrapolate")
+            return interp1d(self.spectrum, cdf, fill_value="extrapolate")
 
     def get_kernel(self) -> TightHannKernel:
         """compute TightHann kernel adaptively"""
 
-        omega = lambda eig: torch.tensor(self.warp_func(eig.numpy()))
+        omega = lambda eig: torch.tensor(self.warp(eig.numpy()))
 
         return TightHannKernel(self.n_scales, self.max_eig, omega)
 
@@ -300,9 +303,9 @@ class TightHann(ScatteringTransform):
 
         """
 
-        mu = (1 / self.W_adj.shape[1]) * torch.ones(
+        lowpass = (1 / self.W_adj.shape[1]) * torch.ones(
             self.W_adj.shape[0], self.W_adj.shape[1]
-        )  # , device=self.device)
-        mu = rearrange(mu, "b ni -> b ni 1")  # added this ...
+        )
+        lowpass = rearrange(lowpass, "b ni -> b ni 1")
 
-        return mu
+        return lowpass
