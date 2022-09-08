@@ -7,7 +7,7 @@ import torch
 
 
 def adjacency_to_laplacian(W: torch.Tensor) -> torch.Tensor:
-    """Convert a adjacency matrix into the graph Laplacian.
+    """Convert an adjacency matrix into the graph Laplacian.
 
     Parameters
     ----------
@@ -26,7 +26,7 @@ def adjacency_to_laplacian(W: torch.Tensor) -> torch.Tensor:
 
 
 def normalize_adjacency(W: torch.Tensor) -> torch.Tensor:
-    """Normalize a adjacency matrix.
+    """Normalize an adjacency matrix.
 
     Parameters
     ----------
@@ -49,7 +49,7 @@ def normalize_adjacency(W: torch.Tensor) -> torch.Tensor:
 
 
 def normalize_laplacian(L: torch.Tensor) -> torch.Tensor:
-    """Normalize a graph Laplacian.
+    """Normalize an graph Laplacian.
 
     Parameters
     ----------
@@ -73,10 +73,10 @@ def normalize_laplacian(L: torch.Tensor) -> torch.Tensor:
 
 
 def compute_spectra(W: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
-    """Compute spectra of graph Laplacian from its adjacency matrix.
+    """Compute the spectra of graph Laplacian from its adjacency matrix.
 
     Performs an eigendecomposition (w/o assuming additional structure)
-    using torch.linalg.eigh (previously used torch.symeig) on a normalized
+    using `torch.linalg.eigh` (previously used `torch.symeig`) on a normalized
     graph laplacian. Converts from the adjacency matrix to the laplacian
     internally.
 

@@ -2,11 +2,7 @@
 
 TODO:
     - figure out wavelet vs kernel notation
-    - consider making wavelet class
-        - get_kernel, matmul, append pattern
-        - could add checks
     - add references
-    - single variable names
 """
 
 import torch

@@ -19,14 +19,9 @@ Behavior can potentially be unstable and consistency is not guaranteed.
 
 ## TODO
 
-* add release management (long term)
-* add more tests
 * un-lock repo
-* add examples with data to test things out
-* update docs
 * clean up readme, add additional formatting
 * clean up dependencies
-* spell check
 
 ## Installation
 
