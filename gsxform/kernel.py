@@ -64,7 +64,7 @@ class TightHannKernel(object):
             * (eig <= self.d)
         )
 
-    def adapted_kernels(self, eig: torch.Tensor, scale: int) -> torch.Tensor:
+    def get_adapted_kernel(self, eig: torch.Tensor, scale: int) -> torch.Tensor:
         """compute spectrum adapted kernels.
         return self.kernel(self.omega(eig) - self.d / self.R * (scale - self.R + 1))
 
@@ -79,7 +79,7 @@ class TightHannKernel(object):
 
         Returns
         --------
-        adapted_kernel: Callable[[torch.Tensor], torch.Tensor]
+        adapted_kernel: torch.Tensor
             scale-specific adapted kernel
 
         """

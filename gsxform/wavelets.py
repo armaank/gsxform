@@ -79,12 +79,16 @@ def tighthann_wavelets(
     psi = torch.empty(V.shape[0], 0, V.shape[1], V.shape[2])
     for jj in range(0, n_scales):
 
-        # compute kernel, check notation here...
-        phi = torch.diag_embed(kernel.adapted_kernels(E, jj + 1))
+        # compute adapted kernel
+        adapted_kernel = kernel.get_adapted_kernel(E, jj + 1)
+        phi = torch.diag_embed(adapted_kernel)
+
         # compute jth wavelet filter via matmul
         psi_j = V.matmul(phi).matmul(V_herm)
+
         # append wavelets
         psi_j = rearrange(psi_j, "b n m -> b 1 n m")
+
         psi = torch.cat((psi, psi_j), axis=1)
 
     return psi
