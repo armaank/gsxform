@@ -4,16 +4,12 @@ TODO:
     - fix typing for pytorch module
     - confirm symbolic notation
     - add references
-    - think more carefully about what should go where wrt torch batching, init
-    - add compute moments to base scattering class
-    - pass wavelet parameters via kwargs/args
     - add docs
 """
 from typing import Any, Callable
 
-# import numpy as np
 import torch
-from einops import rearrange, reduce, repeat
+from einops import rearrange, repeat
 from scipy.interpolate import interp1d
 from torch import nn
 
@@ -26,7 +22,7 @@ class ScatteringTransform(nn.Module):  # type: ignore
     """ScatteringTransform base class. Inherits from PyTorch nn.Module
 
     This class implements the base logic to compute graph scattering
-    transforms with an arbitrary pooling and wavelet transform
+    transforms with a pooling and an arbitrary wavelet transform
     operators.
 
     """
@@ -42,8 +38,8 @@ class ScatteringTransform(nn.Module):  # type: ignore
         """Initialize scattering transform base class
 
         This is a base class, and implements only the logic to compute
-        an arbitrary scattering transform. The methods `get_wavelets` and
-        `get_pooling` must be implemented by subclasses.
+        an arbitrary scattering transform. The method `get_wavelets`
+        must be implemented by the subclass
 
         Parameters
         ----------
@@ -72,6 +68,9 @@ class ScatteringTransform(nn.Module):  # type: ignore
 
         self.nlin = nlin
 
+        # batch size
+        self.b_size = self.W_adj.shape[0]
+
     def get_wavelets(self) -> torch.Tensor:
         """Compute wavelet operator. Subclasses are required to
         implement this method"""
@@ -79,9 +78,24 @@ class ScatteringTransform(nn.Module):  # type: ignore
         raise NotImplementedError
 
     def get_lowpass(self) -> torch.Tensor:
-        """Compute pooling operator. Subclasses are required to implement this method"""
+        """Compute lowpass filtering/pooling operator.
 
-        raise NotImplementedError
+        This should roughly resemble an average, it alters the output
+        scaling factor. For instance averaging with the norm
+        of the degree vector scales towards zero, this implementation
+        offers a more natural scaling.
+
+        Returns
+        -------
+        lowpass: torch.Tensor
+            average pooling operator
+        """
+
+        lowpass = (1 / self.n_nodes) * torch.ones(self.b_size, self.n_nodes)
+
+        lowpass = rearrange(lowpass, "b ni -> b ni 1")
+
+        return lowpass
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward pass of a generic scattering transform.
@@ -106,8 +120,7 @@ class ScatteringTransform(nn.Module):  # type: ignore
         psi = self.get_wavelets()
 
         # compute first scattering layer, low pass filter via matmul
-        # p = 1, padding dimension
-        phi = torch.einsum("b f n, b n p -> b f p", x, lowpass)
+        phi = torch.matmul(x, lowpass)
 
         # reshape inputs for loop
         S_x = rearrange(x, "b f n -> b 1 f n")
@@ -124,7 +137,7 @@ class ScatteringTransform(nn.Module):  # type: ignore
                 x_jj = rearrange(S_x[:, jj, :, :], "b f n -> b 1 f n")
 
                 # wavelet filtering operation, matrix multiply
-                psi_x_jj = torch.einsum("b p f n, b l n n -> b l f n", x_jj, psi)
+                psi_x_jj = torch.matmul(x_jj, psi)
 
                 # application of non-linearity, yields scattering output
                 S_x_jj = self.nlin(psi_x_jj)
@@ -133,7 +146,7 @@ class ScatteringTransform(nn.Module):  # type: ignore
                 S_x_ll = torch.cat((S_x_ll, S_x_jj), axis=1)
 
                 # compute scattering representation, matrix multiply
-                phi_jj = torch.einsum("b l f n, b l n p -> b l f p", S_x_jj, lowpass)
+                phi_jj = torch.matmul(S_x_jj, lowpass)
                 phi_jj = rearrange(phi_jj, "b l f 1 -> b f l")
 
                 phi = torch.cat((phi, phi_jj), axis=2)
@@ -146,8 +159,7 @@ class ScatteringTransform(nn.Module):  # type: ignore
 class Diffusion(ScatteringTransform):
     """Diffusion scattering transform.
 
-    Subclass of `ScatteringTransform`, implements `get_wavelets` and `get_lowpass`
-    methods.
+    Subclass of `ScatteringTransform`, implements `get_wavelets` method
 
     """
 
@@ -195,30 +207,13 @@ class Diffusion(ScatteringTransform):
 
         return psi
 
-    def get_lowpass(self) -> torch.Tensor:
-        """subclass method used to get lowpass pooling operator
-
-        Returns
-        -------
-        lowpass: torch.Tensor
-            lowpass pooling operator
-
-        """
-
-        # compute degree vector. ni and nj are equivalent, used to disambiguate
-        d = reduce(self.W_adj, "b ni nj -> b ni", "sum")
-        # normalize
-        lowpass = d / torch.norm(d, 1)
-        lowpass = rearrange(lowpass, "b ni -> b ni 1")
-
-        return lowpass
-
 
 class TightHann(ScatteringTransform):
     """TightHann scattering transform.
 
-    Subclass of `ScatteringTransform`, implements `get_wavelets` and `get_lowpass`
-    methods.
+    Subclass of `ScatteringTransform`, implements `get_wavelets` methods.
+    Also additionally implements functions used to compute spectrum-adaptive
+    wavelets
 
     """
 
@@ -265,7 +260,7 @@ class TightHann(ScatteringTransform):
                 self.spectra[0::step], cdf[0::step], fill_value="extrapolate"
             )
         else:
-            return interp1d(self.spectrum, cdf, fill_value="extrapolate")
+            return interp1d(self.spectra, cdf, fill_value="extrapolate")
 
     def get_kernel(self) -> TightHannKernel:
         """compute TightHann kernel adaptively"""
@@ -290,22 +285,3 @@ class TightHann(ScatteringTransform):
         psi = tighthann_wavelets(self.W_adj, self.n_scales, self.get_kernel())
 
         return psi
-
-    def get_lowpass(self) -> torch.Tensor:
-        """subclass method used to get lowpass pooling operator
-
-        TODO: check if this can be added to the base class, might not need this...
-
-        Returns
-        -------
-        lowpass: torch.Tensor
-            lowpass pooling operator
-
-        """
-
-        lowpass = (1 / self.W_adj.shape[1]) * torch.ones(
-            self.W_adj.shape[0], self.W_adj.shape[1]
-        )
-        lowpass = rearrange(lowpass, "b ni -> b ni 1")
-
-        return lowpass

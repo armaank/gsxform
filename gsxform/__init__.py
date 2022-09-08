@@ -8,7 +8,7 @@ from .graph import (
 )
 
 # from .kernel import spline_kernel #, hann_kernel
-from .scattering import Diffusion  # , Geometric, TightHann
+from .scattering import Diffusion, TightHann  # , Geometric, TightHann
 from .wavelets import diffusion_wavelets  # spline_wavelets  ,tighthann_wavelets
 
 __all__ = [
@@ -17,7 +17,7 @@ __all__ = [
     # "tighthann_wavelets",
     "Diffusion",
     # "Spline",
-    # "TightHann",
+    "TightHann",
     # "Geometric",
     # "hann_kernel",
     # "spline_kernel",

@@ -45,7 +45,8 @@ def diffusion_wavelets(T: torch.Tensor, n_scales: int) -> torch.Tensor:
         # compute jth diffusion operator (wavelet kernel)
         T_j = torch.matrix_power(T, 2 ** (jj - 1))
         # compute jth wavelet filter via matmul
-        psi_j = torch.einsum("b n m, b n m -> b n m", T_j, (I_N - T_j))
+        # psi_j = torch.einsum("b n m, b n m -> b n m", T_j, (I_N - T_j))
+        psi_j = torch.matmul(T_j, (I_N - T_j))
         # append wavelets
         psi = torch.cat((psi, psi_j), axis=0)
 
@@ -79,17 +80,15 @@ def tighthann_wavelets(
     V_herm = rearrange(V, "b ni nj -> b nj ni")  # hermetian transpose
 
     # compute wavelet coeffs
-    # check loop bounds, iterators...
-    psi = torch.zeros_like(V)
-
-    for jj in range(1, n_scales):
+    psi = torch.empty(V.shape[0], 0, V.shape[1], V.shape[2])
+    for jj in range(0, n_scales):
 
         # compute kernel, check notation here...
-        phi = torch.diag_embed(kernel.adapted_kernels(E, jj))
+        phi = torch.diag_embed(kernel.adapted_kernels(E, jj + 1))
         # compute jth wavelet filter via matmul
-        psi_j = torch.einsum("b n m, b n m, b n m -> b n m", V, phi, V_herm)
+        psi_j = V.matmul(phi).matmul(V_herm)
         # append wavelets
-        psi = torch.cat((psi, psi_j), axis=0)
+        psi_j = rearrange(psi_j, "b n m -> b 1 n m")
+        psi = torch.cat((psi, psi_j), axis=1)
 
-    psi = rearrange(psi, "(b ns) ni nj -> b ns ni nj", ns=n_scales)
     return psi

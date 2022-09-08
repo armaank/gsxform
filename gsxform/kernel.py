@@ -2,6 +2,7 @@
 
 TODO:
     - add references
+    - rework into a function, no need for a kernel class
 """
 
 from typing import Any, Callable, Union
@@ -19,7 +20,7 @@ class TightHannKernel:
     ):
 
         self.M = M  # number of scales
-        K = 1
+        self.K = 1
         self.R = 3.0
         self.max_eig = max_eig
 
@@ -28,13 +29,14 @@ class TightHannKernel:
             self.max_eig = self.omega(self.max_eig.float())
 
         # dilation factor, might need to reverse this to account for swapped bounds...
-        self.d = (self.M + 1 - self.R) / (self.R * self.max_eig)
+        # self.d = (self.M + 1 - self.R) / (self.R * self.max_eig)
+        self.d = self.R * self.max_eig / (self.M + 1 - self.R)
         # hann kernel
         self.kernel: Callable[[torch.Tensor], torch.Tensor] = (
             lambda eig: sum(
                 [
-                    0.5 * torch.cos(2 * np.pi * (eig * self.d - 0.5) * k)
-                    for k in range(K + 1)
+                    0.5 * torch.cos(2 * np.pi * (eig / self.d - 0.5) * k)
+                    for k in range(self.K + 1)
                 ]
             )
             * (eig >= 0)
@@ -45,4 +47,4 @@ class TightHannKernel:
         self, eig: float, m: int
     ) -> Any:  # Callable[[torch.Tensor], torch.Tensor]:
         """compute spectrum adapted kernels. check return type"""
-        return self.kernel(eig - self.d / self.R * (m - self.R + 1))
+        return self.kernel(self.omega(eig) - self.d / self.R * (m - self.R + 1))
