@@ -14,10 +14,10 @@ import torch
 class TightHannKernel(object):
     """TightHannKernel class.
 
-    Thie class implements a spectrum-adaptive tight-hann kernel function used
-    in its corresponding wavelet transform.
-
-    ADD NOTES HERE
+    Thie class constructs a spectrum-adaptive tight-hann kernel function used
+    in its corresponding wavelet transform. Based off of the implementation
+    from Tabar et. al 2021 of the algorithm originally described in
+    Shuman et. al 2015
 
     """
 

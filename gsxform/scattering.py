@@ -1,10 +1,7 @@
 """generic base classes for scattering transform operations
 
 TODO:
-    - fix typing for pytorch module
     - confirm symbolic notation
-    - add references
-    - add docs
 """
 from typing import Any, Callable
 
@@ -159,7 +156,9 @@ class ScatteringTransform(nn.Module):  # type: ignore
 class Diffusion(ScatteringTransform):
     """Diffusion scattering transform.
 
-    Subclass of `ScatteringTransform`, implements `get_wavelets` method
+    Subclass of `ScatteringTransform`, implements `get_wavelets` method.
+    Diffusion scattering transform algorithm based on description
+    in Gama et. al 2018.
 
     """
 
@@ -213,7 +212,7 @@ class TightHann(ScatteringTransform):
 
     Subclass of `ScatteringTransform`, implements `get_wavelets` methods.
     Also additionally implements functions used to compute spectrum-adaptive
-    wavelets
+    wavelets.
 
     """
 

@@ -15,7 +15,9 @@ from .kernel import TightHannKernel
 def diffusion_wavelets(T: torch.Tensor, n_scales: int) -> torch.Tensor:
     """Compute diffusion wavelet filter bank
 
-    Computes diffusion wavelets from inputs. ADD DOCS, references
+    Computes diffusion wavelets from from input diffusion matrix.
+    Implementation based off the algorithm originally described in
+    Coifman et. al 2006.
 
     Parameters
     ----------
@@ -54,7 +56,8 @@ def diffusion_wavelets(T: torch.Tensor, n_scales: int) -> torch.Tensor:
 def tighthann_wavelets(
     W_adj: torch.Tensor, n_scales: int, kernel: TightHannKernel
 ) -> torch.Tensor:
-    """Computes spectrum adapted tight Hann wavelets.
+    """Computes spectrum adapted tight Hann wavelets. Based
+    of algorithm described in Shuman et. al 2015.
 
     Parameters
     ----------
