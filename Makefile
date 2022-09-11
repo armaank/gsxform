@@ -34,7 +34,7 @@ conda: ## Setup conda environment
 setup-pip: ## Setup pip environment w/o venv 
 	@printf "Installing Python dependencies...\n"
 	$(PIP) install -U pip
-	$(PIP) install -r requirements.txt
+	$(PIP) install -r requirements_dev.txt
 
 .PHONY: export-conda
 export-conda: ## Export conda environment
@@ -44,7 +44,7 @@ export-conda: ## Export conda environment
 .PHONY: export-pip
 export-pip: ## Export pip environment
 	@printf "Exporting pip environment...\n"
-	$(PIP) list --format=freeze > requirements.txt
+	$(PIP) list --format=freeze > requirements_dev.txt
 
 .PHONY: tests
 tests: ## run tests
