@@ -7,6 +7,7 @@
 [![code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![license](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![DOI](https://zenodo.org/badge/513695351.svg)](https://zenodo.org/badge/latestdoi/513695351)
  ---
  
 `gsxform` is a package for constructing graph scattering transforms, leveraging PyTorch
@@ -44,5 +45,5 @@ The original code of this repository is released under the
 Modifications, adaptations and derivative work is encouraged!
 
 ## Citation 
-
+If you use `gsxform`, please cite using the [Zenodo DOI](https://zenodo.org/record/7069114)
 
