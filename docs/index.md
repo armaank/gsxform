@@ -18,11 +18,6 @@ easily build models that use both scattering transform and neural network compon
 `gsxform` is first and foremost a research project and is being continuously refined.
 Behavior can potentially be unstable and consistency is not guaranteed.
 
-## TODO
-
-* clean up readme, add additional formatting
-* check dependencies 
-
 ## Installation
 
 ### Official Release
