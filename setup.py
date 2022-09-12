@@ -1,9 +1,8 @@
 import codecs
 import os
 import pathlib
-from typing import Any, List
+from typing import List
 
-from pypandoc import convert
 from setuptools import find_packages, setup
 
 ROOT = pathlib.Path(__file__).resolve().parent
@@ -26,11 +25,9 @@ def get_requirements() -> List[str]:
         return f.read().splitlines()
 
 
-def get_long_description() -> Any:
-    # with codecs.open(README, "rt") as f:
-    #    return f.read()
-    # from pypandoc import convert
-    return convert(README, "rst")
+def get_long_description() -> str:
+    with codecs.open(README, "rt") as f:
+        return f.read()
 
 
 def get_version() -> str:
@@ -51,5 +48,6 @@ if __name__ == "__main__":
         packages=find_packages(),
         install_requires=get_requirements(),
         long_description=get_long_description(),
+        long_description_content_type="text/markdown",
         include_package_data=True,
     )
