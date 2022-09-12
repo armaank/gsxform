@@ -19,9 +19,8 @@ Behavior can potentially be unstable and consistency is not guaranteed.
 
 ## TODO
 
-* un-lock repo
 * clean up readme, add additional formatting
-* clean up dependencies
+* check dependencies 
 
 ## Installation
 
@@ -38,9 +37,6 @@ The most up-to-date version of `gsxform` can be installed via git:
 ```bash
 pip install git+https://github.com/armaank/gsxform.git
 ```
-
-## Acknowledgements 
-
 
 ## License 
 The original code of this repository is released under the
