@@ -1,9 +1,9 @@
 import codecs
 import os
 import pathlib
-
-from setuptools import setup, find_packages
 from typing import List
+
+from setuptools import find_packages, setup
 
 ROOT = pathlib.Path(__file__).resolve().parent
 REQUIREMENTS = os.path.join(ROOT, "requirements.txt")
@@ -13,7 +13,7 @@ CLASSIFIERS = [
     "Development Status :: 3 - Alpha",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3.9",
-    "License :: OSI Approved :: BSD 3-Clause",
+    "License :: OSI Approved :: BSD License",
     "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering",
     "Topic :: Scientific/Engineering :: Mathematics",
