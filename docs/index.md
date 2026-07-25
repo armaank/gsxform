@@ -22,6 +22,8 @@ Behavior can potentially be unstable and consistency is not guaranteed.
 
 ### Official Release
 
+TODO: fix pypi release
+
 `gsxform` is available on PyPi:
 ```bash
 pip install gsxform
