@@ -1,4 +1,4 @@
-"""Implementations of graph wavelet transforms and kernel functions
+"""Implementations of graph wavelet transforms and kernel functions.
 
 TODO:
     - figure out wavelet vs kernel notation
@@ -13,7 +13,7 @@ from .kernel import TightHannKernel
 
 
 def diffusion_wavelets(T: torch.Tensor, n_scales: int) -> torch.Tensor:
-    """Compute diffusion wavelet filter bank
+    """Compute diffusion wavelet filter bank.
 
     Computes diffusion wavelets from from input diffusion matrix.
     Implementation based off the algorithm originally described in
@@ -31,7 +31,6 @@ def diffusion_wavelets(T: torch.Tensor, n_scales: int) -> torch.Tensor:
     phi: torch.Tensor
         wavelet filter bank
     """
-
     # make n_node x n_node identity matrix
     I_N = torch.eye(T.shape[1])
 
@@ -46,7 +45,7 @@ def diffusion_wavelets(T: torch.Tensor, n_scales: int) -> torch.Tensor:
         # psi_j = torch.einsum("b n m, b n m -> b n m", T_j, (I_N - T_j))
         psi_j = torch.matmul(T_j, (I_N - T_j))
         # append wavelets
-        psi = torch.cat((psi, psi_j), axis=0)
+        psi = torch.cat((psi, psi_j), dim=0)
 
     psi = rearrange(psi, "(b ns) ni nj -> b ns ni nj", ns=n_scales)
 
@@ -56,8 +55,9 @@ def diffusion_wavelets(T: torch.Tensor, n_scales: int) -> torch.Tensor:
 def tighthann_wavelets(
     W_adj: torch.Tensor, n_scales: int, kernel: TightHannKernel
 ) -> torch.Tensor:
-    """Computes spectrum adapted tight Hann wavelets. Based
-    of algorithm described in Shuman et. al 2015.
+    """Compute spectrum adapted tight Hann wavelets.
+
+    Based off the algorithm described in Shuman et. al 2015.
 
     Parameters
     ----------
@@ -81,7 +81,6 @@ def tighthann_wavelets(
     # compute wavelet coeffs
     psi = torch.empty(V.shape[0], 0, V.shape[1], V.shape[2])
     for jj in range(0, n_scales):
-
         # compute adapted kernel
         adapted_kernel = kernel.get_adapted_kernel(E, jj + 1)
         phi = torch.diag_embed(adapted_kernel)
@@ -92,6 +91,6 @@ def tighthann_wavelets(
         # append wavelets
         psi_j = rearrange(psi_j, "b n m -> b 1 n m")
 
-        psi = torch.cat((psi, psi_j), axis=1)
+        psi = torch.cat((psi, psi_j), dim=1)
 
     return psi

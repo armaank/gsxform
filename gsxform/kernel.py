@@ -1,17 +1,17 @@
-"""Implementations of kernel functions used to build graph wavelets
+"""Implementations of kernel functions used to build graph wavelets.
 
 TODO:
     - add references
     - rework into a function, no need for a kernel class
 """
 
-from typing import Callable, Union
+from collections.abc import Callable
 
 import numpy as np
 import torch
 
 
-class TightHannKernel(object):
+class TightHannKernel:
     """TightHannKernel class.
 
     Thie class constructs a spectrum-adaptive tight-hann kernel function used
@@ -25,9 +25,9 @@ class TightHannKernel(object):
         self,
         n_scales: int,
         max_eig: torch.Tensor,
-        omega: Union[Callable[[torch.Tensor], torch.Tensor], None] = None,
+        omega: Callable[[torch.Tensor], torch.Tensor] | None = None,
     ) -> None:
-        """Initialize TightHannKernel class
+        """Initialize TightHannKernel class.
 
         Parameters
         ----------
@@ -39,7 +39,6 @@ class TightHannKernel(object):
             warping function. Defaults to None
 
         """
-
         self.n_scales = n_scales
         self.K = 1
         self.R = 3.0
@@ -53,8 +52,8 @@ class TightHannKernel(object):
         # self.d = (self.M + 1 - self.R) / (self.R * self.max_eig)
         self.d = self.R * self.max_eig / (self.n_scales + 1 - self.R)
         # hann kernel functional form
-        self.kernel: Callable[[torch.Tensor], torch.Tensor] = (
-            lambda eig: sum(
+        self.kernel: Callable[[torch.Tensor], torch.Tensor] = lambda eig: (
+            sum(
                 [
                     0.5 * torch.cos(2 * np.pi * (eig / self.d - 0.5) * k)
                     for k in range(self.K + 1)
@@ -65,7 +64,8 @@ class TightHannKernel(object):
         )
 
     def get_adapted_kernel(self, eig: torch.Tensor, scale: int) -> torch.Tensor:
-        """compute spectrum adapted kernels.
+        """Compute spectrum adapted kernels.
+
         return self.kernel(self.omega(eig) - self.d / self.R * (scale - self.R + 1))
 
         Parameters
@@ -78,7 +78,7 @@ class TightHannKernel(object):
             by the wavelet transform.
 
         Returns
-        --------
+        -------
         adapted_kernel: torch.Tensor
             scale-specific adapted kernel
 

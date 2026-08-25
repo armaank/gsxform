@@ -1,7 +1,4 @@
-"""graph utility functions.
-"""
-
-from typing import Tuple
+"""Graph utility functions."""
 
 import torch
 
@@ -72,7 +69,7 @@ def normalize_laplacian(L: torch.Tensor) -> torch.Tensor:
     return L_norm
 
 
-def compute_spectra(W: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+def compute_spectra(W: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
     """Compute the spectra of graph Laplacian from its adjacency matrix.
 
     Performs an eigendecomposition (w/o assuming additional structure)

@@ -4,6 +4,7 @@ TODO:
     - write better tests
     - add check for output feature dim
 """
+
 import torch
 
 from gsxform import scattering

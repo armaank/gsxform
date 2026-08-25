@@ -1,5 +1,4 @@
-"""test utility functions
-"""
+"""test utility functions"""
 
 import torch
 

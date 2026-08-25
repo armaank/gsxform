@@ -1,8 +1,9 @@
-"""testing suite for graph.py
-"""
+"""testing suite for graph.py"""
+
 import torch
 
 from gsxform import graph
+
 from .test_utils import create_adj
 
 
