@@ -1,8 +1,7 @@
 # Installation
 
 `gsxform` is written without complex dependencies, it can be installed using `pip` or
-from source. Currently, `gsxform` has only been tested with Python3.9, previous versions
-of Python are not explicitly supported.
+from source. `gsxform` supports Python 3.10 and newer.
 
 ### Using `pip`
 
@@ -18,19 +17,19 @@ The code for `gsxform` can be downloaded and installed as follows:
 ```bash
 git clone https://github.com/armaank/gsxform.git
 cd gsxform
-python setup.py install
+pip install .
 ```
 
 ## Development
 
-To contribute to `gxform`, download the source code, setup a conda environment and
-`source` the setup script to install all of the `pre-commit` hooks to ensure
-appropriate typing and code formatting. 
+`gsxform` uses [`uv`](https://docs.astral.sh/uv/) to manage environments and
+dependencies. To contribute, download the source code and run `make install` to
+create the development environment and install the `pre-commit` hooks that enforce
+typing and code formatting.
 ```bash
 git clone https://github.com/armaank/gsxform.git
 cd gsxform
-make conda
-source scripts/setup.sh
+make install
 ```
 
 Please follow the [NumPy development
@@ -45,12 +44,19 @@ To run the unit tests locally using `pytest`, from the root project directory ex
 make tests
 ```
 
-### Documentation
+### Linting and type checking
 
+Formatting and lint rules are enforced with [`ruff`](https://docs.astral.sh/ruff/),
+and types are checked with `mypy`:
+```bash
+make format     # apply formatting and autofixes
+make lint       # check formatting and lint rules
+make typecheck  # run mypy
+```
+
+### Documentation
 
 To preview documentation locally, from the root project directory execute:
 ```bash
 make docs
 ```
-
-

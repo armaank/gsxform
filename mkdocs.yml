@@ -44,8 +44,8 @@ plugins:
   - mkdocstrings:
       handlers:
         python:
-          paths: [gsxform]
-          import:
+          paths: [.]
+          inventories:
           - https://docs.python.org/3/objects.inv
           - https://mkdocstrings.github.io/objects.inv
           - https://mkdocstrings.github.io/griffe/objects.inv
@@ -78,4 +78,3 @@ markdown_extensions:
 
 repo_name: armaank/gsxform
 repo_url: https://github.com/armaank/gsxform
-
