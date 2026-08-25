@@ -1,4 +1,0 @@
-recursive-include docs *
-include *.md
-include requirements.txt
-include LICENSE

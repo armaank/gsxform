@@ -1,0 +1,100 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "gsxform"
+version = "0.1.0"
+description = "Wavelet scattering transforms on graphs via PyTorch"
+readme = { file = "docs/index.md", content-type = "text/markdown" }
+requires-python = ">=3.10"
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+authors = [{ name = "Armaan Kohli", email = "kohli@cooper.edu" }]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+dependencies = [
+    "einops",
+    "scipy",
+    "torch",
+    # torch ships no macOS x86_64 wheels after 2.2.2, and that build is compiled
+    # against the numpy 1.x ABI (tensor <-> ndarray conversion breaks on numpy 2)
+    "numpy; sys_platform != 'darwin' or platform_machine != 'x86_64'",
+    "numpy<2; sys_platform == 'darwin' and platform_machine == 'x86_64'",
+]
+
+[project.urls]
+Homepage = "https://github.com/armaank/gsxform"
+Documentation = "https://armaank.github.io/gsxform"
+Repository = "https://github.com/armaank/gsxform"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.14",
+    "pre-commit>=4",
+    "pytest>=8",
+    "pytest-cov>=6",
+    "pytest-html>=4",
+    "ruff>=0.9",
+]
+docs = [
+    "mkdocs>=1.6",
+    "mkdocs-material>=9.5",
+    "mkdocstrings[python]>=0.27",
+    "mknotebooks>=0.8",
+]
+
+[tool.uv]
+# Resolve for Intel macs as a first-class target rather than pinning a torch
+# version by hand: uv forks the lock to whatever still has x86_64 mac wheels.
+required-environments = [
+    "sys_platform == 'darwin' and platform_machine == 'x86_64'",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["gsxform"]
+
+[tool.hatch.build.targets.sdist]
+include = ["gsxform", "tests", "docs", "LICENSE"]
+
+[tool.pytest.ini_options]
+testpaths = ["gsxform", "tests"]
+addopts = "-v --doctest-modules --cov=gsxform --cov-report=term-missing"
+
+[tool.coverage.run]
+source = ["gsxform"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+# exclude notebooks from ruff
+extend-exclude = ["*.ipynb"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "D"]
+ignore = ["E501", "E731"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.lint.per-file-ignores]
+"gsxform/__init__.py" = ["F401"]
+"tests/*" = ["D"]
+"examples/*" = ["D"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+strict = true
+ignore_missing_imports = true
+files = ["gsxform"]
