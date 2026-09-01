@@ -6,8 +6,6 @@ on:
   pull_request:
     # `closed` is needed so the PR preview is torn down again.
     types: [opened, synchronize, reopened, closed]
-  release:
-    types: [published]
   workflow_dispatch:
 
 permissions:
@@ -93,8 +91,10 @@ jobs:
             -f description="Documentation preview for this PR" \
             -f target_url="${URL}"
 
+  # main -> /dev/ : in-progress docs, overwritten on every push. Versioned
+  # release docs are deployed by release.yml, not here.
   deploy-docs:
-    if: github.event_name == 'push' || github.event_name == 'release'
+    if: github.event_name == 'push'
     needs: build-docs
     runs-on: ubuntu-latest
     permissions:
@@ -114,14 +114,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      # main -> /dev/ : in-progress docs, overwritten on every push.
       - name: Deploy dev docs
-        if: github.event_name == 'push'
         run: uv run mike deploy --push dev
-
-      # release -> /vX.Y.Z/ frozen, with `latest` moved to point at it.
-      - name: Deploy release docs
-        if: github.event_name == 'release'
-        run: |
-          uv run mike deploy --push --update-aliases "${GITHUB_REF_NAME}" latest
-          uv run mike set-default --push latest

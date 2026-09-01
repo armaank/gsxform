@@ -16,7 +16,7 @@ make install
 `make install` creates the virtual environment, installs `gsxform` with the development and documentation dependencies, and installs the `pre-commit` hooks.
 
 Run `make` on its own to list the available targets.
-To preview documentation while writing it, `uv run mkdocs serve` gives a live-reloading
+To preview documentation while writing it, `make docs-serve` gives a live-reloading
 server
 
 ## Code style

@@ -60,7 +60,7 @@ make install
 
 This creates the virtual environment, installs `gsxform` with development and
 documentation dependencies, and sets up the `pre-commit` hooks. The
-[development guide](https://armaank.github.io/gsxform/development/) covers the `make`
+[development guide](https://armaank.github.io/gsxform/dev/development/) covers the `make`
 targets, code style, branching, and the release process.
 
 
