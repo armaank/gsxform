@@ -35,9 +35,19 @@ typecheck: ## run static type checking
 	$(UV) run mypy
 
 .PHONY: docs
-docs: ## make doc site
+docs: ## build the doc site (CI)
 	@printf "Building doc site...\n"
 	$(UV) run --group docs mkdocs build
+
+.PHONY: docs-serve
+docs-serve: ## preview the docs locally
+	@printf "Serving doc site...\n"
+	$(UV) run --group docs mkdocs serve
+
+.PHONY: lock
+lock: ## verify that uv.lock is in sync with pyproject.toml
+	@printf "Checking lock...\n"
+	$(UV) lock --check
 
 .PHONY: clean
 clean: ## clean project directory
@@ -46,3 +56,4 @@ clean: ## clean project directory
 	rm -rf .pytest_cache/ .mypy_cache/ .ruff_cache/
 	rm -rf **/__pycache__/
 	rm -rf site/ dist/
+	rm -f examples/*.md.tmp

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "gsxform"
-version = "0.1.0"
+version = "0.2.0"
 description = "Wavelet scattering transforms on graphs via PyTorch"
 readme = { file = "docs/index.md", content-type = "text/markdown" }
 requires-python = ">=3.10"
@@ -51,6 +51,7 @@ docs = [
     "mkdocs-material>=9.5",
     "mkdocstrings[python]>=0.27",
     "mknotebooks>=0.8",
+    "mike>=2.2",
 ]
 
 [tool.uv]

@@ -1,5 +1,7 @@
 """gsxform."""
 
+from importlib.metadata import version
+
 from .graph import (
     adjacency_to_laplacian,
     compute_spectra,
@@ -11,7 +13,10 @@ from .graph import (
 from .scattering import Diffusion, TightHann  # , Geometric, TightHann
 from .wavelets import diffusion_wavelets  # spline_wavelets  ,tighthann_wavelets
 
+__version__ = version("gsxform")
+
 __all__ = [
+    "__version__",
     "diffusion_wavelets",
     # "spline_wavelets",
     # "tighthann_wavelets",

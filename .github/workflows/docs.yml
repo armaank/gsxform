@@ -2,33 +2,126 @@ name: docs
 
 on:
   push:
+    branches: [main]
   pull_request:
+    # `closed` is needed so the PR preview is torn down again.
+    types: [opened, synchronize, reopened, closed]
+  release:
+    types: [published]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+concurrency:
+  # Everything here writes to gh-pages, so deploys must not overlap.
+  group: docs-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
+  # Strict build plus a dry-run of the mike path, so broken nav, dead links and
+  # mike misconfiguration all fail before merge rather than after.
   build-docs:
+    if: github.event.action != 'closed'
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v6
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # mike needs branch history
+      - uses: astral-sh/setup-uv@v10.0.1
         with:
           enable-cache: true
       - name: Sync environment
-        run: uv sync --locked --all-groups
+        run: uv sync --locked --group docs
+
       - name: Build documentation
         run: make docs
-      # build runs everywhere so breakage surfaces before merge; only main deploys
-      - name: Deploy website
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v4
+
+      - name: Verify mike deployment (dry run)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          uv run mike deploy --no-push dev
+
+      - uses: actions/upload-artifact@v7
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site
-          publish_branch: gh-pages
-          allow_empty_commit: false
-          keep_files: false
-          force_orphan: true
-          enable_jekyll: false
-          disable_nojekyll: false
+          name: site
+          path: site/
+
+  # Publishes each PR to gh-pages under pr-preview/pr-<N>/ and surfaces the link
+  # as a `docs/preview` status check, alongside the test checks. Lives outside
+  # mike's version directories, so it never appears in the version selector.
+  # Torn down automatically when the PR closes.
+  #
+  # Note: pull requests from forks get a read-only token and will skip this.
+  preview-docs:
+    needs: build-docs
+    if: >-
+      always() && github.event_name == 'pull_request' &&
+      (needs.build-docs.result == 'success' || github.event.action == 'closed')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # writes the preview into gh-pages
+      statuses: write # posts the preview link as a check
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/download-artifact@v8
+        if: github.event.action != 'closed'
+        with:
+          name: site
+          path: site/
+
+      - name: Deploy preview
+        uses: rossjrw/pr-preview-action@v1.8.1
+        with:
+          source-dir: ./site
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          action: auto
+          comment: false # surfaced as a status check instead
+
+      - name: Publish preview link as a status check
+        if: github.event.action != 'closed'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          URL: https://armaank.github.io/gsxform/pr-preview/pr-${{ github.event.number }}/
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/statuses/${{ github.event.pull_request.head.sha }}" \
+            -f state=success \
+            -f context=docs/preview \
+            -f description="Documentation preview for this PR" \
+            -f target_url="${URL}"
+
+  deploy-docs:
+    if: github.event_name == 'push' || github.event_name == 'release'
+    needs: build-docs
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # mike commits the built site to gh-pages
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          enable-cache: true
+      - name: Sync environment
+        run: uv sync --locked --group docs
+
+      - name: Configure git for mike
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      # main -> /dev/ : in-progress docs, overwritten on every push.
+      - name: Deploy dev docs
+        if: github.event_name == 'push'
+        run: uv run mike deploy --push dev
+
+      # release -> /vX.Y.Z/ frozen, with `latest` moved to point at it.
+      - name: Deploy release docs
+        if: github.event_name == 'release'
+        run: |
+          uv run mike deploy --push --update-aliases "${GITHUB_REF_NAME}" latest
+          uv run mike set-default --push latest

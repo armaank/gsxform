@@ -3,6 +3,9 @@ site_url: https://armaank.github.io/gsxform
 
 docs_dir: docs/
 
+# fail the build on broken nav entries or dead internal links
+strict: true
+
 theme:
   name: material
   icon:
@@ -25,6 +28,7 @@ theme:
 nav:
   - Home: index.md
   - Installation: install.md
+  - Development: development.md
   - Examples:
     - Basic Plot: examples/example.ipynb
   - API Reference:
@@ -33,7 +37,12 @@ nav:
         - Kernel functions: kernel.md
         - Graph wavelet transforms: wavelets.md
     - Graph scattering transforms: scattering.md
+  - Changelog: changelog.md
   - About gsxform: about.md
+
+extra:
+  version:
+    provider: mike
 
 extra_css:
     - css/custom.css

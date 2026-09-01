@@ -16,6 +16,11 @@ repos:
       - id: check-added-large-files
         exclude: ^uv\.lock$
 
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.12.6
+    hooks:
+      - id: uv-lock
+
   # run mypy inside the uv-managed project environment so torch/scipy stubs
   # are available; an isolated hook env would type nn.Module as Any
   - repo: local
