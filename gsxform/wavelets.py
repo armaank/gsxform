@@ -32,7 +32,7 @@ def diffusion_wavelets(T: torch.Tensor, n_scales: int) -> torch.Tensor:
         wavelet filter bank
     """
     # make n_node x n_node identity matrix
-    I_N = torch.eye(T.shape[1])
+    I_N = torch.eye(T.shape[1], device=T.device)
 
     # compute zero-eth order (J=0) wavelet filter
     # one half the normalized laplacian operator 1/2(I-D^-1/2WD^-1/2)
@@ -47,7 +47,7 @@ def diffusion_wavelets(T: torch.Tensor, n_scales: int) -> torch.Tensor:
         # append wavelets
         psi = torch.cat((psi, psi_j), dim=0)
 
-    psi = rearrange(psi, "(b ns) ni nj -> b ns ni nj", ns=n_scales)
+    psi = rearrange(psi, "(ns b) ni nj -> b ns ni nj", ns=n_scales)
 
     return psi
 
@@ -79,7 +79,7 @@ def tighthann_wavelets(
     V_herm = rearrange(V, "b ni nj -> b nj ni")  # hermetian transpose
 
     # compute wavelet coeffs
-    psi = torch.empty(V.shape[0], 0, V.shape[1], V.shape[2])
+    psi = torch.empty(V.shape[0], 0, V.shape[1], V.shape[2], device=V.device)
     for jj in range(0, n_scales):
         # compute adapted kernel
         adapted_kernel = kernel.get_adapted_kernel(E, jj + 1)

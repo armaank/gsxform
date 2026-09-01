@@ -5,6 +5,7 @@ from importlib.metadata import version
 from .graph import (
     adjacency_to_laplacian,
     compute_spectra,
+    lazy_diffusion,
     normalize_adjacency,
     normalize_laplacian,
 )
@@ -29,5 +30,6 @@ __all__ = [
     "adjacency_to_laplacian",
     "normalize_adjacency",
     "normalize_laplacian",
+    "lazy_diffusion",
     "compute_spectra",
 ]
