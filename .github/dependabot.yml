@@ -1,0 +1,25 @@
+# Opens PRs to update dependencies
+version: 2
+
+updates:
+  # Update github-actions dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      actions:
+        patterns: ["*"]
+    commit-message:
+      prefix: "CI"
+
+  # Update package dependencies
+  - package-ecosystem: "uv"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    groups:
+      dependencies:
+        patterns: ["*"]
+    commit-message:
+      prefix: "BLD"
