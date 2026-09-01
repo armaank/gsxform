@@ -24,7 +24,6 @@ classifiers = [
 ]
 dependencies = [
     "einops",
-    "scipy",
     "torch",
     # torch ships no macOS x86_64 wheels after 2.2.2, and that build is compiled
     # against the numpy 1.x ABI (tensor <-> ndarray conversion breaks on numpy 2)
