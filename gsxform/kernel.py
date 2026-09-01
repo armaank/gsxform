@@ -47,10 +47,22 @@ class TightHannKernel:
         if omega is not None:
             self.omega = omega
             self.max_eig = self.omega(self.max_eig.float())
+        else:
+            self.omega = lambda eig: eig
+
+        if self.n_scales + 1 - self.R <= 0:
+            raise ValueError(
+                f"n_scales must be greater than {self.R - 1:g}, got {n_scales}"
+            )
 
         # dilation factor, might need to reverse this to account for swapped bounds...
         # self.d = (self.M + 1 - self.R) / (self.R * self.max_eig)
         self.d = self.R * self.max_eig / (self.n_scales + 1 - self.R)
+
+        # add a trailing axis so it broadcasts against the (batch, n_nodes)
+        # eigenvalue tensors
+        if self.d.ndim > 0:
+            self.d = self.d.unsqueeze(-1)
         # hann kernel functional form
         self.kernel: Callable[[torch.Tensor], torch.Tensor] = lambda eig: (
             sum(
