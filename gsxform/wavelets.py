@@ -6,7 +6,7 @@ TODO:
 """
 
 import torch
-from einops import rearrange
+from einops import einsum, rearrange
 
 from .graph import compute_spectra
 from .kernel import TightHannKernel
@@ -41,9 +41,8 @@ def diffusion_wavelets(T: torch.Tensor, n_scales: int) -> torch.Tensor:
     for jj in range(1, n_scales):
         # compute jth diffusion operator (wavelet kernel)
         T_j = torch.matrix_power(T, 2 ** (jj - 1))
-        # compute jth wavelet filter via matmul
-        # psi_j = torch.einsum("b n m, b n m -> b n m", T_j, (I_N - T_j))
-        psi_j = torch.matmul(T_j, (I_N - T_j))
+        # compute jth wavelet filter
+        psi_j = einsum(T_j, I_N - T_j, "b ni nk, b nk nj -> b ni nj")
         # append wavelets
         psi = torch.cat((psi, psi_j), dim=0)
 
@@ -76,17 +75,15 @@ def tighthann_wavelets(
     """
     E, V = compute_spectra(W_adj)
 
-    V_herm = rearrange(V, "b ni nj -> b nj ni")  # hermetian transpose
-
     # compute wavelet coeffs
     psi = torch.empty(V.shape[0], 0, V.shape[1], V.shape[2], device=V.device)
     for jj in range(0, n_scales):
         # compute adapted kernel
         adapted_kernel = kernel.get_adapted_kernel(E, jj + 1)
-        phi = torch.diag_embed(adapted_kernel)
 
-        # compute jth wavelet filter via matmul
-        psi_j = V.matmul(phi).matmul(V_herm)
+        # compute jth wavelet filter, V diag(kernel) V^H without building the
+        # diagonal; the second V is indexed transposed, giving the hermetian
+        psi_j = einsum(V, adapted_kernel, V, "b ni nk, b nk, b nj nk -> b ni nj")
 
         # append wavelets
         psi_j = rearrange(psi_j, "b n m -> b 1 n m")

@@ -807,7 +807,7 @@ docs = [
 
 [package.metadata]
 requires-dist = [
-    { name = "einops" },
+    { name = "einops", specifier = ">=0.6" },
     { name = "numpy", marker = "platform_machine != 'x86_64' or sys_platform != 'darwin'" },
     { name = "numpy", marker = "platform_machine == 'x86_64' and sys_platform == 'darwin'", specifier = "<2" },
     { name = "torch" },

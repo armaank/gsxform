@@ -8,7 +8,7 @@ from collections.abc import Callable
 from typing import Any
 
 import torch
-from einops import rearrange, repeat
+from einops import einsum, rearrange, repeat
 from torch import nn
 
 from .graph import compute_spectra, lazy_diffusion
@@ -143,8 +143,6 @@ class ScatteringTransform(nn.Module):
             batch_size, self.n_nodes, device=self.W_adj.device
         )
 
-        lowpass = rearrange(lowpass, "b ni -> b ni 1")
-
         return lowpass
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -172,13 +170,12 @@ class ScatteringTransform(nn.Module):
         lowpass = self.get_lowpass(batch_size)
         psi = self.get_wavelets()
 
-        # compute first scattering layer, low pass filter via matmul
-        phi = torch.matmul(x, lowpass)
+        # compute first scattering layer, low pass filter
+        phi: torch.Tensor = einsum(x, lowpass, "b f n, b n -> b f")
+        phi = rearrange(phi, "b f -> b f 1")
 
         # reshape inputs for loop
         S_x = rearrange(x, "b f n -> b 1 f n")
-        lowpass = rearrange(lowpass, "b n 1 -> b 1 n 1")
-        lowpass = repeat(lowpass, "b 1 n 1 -> b (1 ns) n 1", ns=self.n_scales)
 
         for ll in range(1, self.n_layers):
             S_x_ll = torch.empty(
@@ -186,11 +183,11 @@ class ScatteringTransform(nn.Module):
             )
 
             for jj in range(self.n_scales ** (ll - 1)):
-                # intermediate repr
-                x_jj = rearrange(S_x[:, jj, :, :], "b f n -> b 1 f n")
+                # intermediate repr, one copy per scale to contract against psi
+                x_jj = repeat(S_x[:, jj, :, :], "b f n -> b ns f n", ns=self.n_scales)
 
-                # wavelet filtering operation, matrix multiply
-                psi_x_jj = torch.matmul(x_jj, psi)
+                # wavelet filtering operation
+                psi_x_jj = einsum(x_jj, psi, "b ns f n, b ns n m -> b ns f m")
 
                 # application of non-linearity, yields scattering output
                 S_x_jj = self.nlin(psi_x_jj)
@@ -198,9 +195,8 @@ class ScatteringTransform(nn.Module):
                 # concat scattering scale for the layer
                 S_x_ll = torch.cat((S_x_ll, S_x_jj), dim=1)
 
-                # compute scattering representation, matrix multiply
-                phi_jj = torch.matmul(S_x_jj, lowpass)
-                phi_jj = rearrange(phi_jj, "b l f 1 -> b f l")
+                # compute scattering representation
+                phi_jj = einsum(S_x_jj, lowpass, "b ns f n, b n -> b f ns")
 
                 phi = torch.cat((phi, phi_jj), dim=2)
 

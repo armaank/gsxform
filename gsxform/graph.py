@@ -1,6 +1,7 @@
 """Graph utility functions."""
 
 import torch
+from einops import einsum
 
 
 def adjacency_to_laplacian(W: torch.Tensor) -> torch.Tensor:
@@ -39,10 +40,8 @@ def normalize_adjacency(W: torch.Tensor) -> torch.Tensor:
     # build degree vector
     d = W.sum(1)
     # normalize
-    D_invsqrt = torch.diag_embed(
-        1.0 / torch.sqrt(torch.max(torch.ones(d.size(), device=d.device), d))
-    )
-    W_norm = D_invsqrt.matmul(W).matmul(D_invsqrt)
+    d_invsqrt = 1.0 / torch.sqrt(torch.max(torch.ones(d.size(), device=d.device), d))
+    W_norm: torch.Tensor = einsum(d_invsqrt, W, d_invsqrt, "b i, b i j, b j -> b i j")
 
     return W_norm
 
@@ -86,10 +85,8 @@ def normalize_laplacian(L: torch.Tensor) -> torch.Tensor:
     # (https://pytorch.org/docs/stable/generated/torch.diagonal.html#torch.diagonal)
     d = torch.diagonal(L, dim1=-2, dim2=-1)
     # normalize
-    D_invsqrt = torch.diag_embed(
-        1.0 / torch.sqrt(torch.max(torch.ones(d.size(), device=d.device), d))
-    )
-    L_norm = D_invsqrt.matmul(L).matmul(D_invsqrt)
+    d_invsqrt = 1.0 / torch.sqrt(torch.max(torch.ones(d.size(), device=d.device), d))
+    L_norm: torch.Tensor = einsum(d_invsqrt, L, d_invsqrt, "b i, b i j, b j -> b i j")
 
     return L_norm
 
