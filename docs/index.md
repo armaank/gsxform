@@ -5,9 +5,9 @@
 [![tests](https://github.com/armaank/gsxform/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/armaank/gsxform/actions/workflows/tests.yml)
 [![codecov](https://codecov.io/gh/armaank/gsxform/branch/main/graph/badge.svg?token=AUFSGAPB4O)](https://codecov.io/gh/armaank/gsxform)
 [![docs](https://github.com/armaank/gsxform/actions/workflows/docs.yml/badge.svg?branch=main)](https://github.com/armaank/gsxform/actions/workflows/docs.yml)
+[![PyPI](https://img.shields.io/pypi/v/gsxform)](https://pypi.org/project/gsxform/)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 [![ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![license](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![DOI](https://zenodo.org/badge/513695351.svg)](https://zenodo.org/badge/latestdoi/513695351)
  ---
@@ -22,30 +22,35 @@ Behavior can potentially be unstable and consistency is not guaranteed.
 
 ## Installation
 
-### Official Release
+`gsxform` requires Python 3.10 or later.
 
-`gsxform` is available on PyPi:
+### Latest version (recommended)
+
 
 ```bash
-pip install gsxform
+uv add "gsxform @ git+https://github.com/armaank/gsxform"
 ```
 
-`gsxform` supports Python 3.10 and newer.
-
-### Pre-releases
-
-The most up-to-date version of `gsxform` can be installed via git:
+Or, to use a specific branch not yet merged to main
 
 ```bash
-pip install git+https://github.com/armaank/gsxform.git
+uv add "gsxform @ git+https://github.com/armaank/gsxform@branch-name"
+```
+
+### Stable Version
+
+To install the latest stable release from PyPI:
+
+```bash
+uv add gsxform
+# or
+pip install gsxform
 ```
 
 ### Development version
 
 `gsxform` uses [`uv`](https://docs.astral.sh/uv/) to manage environments and
-dependencies. To work on `gsxform` itself, clone the repository and run `make install`,
-which creates the virtual environment, installs `gsxform` in editable mode along with
-the development and documentation dependencies, and sets up the `pre-commit` hooks:
+dependencies. To work on `gsxform` itself, clone the repository and run `make install`:
 
 ```bash
 git clone https://github.com/armaank/gsxform.git
@@ -53,16 +58,11 @@ cd gsxform
 make install
 ```
 
-From there, `make` on its own lists the available targets:
+This creates the virtual environment, installs `gsxform` with development and
+documentation dependencies, and sets up the `pre-commit` hooks. The
+[development guide](https://armaank.github.io/gsxform/development/) covers the `make`
+targets, code style, branching, and the release process.
 
-```bash
-make tests      # run the test suite with coverage
-make lint       # check formatting and lint rules
-make typecheck  # run mypy
-make docs       # build the documentation site
-```
-
-See the [installation page](install.md) for more detail.
 
 ## License
 
@@ -72,4 +72,5 @@ Modifications, adaptations and derivative work is encouraged!
 
 ## Citation
 
-If you use `gsxform`, please cite using the [Zenodo DOI](https://zenodo.org/record/7069114)
+If you use `gsxform`, please cite using the
+[Zenodo DOI](https://doi.org/10.5281/zenodo.7069113)

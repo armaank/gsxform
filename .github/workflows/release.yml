@@ -1,0 +1,106 @@
+# Publishing is manual. Bump `version` in pyproject.toml, merge it, then run
+# this workflow from the Actions tab. Nothing here fires on a push or a merge.
+#
+# The version is read from pyproject.toml; the alias below is what the docs
+# version selector will point at (latest, stable, ...).
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      alias:
+        description: "Docs alias for this release"
+        required: true
+        default: latest
+        type: choice
+        options: [latest, stable]
+      set-default:
+        description: "Make this alias the site's default version"
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.0.1
+      - id: get
+        run: echo "version=$(uv version --short)" >> "$GITHUB_OUTPUT"
+
+  # Freezes the docs at this version and moves the chosen alias onto it.
+  #
+  # Runs before publishing because it is idempotent: re-running the workflow
+  # simply redeploys the same version. Uploading to PyPI is not, so it goes as
+  # late as possible.
+  docs:
+    needs: version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # mike commits to gh-pages
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          enable-cache: true
+      - name: Sync environment
+        run: uv sync --locked --group docs
+      - name: Deploy versioned docs
+        env:
+          VERSION: ${{ needs.version.outputs.version }}
+          ALIAS: ${{ inputs.alias }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          uv run mike deploy --push --update-aliases "${VERSION}" "${ALIAS}"
+      - name: Set default version
+        if: inputs.set-default
+        env:
+          ALIAS: ${{ inputs.alias }}
+        run: uv run mike set-default --push "${ALIAS}"
+
+  # The one irreversible step, so it runs as late as anything that can fail:
+  # a version cannot be re-uploaded to PyPI, and everything before this point
+  # is safe to re-run.
+  publish:
+    needs: [version, docs]
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write # PyPI Trusted Publishing; no API token is stored
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          enable-cache: true
+      - name: Build distributions
+        run: uv build
+      - name: Check metadata
+        run: uvx twine check dist/*
+      - uses: pypa/gh-action-pypi-publish@release/v1
+
+  # Marks the released commit only once everything else has succeeded. Trivially
+  # redone by hand (`gh release create`) if this single step ever fails.
+  tag:
+    needs: [version, publish, docs]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - name: Tag and create release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ needs.version.outputs.version }}
+        run: |
+          gh release create "v${VERSION}" \
+            --title "v${VERSION}" \
+            --generate-notes
