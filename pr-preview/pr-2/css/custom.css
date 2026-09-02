@@ -1,0 +1,16 @@
+/* div.autodoc-docstring {
+  padding-left: 20px;
+  margin-bottom: 30px;
+  border-left: 5px solid rgba(230, 230, 230);
+}
+
+div.autodoc-members {
+  padding-left: 20px;
+  margin-bottom: 15px;
+}
+*/
+:root > * {
+    --md-primary-fg-color:        #225910;
+    --md-primary-fg-color--light: #fffff8;
+    --md-primary-fg-color--dark:  #225910;
+}
