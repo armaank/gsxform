@@ -73,6 +73,8 @@ class ScatteringTransform(nn.Module):
 
     """
 
+    W_adj: torch.Tensor
+
     def __init__(
         self,
         W_adj: torch.Tensor,
@@ -264,6 +266,9 @@ class TightHann(ScatteringTransform):
     wavelets.
 
     """
+
+    _warp_xp: torch.Tensor
+    _warp_fp: torch.Tensor
 
     def __init__(
         self,

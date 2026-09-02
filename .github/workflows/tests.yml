@@ -83,7 +83,6 @@ jobs:
       - name: Check metadata
         run: uvx twine check dist/*
 
-  # Aggregates lint, tests and packaging into one check for branch protection
   ci-ok:
     if: always()
     needs: [lint, test, build]
