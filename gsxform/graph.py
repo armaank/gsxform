@@ -1,9 +1,7 @@
-"""graph utility functions.
-"""
-
-from typing import Tuple
+"""Graph utility functions."""
 
 import torch
+from einops import einsum
 
 
 def adjacency_to_laplacian(W: torch.Tensor) -> torch.Tensor:
@@ -42,10 +40,31 @@ def normalize_adjacency(W: torch.Tensor) -> torch.Tensor:
     # build degree vector
     d = W.sum(1)
     # normalize
-    D_invsqrt = torch.diag_embed(1.0 / torch.sqrt(torch.max(torch.ones(d.size()), d)))
-    W_norm = D_invsqrt.matmul(W).matmul(D_invsqrt)
+    d_invsqrt = 1.0 / torch.sqrt(torch.max(torch.ones(d.size(), device=d.device), d))
+    W_norm: torch.Tensor = einsum(d_invsqrt, W, d_invsqrt, "b i, b i j, b j -> b i j")
 
     return W_norm
+
+
+def lazy_diffusion(W: torch.Tensor) -> torch.Tensor:
+    """Build the lazy diffusion operator T = 1/2 (I+A).
+
+    Parameters
+    ----------
+    W: torch.Tensor
+        Batch of adjacency matricies.
+
+    Returns
+    -------
+    torch.Tensor
+        Batch of lazy diffusion operators.
+
+    """
+    I_N = torch.eye(W.shape[-1], device=W.device)
+
+    T = 1 / 2 * (I_N + normalize_adjacency(W))
+
+    return T
 
 
 def normalize_laplacian(L: torch.Tensor) -> torch.Tensor:
@@ -66,13 +85,13 @@ def normalize_laplacian(L: torch.Tensor) -> torch.Tensor:
     # (https://pytorch.org/docs/stable/generated/torch.diagonal.html#torch.diagonal)
     d = torch.diagonal(L, dim1=-2, dim2=-1)
     # normalize
-    D_invsqrt = torch.diag_embed(1.0 / torch.sqrt(torch.max(torch.ones(d.size()), d)))
-    L_norm = D_invsqrt.matmul(L).matmul(D_invsqrt)
+    d_invsqrt = 1.0 / torch.sqrt(torch.max(torch.ones(d.size(), device=d.device), d))
+    L_norm: torch.Tensor = einsum(d_invsqrt, L, d_invsqrt, "b i, b i j, b j -> b i j")
 
     return L_norm
 
 
-def compute_spectra(W: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+def compute_spectra(W: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
     """Compute the spectra of graph Laplacian from its adjacency matrix.
 
     Performs an eigendecomposition (w/o assuming additional structure)

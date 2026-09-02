@@ -6,4 +6,6 @@
 
 ::: gsxform.graph.normalize_laplacian
 
+::: gsxform.graph.lazy_diffusion
+
 ::: gsxform.graph.compute_spectra

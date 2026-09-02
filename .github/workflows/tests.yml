@@ -1,28 +1,94 @@
+# Covers lint, types, tests and packaging.
 name: tests
-on: [push]
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps: 
-      - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
-      - uses: actions/checkout@v2
-      - name: Setup env
-        shell: bash -l {0}
-        run: |
-          echo "Setting up development environment..."
-          make setup-pip
-          echo "Set up sucessfull"  
-      - name: run tests
-        shell: bash -l {0}
-        run: |
-          echo "starting tests..."
-          make tests
-      - name: compute and upload codecov
-        uses: codecov/codecov-action@v1
-        with:
-           token: ${{ secrets.CODECOV_TOKEN }}
-           file: ./coverage.xml
-           name: codecov-umbrella
-           fail_ci_if_error: true
 
-           # add additional configs here for make test, code cov computation
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# On a PR, a new push supersedes the previous incomplete run. Runs on main are
+# never cancelled, so the badge never reflects a cancelled build.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+
+  # Lint and type check
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          enable-cache: true
+      - name: Sync environment
+        run: uv sync --locked --all-groups
+      - name: Lint
+        run: make lint
+      - name: Type check
+        run: make typecheck
+
+  # Run tests on multiple OS and Python versions
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        include:
+          # Apple Silicon: same resolution as linux
+          - os: macos-latest
+            python-version: "3.12"
+          # Intel mac: torch has no wheels past 2.2.2, which pins numpy to 1.x.
+          # 3.12 is the newest interpreter that resolution supports.
+          - os: macos-15-intel
+            python-version: "3.12"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          enable-cache: true
+          python-version: ${{ matrix.python-version }}
+      - name: Sync environment
+        run: uv sync --locked --all-groups
+      - name: Show resolved versions
+        run: uv run python -c "import torch, numpy; print(torch.__version__, numpy.__version__)"
+      - name: Run tests
+        run: make tests
+      - name: Upload coverage
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
+        uses: codecov/codecov-action@v7
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          name: codecov-umbrella
+          fail_ci_if_error: false
+
+  # Builds and validates a wheel on every PR. Does not publish
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          enable-cache: true
+      - name: Build distributions
+        run: uv build
+      - name: Check metadata
+        run: uvx twine check dist/*
+
+  ci-ok:
+    if: always()
+    needs: [lint, test, build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify all jobs passed
+        uses: re-actors/alls-green@release/v1
+        with:
+          jobs: ${{ toJSON(needs) }}

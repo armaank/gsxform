@@ -1,4 +1,4 @@
-"""Implementations of graph wavelet transforms and kernel functions
+"""Implementations of graph wavelet transforms and kernel functions.
 
 TODO:
     - figure out wavelet vs kernel notation
@@ -6,14 +6,14 @@ TODO:
 """
 
 import torch
-from einops import rearrange
+from einops import einsum, rearrange
 
 from .graph import compute_spectra
 from .kernel import TightHannKernel
 
 
 def diffusion_wavelets(T: torch.Tensor, n_scales: int) -> torch.Tensor:
-    """Compute diffusion wavelet filter bank
+    """Compute diffusion wavelet filter bank.
 
     Computes diffusion wavelets from from input diffusion matrix.
     Implementation based off the algorithm originally described in
@@ -31,9 +31,8 @@ def diffusion_wavelets(T: torch.Tensor, n_scales: int) -> torch.Tensor:
     phi: torch.Tensor
         wavelet filter bank
     """
-
     # make n_node x n_node identity matrix
-    I_N = torch.eye(T.shape[1])
+    I_N = torch.eye(T.shape[1], device=T.device)
 
     # compute zero-eth order (J=0) wavelet filter
     # one half the normalized laplacian operator 1/2(I-D^-1/2WD^-1/2)
@@ -42,13 +41,12 @@ def diffusion_wavelets(T: torch.Tensor, n_scales: int) -> torch.Tensor:
     for jj in range(1, n_scales):
         # compute jth diffusion operator (wavelet kernel)
         T_j = torch.matrix_power(T, 2 ** (jj - 1))
-        # compute jth wavelet filter via matmul
-        # psi_j = torch.einsum("b n m, b n m -> b n m", T_j, (I_N - T_j))
-        psi_j = torch.matmul(T_j, (I_N - T_j))
+        # compute jth wavelet filter
+        psi_j = einsum(T_j, I_N - T_j, "b ni nk, b nk nj -> b ni nj")
         # append wavelets
-        psi = torch.cat((psi, psi_j), axis=0)
+        psi = torch.cat((psi, psi_j), dim=0)
 
-    psi = rearrange(psi, "(b ns) ni nj -> b ns ni nj", ns=n_scales)
+    psi = rearrange(psi, "(ns b) ni nj -> b ns ni nj", ns=n_scales)
 
     return psi
 
@@ -56,8 +54,9 @@ def diffusion_wavelets(T: torch.Tensor, n_scales: int) -> torch.Tensor:
 def tighthann_wavelets(
     W_adj: torch.Tensor, n_scales: int, kernel: TightHannKernel
 ) -> torch.Tensor:
-    """Computes spectrum adapted tight Hann wavelets. Based
-    of algorithm described in Shuman et. al 2015.
+    """Compute spectrum adapted tight Hann wavelets.
+
+    Based off the algorithm described in Shuman et. al 2015.
 
     Parameters
     ----------
@@ -76,22 +75,19 @@ def tighthann_wavelets(
     """
     E, V = compute_spectra(W_adj)
 
-    V_herm = rearrange(V, "b ni nj -> b nj ni")  # hermetian transpose
-
     # compute wavelet coeffs
-    psi = torch.empty(V.shape[0], 0, V.shape[1], V.shape[2])
+    psi = torch.empty(V.shape[0], 0, V.shape[1], V.shape[2], device=V.device)
     for jj in range(0, n_scales):
-
         # compute adapted kernel
         adapted_kernel = kernel.get_adapted_kernel(E, jj + 1)
-        phi = torch.diag_embed(adapted_kernel)
 
-        # compute jth wavelet filter via matmul
-        psi_j = V.matmul(phi).matmul(V_herm)
+        # compute jth wavelet filter, V diag(kernel) V^H without building the
+        # diagonal; the second V is indexed transposed, giving the hermetian
+        psi_j = einsum(V, adapted_kernel, V, "b ni nk, b nk, b nj nk -> b ni nj")
 
         # append wavelets
         psi_j = rearrange(psi_j, "b n m -> b 1 n m")
 
-        psi = torch.cat((psi, psi_j), axis=1)
+        psi = torch.cat((psi, psi_j), dim=1)
 
     return psi
