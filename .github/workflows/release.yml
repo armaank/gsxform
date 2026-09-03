@@ -42,6 +42,11 @@ jobs:
   docs:
     needs: version
     runs-on: ubuntu-latest
+    # Shares docs.yml's repo-wide group so gh-pages has a single writer queue.
+    concurrency:
+      group: docs
+      cancel-in-progress: false
+      queue: max
     permissions:
       contents: write # mike commits to gh-pages
     steps:
@@ -75,7 +80,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: pypi
     permissions:
-      id-token: write # PyPI Trusted Publishing; no API token is stored
+      id-token: write
     steps:
       - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v10.0.1

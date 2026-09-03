@@ -131,3 +131,6 @@ dmypy.json
 
 # mknotebooks intermediate output
 *.md.tmp
+
+# Claude/Codex/OpenCode
+CLAUDE.md
