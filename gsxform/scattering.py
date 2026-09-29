@@ -64,6 +64,24 @@ def _interp(x: torch.Tensor, xp: torch.Tensor, fp: torch.Tensor) -> torch.Tensor
     return out.squeeze(-1) if squeeze else out
 
 
+def _left_pad(points: torch.Tensor, width: int) -> torch.Tensor:
+    """Pad (1, n) points to (1, width) by repeating the first point."""
+    first = points[:, :1].expand(-1, width - points.shape[-1])
+    return torch.cat((first, points), dim=-1)
+
+
+def _same_tensor(cached: torch.Tensor | None, new: torch.Tensor | None) -> bool:
+    """Check whether a cached tensor holds exactly the values of a new one."""
+    if cached is None or new is None:
+        return cached is None and new is None
+    return (
+        cached.shape == new.shape
+        and cached.dtype == new.dtype
+        and cached.device == new.device
+        and torch.equal(cached, new)
+    )
+
+
 class ScatteringTransform(nn.Module):
     """ScatteringTransform base class. Inherits from PyTorch nn.Module.
 
@@ -74,6 +92,7 @@ class ScatteringTransform(nn.Module):
     """
 
     _cached_adj: torch.Tensor | None
+    _cached_mask: torch.Tensor | None
     _cached_psi: torch.Tensor | None
 
     def __init__(
@@ -116,43 +135,47 @@ class ScatteringTransform(nn.Module):
         # derived from the graph and shaped by its size, so kept out of the
         # state dict; the adjacency is kept to detect when the graph changes
         self.register_buffer("_cached_adj", None, persistent=False)
+        self.register_buffer("_cached_mask", None, persistent=False)
         self.register_buffer("_cached_psi", None, persistent=False)
 
     def reset_parameters(self) -> None:
         """Clear the cached filter bank."""
         self._cached_adj = None
+        self._cached_mask = None
         self._cached_psi = None
 
-    def _build_wavelets(self, W_adj: torch.Tensor) -> torch.Tensor:
+    def _build_wavelets(
+        self, W_adj: torch.Tensor, mask: torch.Tensor | None
+    ) -> torch.Tensor:
         """Check the adjacency matrix is square, then build its filter bank."""
         assert W_adj.shape[-1] == W_adj.shape[-2], (
             f"W_adj must be square, got shape {tuple(W_adj.shape)}"
         )
-        return self.get_wavelets(W_adj)
+        return self.get_wavelets(W_adj, mask)
 
-    def _get_wavelets_cached(self, W_adj: torch.Tensor) -> torch.Tensor:
+    def _get_wavelets_cached(
+        self, W_adj: torch.Tensor, mask: torch.Tensor | None
+    ) -> torch.Tensor:
         """Return the filter bank for `W_adj`, reusing the cache when enabled."""
-        
         if not self.cached or W_adj.requires_grad:
-            return self._build_wavelets(W_adj)
+            return self._build_wavelets(W_adj, mask)
 
-        cached_adj = self._cached_adj
         if (
             self._cached_psi is not None
-            and cached_adj is not None
-            and cached_adj.shape == W_adj.shape
-            and cached_adj.dtype == W_adj.dtype
-            and cached_adj.device == W_adj.device
-            and torch.equal(cached_adj, W_adj)
+            and _same_tensor(self._cached_adj, W_adj)
+            and _same_tensor(self._cached_mask, mask)
         ):
             return self._cached_psi
 
-        psi = self._build_wavelets(W_adj)
+        psi = self._build_wavelets(W_adj, mask)
         self._cached_adj = W_adj.detach().clone()
+        self._cached_mask = None if mask is None else mask.clone()
         self._cached_psi = psi
         return psi
 
-    def get_wavelets(self, W_adj: torch.Tensor) -> torch.Tensor:
+    def get_wavelets(
+        self, W_adj: torch.Tensor, mask: torch.Tensor | None = None
+    ) -> torch.Tensor:
         """Compute the wavelet operator.
 
         Subclasses are required to implement this method.
@@ -160,17 +183,14 @@ class ScatteringTransform(nn.Module):
         Parameters
         ----------
         W_adj: torch.Tensor
-            Batch of weighted adjacency matrices
+            Batch of weighted adjacency matrices. Padded nodes have no edges.
+        mask: torch.Tensor, optional
+            Boolean tensor shaped (batch, n_nodes), true on real nodes. None
+            when every graph fills all `n_nodes`.
         """
         raise NotImplementedError
 
-    def get_lowpass(
-        self,
-        batch_size: int,
-        n_nodes: int,
-        device: torch.device,
-        dtype: torch.dtype,
-    ) -> torch.Tensor:
+    def get_lowpass(self, mask: torch.Tensor, dtype: torch.dtype) -> torch.Tensor:
         """Compute lowpass filtering/pooling operator.
 
         This should roughly resemble an average, it alters the output
@@ -180,27 +200,27 @@ class ScatteringTransform(nn.Module):
 
         Parameters
         ----------
-        batch_size: int
-            Number of graphs in the batch
-        n_nodes: int
-            Number of nodes per graph
-        device: torch.device
-            Device to allocate the operator on
+        mask: torch.Tensor
+            Boolean tensor shaped (batch, n_nodes), true on real nodes
         dtype: torch.dtype
             Floating point type of the operator
 
         Returns
         -------
         lowpass: torch.Tensor
-            average pooling operator
+            average pooling operator over each graph's real nodes
         """
-        lowpass = (1 / n_nodes) * torch.ones(
-            batch_size, n_nodes, device=device, dtype=dtype
-        )
+        weights = mask.to(dtype)
+        lowpass = weights / weights.sum(dim=-1, keepdim=True)
 
         return lowpass
 
-    def forward(self, x: torch.Tensor, W_adj: torch.Tensor) -> torch.Tensor:
+    def forward(
+        self,
+        x: torch.Tensor,
+        W_adj: torch.Tensor,
+        mask: torch.Tensor | None = None,
+    ) -> torch.Tensor:
         """Forward pass of a generic scattering transform.
 
         Parameters
@@ -209,6 +229,9 @@ class ScatteringTransform(nn.Module):
             input batch of graph signals
         W_adj: torch.Tensor
             Batch of weighted adjacency matrices
+        mask: torch.Tensor, optional
+            Padding mask, boolean tensor shaped (batch, n_nodes)
+            Padded entries of `x` and `W_adj` are ignored. Defaults to None
 
         Returns
         -------
@@ -218,7 +241,17 @@ class ScatteringTransform(nn.Module):
         """
         batch_size, n_features, n_nodes = x.shape
 
-        psi = self._get_wavelets_cached(W_adj)
+        if mask is not None:
+            assert mask.shape == (batch_size, n_nodes), (
+                f"mask must be shaped {(batch_size, n_nodes)}, got {tuple(mask.shape)}"
+            )
+            assert mask.dtype == torch.bool, f"mask must be bool, got {mask.dtype}"
+            # isolate padded nodes and silence their signal, so padding cannot
+            # leak into the real nodes whatever the caller filled it with
+            W_adj = W_adj * (mask[:, :, None] & mask[:, None, :])
+            x = x.masked_fill(~mask[:, None, :], 0)
+
+        psi = self._get_wavelets_cached(W_adj, mask)
 
         assert psi.shape[0] == batch_size, (
             f"batch size of x ({batch_size}) must match W_adj ({psi.shape[0]})"
@@ -227,7 +260,9 @@ class ScatteringTransform(nn.Module):
             f"node count of x ({n_nodes}) must match W_adj ({psi.shape[-1]})"
         )
 
-        lowpass = self.get_lowpass(batch_size, n_nodes, x.device, x.dtype)
+        if mask is None:
+            mask = torch.ones(batch_size, n_nodes, dtype=torch.bool, device=x.device)
+        lowpass = self.get_lowpass(mask, x.dtype)
 
         # compute first scattering layer, low pass filter
         phi: torch.Tensor = einsum(x, lowpass, "b f n, b n -> b f")
@@ -297,7 +332,9 @@ class Diffusion(ScatteringTransform):
         """
         super().__init__(n_scales, n_layers, nlin, cached)
 
-    def get_wavelets(self, W_adj: torch.Tensor) -> torch.Tensor:
+    def get_wavelets(
+        self, W_adj: torch.Tensor, mask: torch.Tensor | None = None
+    ) -> torch.Tensor:
         """Subclass method used to get wavelet filter bank.
 
         This method returns diffusion wavelets
@@ -306,6 +343,8 @@ class Diffusion(ScatteringTransform):
         ----------
         W_adj: torch.Tensor
             Batch of weighted adjacency matrices
+        mask: torch.Tensor, optional
+            Unused because T` is block diagonal
 
         Returns
         -------
@@ -359,7 +398,7 @@ class TightHann(ScatteringTransform):
         self.use_warp = use_warp
 
     def warp_func(
-        self, spectra: torch.Tensor
+        self, spectra: torch.Tensor, mask: torch.Tensor | None = None
     ) -> Callable[[torch.Tensor], torch.Tensor]:
         """Compute the spectrum-adaptive warping function.
 
@@ -368,12 +407,35 @@ class TightHann(ScatteringTransform):
         spectra: torch.Tensor
             Eigenvalues of each graph's Laplacian, sorted ascending, shaped
             (batch, n_nodes)
+        mask: torch.Tensor, optional
+            Boolean tensor shaped (batch, n_nodes), true on real nodes
 
         Returns
         -------
         Callable[[torch.Tensor], torch.Tensor]
             Per-graph piecewise linear approximation of the spectral CDF
         """
+        if mask is None:
+            xp, fp = self._warp_points(spectra)
+        else:
+            # padded nodes add an extra eigenvalue at zero, needs to be removed
+            # for CDF to be correct
+            n_eigs = spectra.shape[-1]
+            points = [
+                self._warp_points(spec[n_eigs - int(n_real) :].unsqueeze(0))
+                for spec, n_real in zip(spectra, mask.sum(dim=-1), strict=True)
+            ]
+            width = max(xp_i.shape[-1] for xp_i, _ in points)
+
+            # left-pad by repeating the first point
+            xp = torch.cat([_left_pad(xp_i, width) for xp_i, _ in points], dim=0)
+            fp = torch.cat([_left_pad(fp_i, width) for _, fp_i in points], dim=0)
+
+        # switched from lambda to partial so the kernel stays picklable
+        return partial(_interp, xp=xp.contiguous(), fp=fp.contiguous())
+
+    def _warp_points(self, spectra: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+        """Sample the spectral CDF at the points the warp interpolates between."""
         n_eigs = spectra.shape[-1]
         cdf = torch.arange(0, n_eigs, device=spectra.device, dtype=spectra.dtype) / (
             n_eigs - 1.0
@@ -387,16 +449,19 @@ class TightHann(ScatteringTransform):
         else:
             xp, fp = spectra, cdf
 
-        # switched from lambda to partial so the kernel stays picklable
-        return partial(_interp, xp=xp.contiguous(), fp=fp.contiguous())
+        return xp, fp
 
-    def get_kernel(self, E: torch.Tensor) -> TightHannKernel:
+    def get_kernel(
+        self, E: torch.Tensor, mask: torch.Tensor | None = None
+    ) -> TightHannKernel:
         """Compute TightHann kernel adaptively.
 
         Parameters
         ----------
         E: torch.Tensor
             Eigenvalues of each graph's Laplacian, shaped (batch, n_nodes)
+        mask: torch.Tensor, optional
+            Boolean tensor shaped (batch, n_nodes), true on real nodes
 
         Returns
         -------
@@ -405,9 +470,13 @@ class TightHann(ScatteringTransform):
         """
         # sort within each graph
         spectra, _ = torch.sort(E, dim=-1)
-        return TightHannKernel(self.n_scales, spectra[:, -1], self.warp_func(spectra))
+        return TightHannKernel(
+            self.n_scales, spectra[:, -1], self.warp_func(spectra, mask)
+        )
 
-    def get_wavelets(self, W_adj: torch.Tensor) -> torch.Tensor:
+    def get_wavelets(
+        self, W_adj: torch.Tensor, mask: torch.Tensor | None = None
+    ) -> torch.Tensor:
         """Subclass method used to get wavelet filter bank.
 
         This method returns tight Hann wavelets
@@ -416,6 +485,8 @@ class TightHann(ScatteringTransform):
         ----------
         W_adj: torch.Tensor
             Batch of weighted adjacency matrices
+        mask: torch.Tensor, optional
+            Padding mask, boolean tensor shaped (batch, n_nodes)
 
         Returns
         -------
@@ -423,10 +494,9 @@ class TightHann(ScatteringTransform):
             tight Hann wavelet operator
 
         """
-
         E, V = compute_spectra(W_adj)
         psi = tighthann_wavelets(
-            W_adj, self.n_scales, self.get_kernel(E), spectra=(E, V)
+            W_adj, self.n_scales, self.get_kernel(E, mask), spectra=(E, V)
         )
 
         return psi
