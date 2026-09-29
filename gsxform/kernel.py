@@ -46,7 +46,7 @@ class TightHannKernel:
 
         if omega is not None:
             self.omega = omega
-            self.max_eig = self.omega(self.max_eig.float())
+            self.max_eig = self.omega(self.max_eig)
         else:
             self.omega = lambda eig: eig
 

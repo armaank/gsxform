@@ -40,7 +40,7 @@ def normalize_adjacency(W: torch.Tensor) -> torch.Tensor:
     # build degree vector
     d = W.sum(1)
     # normalize
-    d_invsqrt = 1.0 / torch.sqrt(torch.max(torch.ones(d.size(), device=d.device), d))
+    d_invsqrt = 1.0 / torch.sqrt(torch.max(torch.ones_like(d), d))
     W_norm: torch.Tensor = einsum(d_invsqrt, W, d_invsqrt, "b i, b i j, b j -> b i j")
 
     return W_norm
@@ -60,7 +60,7 @@ def lazy_diffusion(W: torch.Tensor) -> torch.Tensor:
         Batch of lazy diffusion operators.
 
     """
-    I_N = torch.eye(W.shape[-1], device=W.device)
+    I_N = torch.eye(W.shape[-1], device=W.device, dtype=W.dtype)
 
     T = 1 / 2 * (I_N + normalize_adjacency(W))
 
@@ -85,7 +85,7 @@ def normalize_laplacian(L: torch.Tensor) -> torch.Tensor:
     # (https://pytorch.org/docs/stable/generated/torch.diagonal.html#torch.diagonal)
     d = torch.diagonal(L, dim1=-2, dim2=-1)
     # normalize
-    d_invsqrt = 1.0 / torch.sqrt(torch.max(torch.ones(d.size(), device=d.device), d))
+    d_invsqrt = 1.0 / torch.sqrt(torch.max(torch.ones_like(d), d))
     L_norm: torch.Tensor = einsum(d_invsqrt, L, d_invsqrt, "b i, b i j, b j -> b i j")
 
     return L_norm
