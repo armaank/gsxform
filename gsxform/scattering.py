@@ -6,6 +6,7 @@ TODO:
 
 from collections.abc import Callable
 from functools import partial
+from typing import Literal
 
 import torch
 from einops import einsum, rearrange, repeat
@@ -101,12 +102,19 @@ class ScatteringTransform(nn.Module):
         n_layers: int,
         nlin: Callable[[torch.Tensor], torch.Tensor] = torch.abs,
         cached: bool = False,
+        output: Literal["graph", "node"] = "graph",
+        aggregation: Literal["mean", "moments"] = "mean",
+        moments: tuple[int, ...] = (1, 2, 3, 4),
     ) -> None:
         """Initialize scattering transform base class.
 
         This is a base class, and implements only the logic to compute
         an arbitrary scattering transform. The method `get_wavelets`
-        must be implemented by the subclass
+        must be implemented by the subclass. 
+
+        Scattering coefficients are ordered depth-major, then by parent path, 
+        then by scale. 
+
 
         Parameters
         ----------
@@ -120,8 +128,30 @@ class ScatteringTransform(nn.Module):
             If set to True, the filter bank is cached on first execution and
             reused while the same adjacency matrix is passed. A different
             adjacency, or one that requires grad, rebuilds it. Defaults to False
+        output: str
+            "graph" pools each scattering path over the nodes, giving
+            (batch, n_features, n_coefficients), the standard graph scattering transform.
+            "node" skips pooling and returns the graph signal 
+            (batch, n_features, n_coefficients, n_nodes), used for node-level tasks).
+            Defaults to "graph"
+        aggregation: str
+            How "graph" output pools over nodes. "mean" averages each path, the 
+            standard graph scattering transform. 
+            "moments" averages `|path| ** q` for each q in `moments`,
+            following Gao, Wolf & Hirn 2019, giving n_coefficients *
+            len(moments) values per feature, coefficient-major, the so-called 
+            geometric scattering transform. Defaults to "mean"
+        moments: tuple[int, ...]
+            Moment orders used by `aggregation="moments"`. Defaults to (1, 2, 3, 4)
         """
         super().__init__()
+
+        if output not in ("graph", "node"):
+            raise ValueError(f"output must be 'graph' or 'node', got {output!r}")
+        if aggregation not in ("mean", "moments"):
+            raise ValueError(
+                f"aggregation must be 'mean' or 'moments', got {aggregation!r}"
+            )
 
         # number of scales
         self.n_scales = n_scales
@@ -132,11 +162,32 @@ class ScatteringTransform(nn.Module):
 
         self.cached = cached
 
+        self.output = output
+        self.aggregation = aggregation
+        self.moments = moments
+
         # derived from the graph and shaped by its size, so kept out of the
         # state dict; the adjacency is kept to detect when the graph changes
         self.register_buffer("_cached_adj", None, persistent=False)
         self.register_buffer("_cached_mask", None, persistent=False)
         self.register_buffer("_cached_psi", None, persistent=False)
+
+    def path_index(self) -> list[tuple[int, ...]]:
+        """List the scale path behind each scattering coefficient.
+
+        Returns
+        -------
+        list[tuple[int, ...]]
+            One tuple of scale indices per coefficient, in output order: `()`
+            for the input itself, `(j1,)` for the first layer, `(j1, j2)` for
+            the second, and so on
+        """
+        paths: list[tuple[int, ...]] = [()]
+        layer: list[tuple[int, ...]] = [()]
+        for _ in range(1, self.n_layers):
+            layer = [path + (jj,) for path in layer for jj in range(self.n_scales)]
+            paths.extend(layer)
+        return paths
 
     def reset_parameters(self) -> None:
         """Clear the cached filter bank."""
@@ -239,7 +290,7 @@ class ScatteringTransform(nn.Module):
             scattering representation of the input batch
 
         """
-        batch_size, n_features, n_nodes = x.shape
+        batch_size, _, n_nodes = x.shape
 
         if mask is not None:
             assert mask.shape == (batch_size, n_nodes), (
@@ -262,19 +313,57 @@ class ScatteringTransform(nn.Module):
 
         if mask is None:
             mask = torch.ones(batch_size, n_nodes, dtype=torch.bool, device=x.device)
+
+        # apply scattering transform 
+        U = self._propagate(x, psi)
+
+        # special case for node outputs, which are not pooled (hence no lowpass operator)
+        # directly returns the node 
+        if self.output == "node":
+            # padding can pick up rounding-level values from the filter bank
+            return U.masked_fill(~mask[:, None, None, :], 0)
+
         lowpass = self.get_lowpass(mask, x.dtype)
 
-        # compute first scattering layer, low pass filter
-        phi: torch.Tensor = einsum(x, lowpass, "b f n, b n -> b f")
-        phi = rearrange(phi, "b f -> b f 1")
+        # standard scattering transform, which pools over the nodes with a 
+        # lowpass filter
+        if self.aggregation == "mean":
+            phi: torch.Tensor = einsum(U, lowpass, "b f c n, b n -> b f c")
+            return phi
 
-        # reshape inputs for loop
+        # moment aggregation, which pools over the nodes with a lowpass filter, then raised to the qth 
+        # power for a 'geometric' scattering transform
+        moments = torch.stack(
+            [
+                einsum(U.abs() ** q, lowpass, "b f c n, b n -> b f c")
+                for q in self.moments
+            ],
+            dim=-1,
+        )
+        return rearrange(moments, "b f c q -> b f (c q)")
+
+    def _propagate(self, x: torch.Tensor, psi: torch.Tensor) -> torch.Tensor:
+        """Compute every scattering path's graph signal, before any pooling.
+
+        Parameters
+        ----------
+        x: torch.Tensor
+            Batch of graph signals, shaped (batch, n_features, n_nodes)
+        psi: torch.Tensor
+            Filter bank, shaped (batch, n_scales, n_nodes, n_nodes)
+
+        Returns
+        -------
+        torch.Tensor
+            graph signal shaped (batch, n_features, n_coefficients, n_nodes), in
+            `path_index` order
+        """
+        # the input itself is the depth zero path
         S_x = rearrange(x, "b f n -> b 1 f n")
+        signals = [S_x]
 
         for ll in range(1, self.n_layers):
-            S_x_ll = torch.empty(
-                [batch_size, 0, n_features, n_nodes], device=x.device, dtype=x.dtype
-            )
+            S_x_ll = []
 
             for jj in range(self.n_scales ** (ll - 1)):
                 # intermediate repr, one copy per scale to contract against psi
@@ -284,19 +373,13 @@ class ScatteringTransform(nn.Module):
                 psi_x_jj = einsum(x_jj, psi, "b ns f n, b ns n m -> b ns f m")
 
                 # application of non-linearity, yields scattering output
-                S_x_jj = self.nlin(psi_x_jj)
+                S_x_ll.append(self.nlin(psi_x_jj))
 
-                # concat scattering scale for the layer
-                S_x_ll = torch.cat((S_x_ll, S_x_jj), dim=1)
+            # continue iteration through the layer
+            S_x = torch.cat(S_x_ll, dim=1)
+            signals.append(S_x)
 
-                # compute scattering representation
-                phi_jj = einsum(S_x_jj, lowpass, "b ns f n, b n -> b f ns")
-
-                phi = torch.cat((phi, phi_jj), dim=2)
-
-            S_x = S_x_ll.clone()  # continue iteration through the layer
-
-        return phi
+        return rearrange(torch.cat(signals, dim=1), "b c f n -> b f c n")
 
 
 class Diffusion(ScatteringTransform):
@@ -314,6 +397,9 @@ class Diffusion(ScatteringTransform):
         n_layers: int,
         nlin: Callable[[torch.Tensor], torch.Tensor] = torch.abs,
         cached: bool = False,
+        output: Literal["graph", "node"] = "graph",
+        aggregation: Literal["mean", "moments"] = "mean",
+        moments: tuple[int, ...] = (1, 2, 3, 4),
     ) -> None:
         """Initialize diffusion scattering transform.
 
@@ -328,9 +414,15 @@ class Diffusion(ScatteringTransform):
         cached: bool
             Cache the filter bank while the adjacency is unchanged. Defaults to
             False
+        output: str
+            "graph" or "node", see `ScatteringTransform`. Defaults to "graph"
+        aggregation: str
+            "mean" or "moments", see `ScatteringTransform`. Defaults to "mean"
+        moments: tuple[int, ...]
+            Moment orders for `aggregation="moments"`. Defaults to (1, 2, 3, 4)
 
         """
-        super().__init__(n_scales, n_layers, nlin, cached)
+        super().__init__(n_scales, n_layers, nlin, cached, output, aggregation, moments)
 
     def get_wavelets(
         self, W_adj: torch.Tensor, mask: torch.Tensor | None = None
@@ -376,6 +468,9 @@ class TightHann(ScatteringTransform):
         nlin: Callable[[torch.Tensor], torch.Tensor] = torch.abs,
         use_warp: bool = True,
         cached: bool = False,
+        output: Literal["graph", "node"] = "graph",
+        aggregation: Literal["mean", "moments"] = "mean",
+        moments: tuple[int, ...] = (1, 2, 3, 4),
     ) -> None:
         """Initialize tight Hann scattering transform.
 
@@ -392,9 +487,15 @@ class TightHann(ScatteringTransform):
         cached: bool
             Cache the filter bank while the adjacency is unchanged. Defaults to
             False
+        output: str
+            "graph" or "node", see `ScatteringTransform`. Defaults to "graph"
+        aggregation: str
+            "mean" or "moments", see `ScatteringTransform`. Defaults to "mean"
+        moments: tuple[int, ...]
+            Moment orders for `aggregation="moments"`. Defaults to (1, 2, 3, 4)
 
         """
-        super().__init__(n_scales, n_layers, nlin, cached)
+        super().__init__(n_scales, n_layers, nlin, cached, output, aggregation, moments)
         self.use_warp = use_warp
 
     def warp_func(
