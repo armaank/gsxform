@@ -31,6 +31,9 @@ dependencies = [
     "numpy<2; sys_platform == 'darwin' and platform_machine == 'x86_64'",
 ]
 
+[project.optional-dependencies]
+pyg = ["torch-geometric"]
+
 [project.urls]
 Homepage = "https://github.com/armaank/gsxform"
 Documentation = "https://armaank.github.io/gsxform"
@@ -44,12 +47,21 @@ dev = [
     "pytest-cov>=6",
     "pytest-html>=4",
     "ruff>=0.9",
+    "torch-geometric",
+]
+examples = [
+    "ipykernel>=6",
+    "matplotlib>=3.8",
+    "nbconvert>=7",
+    "rdkit>=2024.9",
+    "scikit-learn>=1.4",
+    "seaborn>=0.13",
 ]
 docs = [
     "mkdocs>=1.6",
     "mkdocs-material>=9.5",
     "mkdocstrings[python]>=0.27",
-    "mknotebooks>=0.8",
+    "mkdocs-jupyter>=0.25",
     "mike>=2.2",
 ]
 
