@@ -969,7 +969,7 @@
 
 <h1 id="classifying-cuneiform-signs-with-scattering-features-and-an-svm">Classifying cuneiform signs with scattering features and an SVM<a class="headerlink" href="#classifying-cuneiform-signs-with-scattering-features-and-an-svm" title="Permanent link">&para;</a></h1>
 <p>Scattering transforms have no trainable parameters, so a common workflow is to compute
-each graph's scattering coefficients once and hand them to a standard classifier from <code>scikit-learn</code>. 
+each graph's scattering coefficients once and hand them to a standard classifier from <code>scikit-learn</code>.
 This notebook does that on the Cuneiform dataset, which consists of 267 graphs of handwritten cuneiform signs,
 each one of 30 sign classes (Kriege et al. 2018). Nodes are the wedges a sign is pressed
 from, and edges join touching wedges.</p>
@@ -993,7 +993,7 @@ kernel from <code>scikit-learn</code>.</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">gsxform</span><span class="w"> </span><span class="kn">import</span> <span class="n">TightHann</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">gsxform.pyg</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScatteringFeatures</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">"figure.dpi"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">50</span>  
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">"figure.dpi"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">50</span>
 <span class="n">ROOT</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">notebook_dir</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"data"</span>
 <span class="n">_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </code></pre></div>

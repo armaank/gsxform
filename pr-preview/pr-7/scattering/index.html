@@ -1240,9 +1240,9 @@ operators.</p>
 
         <p>This is a base class, and implements only the logic to compute
 an arbitrary scattering transform. The method <code>get_wavelets</code>
-must be implemented by the subclass. </p>
-<p>Scattering coefficients are ordered depth-major, then by parent path, 
-then by scale. </p>
+must be implemented by the subclass.</p>
+<p>Scattering coefficients are ordered depth-major, then by parent path,
+then by scale.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -1333,7 +1333,7 @@ adjacency, or one that requires grad, rebuilds it. Defaults to False</p>
               <div class="doc-md-description">
                 <p>"graph" pools each scattering path over the nodes, giving
 (batch, n_features, n_coefficients), the standard graph scattering transform.
-"node" skips pooling and returns the graph signal 
+"node" skips pooling and returns the graph signal
 (batch, n_features, n_coefficients, n_nodes), used for node-level tasks).
 Defaults to "graph"</p>
               </div>
@@ -1351,11 +1351,11 @@ Defaults to "graph"</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>How "graph" output pools over nodes. "mean" averages each path, the 
-standard graph scattering transform. 
+                <p>How "graph" output pools over nodes. "mean" averages each path, the
+standard graph scattering transform.
 "moments" averages <code>|path| ** q</code> for each q in <code>moments</code>,
 following Gao, Wolf &amp; Hirn 2019, giving n_coefficients *
-len(moments) values per feature, coefficient-major, the so-called 
+len(moments) values per feature, coefficient-major, the so-called
 geometric scattering transform. Defaults to "mean"</p>
               </div>
             </td>
@@ -1479,10 +1479,10 @@ geometric scattering transform. Defaults to "mean"</p>
 
 <span class="sd">    This is a base class, and implements only the logic to compute</span>
 <span class="sd">    an arbitrary scattering transform. The method `get_wavelets`</span>
-<span class="sd">    must be implemented by the subclass. </span>
+<span class="sd">    must be implemented by the subclass.</span>
 
-<span class="sd">    Scattering coefficients are ordered depth-major, then by parent path, </span>
-<span class="sd">    then by scale. </span>
+<span class="sd">    Scattering coefficients are ordered depth-major, then by parent path,</span>
+<span class="sd">    then by scale.</span>
 
 
 <span class="sd">    Parameters</span>
@@ -1500,15 +1500,15 @@ geometric scattering transform. Defaults to "mean"</p>
 <span class="sd">    output: str</span>
 <span class="sd">        "graph" pools each scattering path over the nodes, giving</span>
 <span class="sd">        (batch, n_features, n_coefficients), the standard graph scattering transform.</span>
-<span class="sd">        "node" skips pooling and returns the graph signal </span>
+<span class="sd">        "node" skips pooling and returns the graph signal</span>
 <span class="sd">        (batch, n_features, n_coefficients, n_nodes), used for node-level tasks).</span>
 <span class="sd">        Defaults to "graph"</span>
 <span class="sd">    aggregation: str</span>
-<span class="sd">        How "graph" output pools over nodes. "mean" averages each path, the </span>
-<span class="sd">        standard graph scattering transform. </span>
+<span class="sd">        How "graph" output pools over nodes. "mean" averages each path, the</span>
+<span class="sd">        standard graph scattering transform.</span>
 <span class="sd">        "moments" averages `|path| ** q` for each q in `moments`,</span>
 <span class="sd">        following Gao, Wolf &amp; Hirn 2019, giving n_coefficients *</span>
-<span class="sd">        len(moments) values per feature, coefficient-major, the so-called </span>
+<span class="sd">        len(moments) values per feature, coefficient-major, the so-called</span>
 <span class="sd">        geometric scattering transform. Defaults to "mean"</span>
 <span class="sd">    moments: tuple[int, ...]</span>
 <span class="sd">        Moment orders used by `aggregation="moments"`. Defaults to (1, 2, 3, 4)</span>
@@ -1783,24 +1783,24 @@ Padded entries of <code>x</code> and <code>W_adj</code> are ignored. Defaults to
     <span class="k">if</span> <span class="n">mask</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">n_nodes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">bool</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 
-    <span class="c1"># apply scattering transform </span>
+    <span class="c1"># apply scattering transform</span>
     <span class="n">U</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_propagate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">psi</span><span class="p">)</span>
 
     <span class="c1"># special case for node outputs, which are not pooled (hence no lowpass operator)</span>
-    <span class="c1"># directly returns the node </span>
+    <span class="c1"># directly returns the node</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="s2">"node"</span><span class="p">:</span>
         <span class="c1"># padding can pick up rounding-level values from the filter bank</span>
         <span class="k">return</span> <span class="n">U</span><span class="o">.</span><span class="n">masked_fill</span><span class="p">(</span><span class="o">~</span><span class="n">mask</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:],</span> <span class="mi">0</span><span class="p">)</span>
 
     <span class="n">lowpass</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_lowpass</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
 
-    <span class="c1"># standard scattering transform, which pools over the nodes with a </span>
+    <span class="c1"># standard scattering transform, which pools over the nodes with a</span>
     <span class="c1"># lowpass filter</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">aggregation</span> <span class="o">==</span> <span class="s2">"mean"</span><span class="p">:</span>
         <span class="n">phi</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="n">einsum</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">lowpass</span><span class="p">,</span> <span class="s2">"b f c n, b n -&gt; b f c"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">phi</span>
 
-    <span class="c1"># moment aggregation, which pools over the nodes with a lowpass filter, then raised to the qth </span>
+    <span class="c1"># moment aggregation, which pools over the nodes with a lowpass filter, then raised to the qth</span>
     <span class="c1"># power for a 'geometric' scattering transform</span>
     <span class="n">moments</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
         <span class="p">[</span>

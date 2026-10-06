@@ -1143,7 +1143,7 @@ Shuman et. al 2015</p>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">"n_scales must be greater than </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">n_scales</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
-    <span class="c1"># dilation factor </span>
+    <span class="c1"># dilation factor</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_eig</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_scales</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="p">)</span>
 
     <span class="c1"># add a trailing axis so it broadcasts against the (batch, n_nodes)</span>

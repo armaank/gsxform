@@ -990,7 +990,7 @@
 
 
 <h1 id="visualizing-qm9-with-graph-scattering-and-pca">Visualizing QM9 with graph scattering and PCA<a class="headerlink" href="#visualizing-qm9-with-graph-scattering-and-pca" title="Permanent link">&para;</a></h1>
-<p>This notebook illustrates how to use scattering transforms to visualize graph data. </p>
+<p>This notebook illustrates how to use scattering transforms to visualize graph data.</p>
 <p>This notebook embeds 30,000 small molecules from QM9 with a diffusion scattering transform and projects the embeddings onto their first two principal components, shaded by the structural property of each molecule.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
@@ -1017,7 +1017,7 @@
 <h2 id="data">Data<a class="headerlink" href="#data" title="Permanent link">&para;</a></h2>
 <p>QM9 holds about 130k small organic molecules with up to nine heavy atoms (C, N, O, F).
 PyG keeps every hydrogen as a node, so graphs have up to 29 atoms. Molocules in QM9
-are labled with a variety of properties, and can be represented as graphs with atoms as nodes and bonds 
+are labled with a variety of properties, and can be represented as graphs with atoms as nodes and bonds
 as edges, or as a string of characters (SMILES).</p>
 <div class="highlight"><pre><span></span><code><span class="n">dataset</span> <span class="o">=</span> <span class="n">QM9</span><span class="p">(</span><span class="n">ROOT</span> <span class="o">/</span> <span class="s2">"QM9"</span><span class="p">)</span>
 <span class="n">sample</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">randperm</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dataset</span><span class="p">))[:</span><span class="mi">30_000</span><span class="p">]]</span>
@@ -1115,7 +1115,7 @@ variance. Each point below is one molecule.</p>
 <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
 <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="o">.</span><span class="n">flat</span><span class="p">,</span> <span class="n">props</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
     <span class="n">embedding_plot</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-<span class="n">axes</span><span class="o">.</span><span class="n">flat</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">"off"</span><span class="p">)</span>  
+<span class="n">axes</span><span class="o">.</span><span class="n">flat</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">"off"</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span>
     <span class="s2">"Molecular Properties in QM9 visualized via Diffusion scattering"</span>
 <span class="p">)</span>
