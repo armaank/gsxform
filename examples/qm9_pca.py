@@ -189,10 +189,9 @@ def _(PCA, X, np, plt, props, sns):
         ax.set_title(title, fontsize=14)
         ax.set_box_aspect(1)
 
-    fig, axes = plt.subplots(1, 3, figsize=(10, 7))
+    fig, axes = plt.subplots(1, len(props), figsize=(10, 4))
     for ax, (name, values) in zip(axes.flat, props.items()):
         embedding_plot(ax, values, name)
-    axes.flat[-1].axis("off")
     fig.suptitle(
         "Molecular Properties in QM9 visualized via Diffusion scattering"
     )
