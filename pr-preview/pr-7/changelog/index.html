@@ -830,18 +830,7 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#020" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        0.2.0
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="0.2.0">
+    <nav class="md-nav" aria-label="Unreleased">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -868,6 +857,56 @@
         
           <li class="md-nav__item">
   <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#020" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2.0
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.2.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -974,18 +1013,7 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#020" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        0.2.0
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="0.2.0">
+    <nav class="md-nav" aria-label="Unreleased">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1012,6 +1040,56 @@
         
           <li class="md-nav__item">
   <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#020" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2.0
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.2.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Added
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Fixed
@@ -1073,10 +1151,67 @@
 <a href="https://keepachangelog.com/en/1.1.0/">Keep a Changelog</a>, and this project adheres to
 <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
 <h2 id="unreleased"><a href="https://github.com/armaank/gsxform/compare/v0.2.0...HEAD">Unreleased</a><a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
+<h3 id="changed">Changed<a class="headerlink" href="#changed" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Breaking:</strong> transforms are no longer bound to a graph at construction.
+  <code>Diffusion(W_adj, n_scales, n_layers)(x)</code> becomes
+  <code>Diffusion(n_scales, n_layers)(x, W_adj)</code>, and one module now runs over batches of
+  any size and node count. For a fixed graph, <code>cached=True</code> (as in PyG's <code>GCNConv</code>)
+  builds the filter bank once and reuses it while the same adjacency is passed.
+  <code>reset_parameters()</code> clears the cache.</li>
+<li><strong>Breaking:</strong> the subclass contract is now <code>get_wavelets(W_adj, mask=None)</code> and
+  <code>get_lowpass(mask, dtype)</code>. <code>TightHann.warp_func</code> and <code>get_kernel</code> take the
+  spectrum (and optional mask) as arguments.</li>
+<li><code>TightHann</code> eigendecomposes once per forward instead of once at construction and
+  again per forward. <code>tighthann_wavelets</code> accepts precomputed <code>spectra=(E, V)</code>.</li>
+</ul>
+<h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
+<ul>
+<li>torch_geometric integration, installed with <code>pip install gsxform[pyg]</code>.
+  <code>gsxform.pyg.GraphScattering</code> wraps any transform so it takes PyG's
+  <code>(x, edge_index, batch, edge_weight)</code> and drops into a PyG model.
+  <code>gsxform.pyg.ScatteringFeatures</code> is a dataset transform that precomputes features
+  once per graph.</li>
+<li><code>output="node"</code> returns each scattering path's per-node signal,
+  <code>(batch, n_features, n_coefficients, n_nodes)</code>, before pooling. It is permutation
+  equivariant, for node-level tasks.</li>
+<li><code>aggregation="moments"</code> pools each path with the moments <code>mean(|path|^q)</code> for <code>q</code>
+  in <code>moments</code> (default 1–4), following Gao, Wolf &amp; Hirn 2019.</li>
+<li><code>path_index()</code> lists the scale path behind each output coefficient. Coefficients
+  are ordered depth-major, then by parent path, then by scale.</li>
+<li>Batches of graphs with different node counts: pad them to a common size (as
+  <code>torch_geometric.utils.to_dense_batch</code> / <code>to_dense_adj</code> do) and pass
+  <code>forward(x, W_adj, mask)</code>. Each graph's output then matches running it alone. The
+  lowpass averages over real nodes only, padded entries of <code>x</code> and <code>W_adj</code> are
+  ignored, and <code>TightHann</code> fits its warp on each graph's own eigenvalues.</li>
+<li>Example notebooks started, written as <a href="https://marimo.io">marimo</a> notebooks
+  replacing the empty "Basic Plot" placeholder:</li>
+<li><code>wavelets</code>: diffusion and tight Hann wavelets drawn on a sensor network, in the
+    vertex domain and in the graph's spectrum</li>
+<li><code>qm9_pca</code>: QM9 scattering embeddings shaded by molecular properties</li>
+<li><code>cuneiform_svm</code>: Cuneiform sign classification with tight Hann scattering
+    features and an RBF SVM</li>
+<li><code>qm9_generation</code>: a molecule generator with a fixed scattering encoder and a
+    trained graph decoder</li>
+</ul>
+<p>The docs build runs each notebook and renders it as a page with its code and
+  figures. An examples page explains how to install their dependencies and run them.
+  The dependencies, including RDKit, are in a new <code>examples</code> dependency group; none
+  of them is a dependency of the package itself.</p>
+<h3 id="fixed">Fixed<a class="headerlink" href="#fixed" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Changes outputs:</strong> <code>TightHann</code> placed every Hann window one step too high. Its top
+  scale passed nothing, so that wavelet and every scattering path through it were
+  zero, and the filter bank was not tight: its squared responses fell to half the
+  frame constant at the bottom of the spectrum. All scales respond, and <code>sum_j psi_j^2</code>
+  equals the frame constant<code>9/8</code> at every eigenvalue.</li>
+<li><code>TightHann</code> could not be pickled, which broke <code>torch.save</code>, multi-worker
+  <code>DataLoader</code>s and DDP.</li>
+</ul>
 <h2 id="020"><a href="https://github.com/armaank/gsxform/releases/tag/v0.2.0">0.2.0</a><a class="headerlink" href="#020" title="Permanent link">&para;</a></h2>
 <p>The library itself is unchanged; this release modernises how it is built, tested, and
 published.</p>
-<h3 id="changed">Changed<a class="headerlink" href="#changed" title="Permanent link">&para;</a></h3>
+<h3 id="changed_1">Changed<a class="headerlink" href="#changed_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Build system moved from <code>setup.py</code> and <code>requirements*.txt</code> to
   <a href="https://docs.astral.sh/uv/"><code>uv</code></a> with a committed <code>uv.lock</code> and PEP 735 dependency
@@ -1091,14 +1226,14 @@ published.</p>
 <li>Releases are published to PyPI via Trusted Publishing, triggered manually rather than
   from a laptop.</li>
 </ul>
-<h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
+<h3 id="added_1">Added<a class="headerlink" href="#added_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li><code>gsxform.__version__</code>.</li>
 <li>Dependency and GitHub Actions updates via Dependabot.</li>
 <li>Documentation previews on pull requests, surfaced as the <code>docs/preview</code> check.</li>
 <li>A single aggregate <code>ci-ok</code> status check covering lint, types, tests, and packaging.</li>
 </ul>
-<h3 id="fixed">Fixed<a class="headerlink" href="#fixed" title="Permanent link">&para;</a></h3>
+<h3 id="fixed_1">Fixed<a class="headerlink" href="#fixed_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li><code>torch.cat</code> calls passed <code>axis=</code> instead of <code>dim=</code> in <code>wavelets.py</code> and
   <code>scattering.py</code>.</li>
