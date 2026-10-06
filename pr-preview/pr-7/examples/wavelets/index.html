@@ -8,26 +8,28 @@
       
       
       
-        <link rel="canonical" href="https://armaank.github.io/gsxform/dev/">
+        <link rel="canonical" href="https://armaank.github.io/gsxform/dev/examples/wavelets/">
       
       
+        <link rel="prev" href="../">
       
-        <link rel="next" href="development/">
+      
+        <link rel="next" href="../qm9_pca/">
       
       
         
       
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>gsxform: Wavelet scattering transforms on graphs</title>
+        <title>Understanding graph wavelets and scattering transforms - gsxform: Wavelet scattering transforms on graphs</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
       
 
@@ -46,11 +48,11 @@
       
     
     
-      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="css/custom.css">
+      <link rel="stylesheet" href="../../css/custom.css">
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -68,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#gsxform" class="md-skip">
+        <a href="#understanding-graph-wavelets-and-scattering-transforms" class="md-skip">
           Skip to content
         </a>
       
@@ -88,7 +90,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="gsxform: Wavelet scattering transforms on graphs" class="md-header__button md-logo" aria-label="gsxform: Wavelet scattering transforms on graphs" data-md-component="logo">
+    <a href="../.." title="gsxform: Wavelet scattering transforms on graphs" class="md-header__button md-logo" aria-label="gsxform: Wavelet scattering transforms on graphs" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M384 512H96c-53 0-96-43-96-96V96C0 43 43 0 96 0h304c26.5 0 48 21.5 48 48v288c0 20.9-13.4 38.7-32 45.3V448c17.7 0 32 14.3 32 32s-14.3 32-32 32zM96 384c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64zm32-232c0 13.3 10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24m24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg>
@@ -108,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              Understanding graph wavelets and scattering transforms
             
           </span>
         </div>
@@ -205,7 +207,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="gsxform: Wavelet scattering transforms on graphs" class="md-nav__button md-logo" aria-label="gsxform: Wavelet scattering transforms on graphs" data-md-component="logo">
+    <a href="../.." title="gsxform: Wavelet scattering transforms on graphs" class="md-nav__button md-logo" aria-label="gsxform: Wavelet scattering transforms on graphs" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M384 512H96c-53 0-96-43-96-96V96C0 43 43 0 96 0h304c26.5 0 48 21.5 48 48v288c0 20.9-13.4 38.7-32 45.3V448c17.7 0 32 14.3 32 32s-14.3 32-32 32zM96 384c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64zm32-232c0 13.3 10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24m24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg>
@@ -232,37 +234,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -278,120 +253,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Installation
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Installation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#latest-version-recommended" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Latest version (recommended)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stable-version" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stable Version
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#optional-torch_geometric-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Optional: torch_geometric support
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#development-version" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Development version
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Examples
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#license" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        License
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#citation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Citation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -403,7 +264,7 @@
   
   
     <li class="md-nav__item">
-      <a href="development/" class="md-nav__link">
+      <a href="../../development/" class="md-nav__link">
         
   
   
@@ -427,8 +288,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -446,11 +309,11 @@
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -471,7 +334,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -489,7 +352,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -514,10 +377,19 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="examples/wavelets/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -533,6 +405,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -545,7 +418,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/qm9_pca/" class="md-nav__link">
+      <a href="../qm9_pca/" class="md-nav__link">
         
   
   
@@ -573,7 +446,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/cuneiform_svm/" class="md-nav__link">
+      <a href="../cuneiform_svm/" class="md-nav__link">
         
   
   
@@ -601,7 +474,7 @@
   
   
     <li class="md-nav__item">
-      <a href="examples/qm9_generation/" class="md-nav__link">
+      <a href="../qm9_generation/" class="md-nav__link">
         
   
   
@@ -693,7 +566,7 @@
   
   
     <li class="md-nav__item">
-      <a href="graph/" class="md-nav__link">
+      <a href="../../graph/" class="md-nav__link">
         
   
   
@@ -774,7 +647,7 @@
   
   
     <li class="md-nav__item">
-      <a href="kernel/" class="md-nav__link">
+      <a href="../../kernel/" class="md-nav__link">
         
   
   
@@ -802,7 +675,7 @@
   
   
     <li class="md-nav__item">
-      <a href="wavelets/" class="md-nav__link">
+      <a href="../../wavelets/" class="md-nav__link">
         
   
   
@@ -838,7 +711,7 @@
   
   
     <li class="md-nav__item">
-      <a href="scattering/" class="md-nav__link">
+      <a href="../../scattering/" class="md-nav__link">
         
   
   
@@ -866,7 +739,7 @@
   
   
     <li class="md-nav__item">
-      <a href="pyg/" class="md-nav__link">
+      <a href="../../pyg/" class="md-nav__link">
         
   
   
@@ -901,7 +774,7 @@
   
   
     <li class="md-nav__item">
-      <a href="changelog/" class="md-nav__link">
+      <a href="../../changelog/" class="md-nav__link">
         
   
   
@@ -928,7 +801,7 @@
   
   
     <li class="md-nav__item">
-      <a href="about/" class="md-nav__link">
+      <a href="../../about/" class="md-nav__link">
         
   
   
@@ -968,108 +841,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Installation
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Installation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#latest-version-recommended" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Latest version (recommended)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stable-version" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stable Version
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#optional-torch_geometric-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Optional: torch_geometric support
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#development-version" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Development version
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Examples
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#license" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        License
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#citation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Citation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -1084,87 +855,19 @@
                   
 
 
-  
-  
 
+<h1 id="understanding-graph-wavelets-and-scattering-transforms">Understanding graph wavelets and scattering transforms<a class="headerlink" href="#understanding-graph-wavelets-and-scattering-transforms" title="Permanent link">&para;</a></h1>
+<p>Coming soon!</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">marimo</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mo</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">LineCollection</span>
 
-<h1 id="gsxform">gsxform<a class="headerlink" href="#gsxform" title="Permanent link">&para;</a></h1>
-<p>Wavelet scattering transforms on graphs via PyTorch</p>
-<p><a href="https://github.com/armaank/gsxform/actions/workflows/tests.yml"><img alt="tests" src="https://github.com/armaank/gsxform/actions/workflows/tests.yml/badge.svg?branch=main" /></a>
-<a href="https://codecov.io/gh/armaank/gsxform"><img alt="codecov" src="https://codecov.io/gh/armaank/gsxform/branch/main/graph/badge.svg?token=AUFSGAPB4O" /></a>
-<a href="https://github.com/armaank/gsxform/actions/workflows/docs.yml"><img alt="docs" src="https://github.com/armaank/gsxform/actions/workflows/docs.yml/badge.svg?branch=main" /></a>
-<a href="https://pypi.org/project/gsxform/"><img alt="PyPI" src="https://img.shields.io/pypi/v/gsxform" /></a>
-<a href="https://github.com/astral-sh/uv"><img alt="uv" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json" /></a>
-<a href="https://github.com/astral-sh/ruff"><img alt="ruff" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json" /></a>
-<a href="https://opensource.org/licenses/BSD-3-Clause"><img alt="license" src="https://img.shields.io/badge/License-BSD_3--Clause-blue.svg" /></a>
-<a href="https://zenodo.org/badge/latestdoi/513695351"><img alt="DOI" src="https://zenodo.org/badge/513695351.svg" /></a></p>
-<hr />
-<p><code>gsxform</code> is a package for constructing graph scattering transforms, leveraging PyTorch
-to allow for GPU based computation.
-Using PyTorch, <code>gsxform</code> offers the ability to more
-easily build models that use both scattering transform and neural network components.</p>
-<p><code>gsxform</code> is first and foremost a research project and is being continuously refined.
-Behavior can potentially be unstable and consistency is not guaranteed.</p>
-<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<p><code>gsxform</code> requires Python 3.10 or later.</p>
-<h3 id="latest-version-recommended">Latest version (recommended)<a class="headerlink" href="#latest-version-recommended" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>add<span class="w"> </span><span class="s2">"gsxform @ git+https://github.com/armaank/gsxform"</span>
-</code></pre></div>
-<p>Or, to use a specific branch not yet merged to main</p>
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>add<span class="w"> </span><span class="s2">"gsxform @ git+https://github.com/armaank/gsxform@branch-name"</span>
-</code></pre></div>
-<h3 id="stable-version">Stable Version<a class="headerlink" href="#stable-version" title="Permanent link">&para;</a></h3>
-<p>To install the latest stable release from PyPI:</p>
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>add<span class="w"> </span>gsxform
-<span class="c1"># or</span>
-pip<span class="w"> </span>install<span class="w"> </span>gsxform
-</code></pre></div>
-<h3 id="optional-torch_geometric-support">Optional: torch_geometric support<a class="headerlink" href="#optional-torch_geometric-support" title="Permanent link">&para;</a></h3>
-<p>The core package needs only PyTorch, but has adapters to work with
-existing models and daasets from <code>torch_geometric</code> (PyG)</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">gsxform</span><span class="w"> </span><span class="kn">import</span> <span class="n">Diffusion</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gsxform</span><span class="w"> </span><span class="kn">import</span> <span class="n">Diffusion</span><span class="p">,</span> <span class="n">TightHann</span><span class="p">,</span> <span class="n">compute_spectra</span>
 
-<span class="n">phi</span> <span class="o">=</span> <span class="n">Diffusion</span><span class="p">(</span><span class="n">n_scales</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="mi">3</span><span class="p">)(</span><span class="n">x</span><span class="p">,</span> <span class="n">W_adj</span><span class="p">)</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </code></pre></div>
-<p>If your graphs are already in <a href="https://pyg.org">PyTorch Geometric</a> format (<code>Data</code>
-objects, <code>edge_index</code>, <code>DataLoader</code> batches), install the <code>pyg</code> extra:</p>
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>add<span class="w"> </span><span class="s2">"gsxform[pyg]"</span>
-<span class="c1"># or</span>
-pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"gsxform[pyg]"</span>
-</code></pre></div>
-<p>To use <code>gsxform</code> with PyG, you can either use:</p>
-<ul>
-<li><code>GraphScattering</code>, which wraps any transform as a module with the usual
-  <code>(x, edge_index, batch, edge_weight)</code> signature. Use it as a feature extractor or as
-  a layer inside a PyG model. It returns <code>[n_graphs, F·C]</code>, or <code>[n_nodes, F·C]</code> for
-  node output.</li>
-<li><code>ScatteringFeatures</code> as a dataset transform. It computes each graph's scattering
-  features once, when the dataset loads, and stores them on the <code>Data</code> object. Use it
-  when the features feed a separate classifier.</li>
-</ul>
-<p>See the <a href="https://armaank.github.io/gsxform/dev/examples/">examples page</a> for how to use
-PyG and <code>gsxform</code> in tandem.</p>
-<h3 id="development-version">Development version<a class="headerlink" href="#development-version" title="Permanent link">&para;</a></h3>
-<p><code>gsxform</code> uses <a href="https://docs.astral.sh/uv/"><code>uv</code></a> to manage environments and
-dependencies. To work on <code>gsxform</code> itself, clone the repository and run <code>make install</code>:</p>
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/armaank/gsxform.git
-<span class="nb">cd</span><span class="w"> </span>gsxform
-make<span class="w"> </span>install
-</code></pre></div>
-<p>This creates the virtual environment, installs <code>gsxform</code> with development and
-documentation dependencies, and sets up the <code>pre-commit</code> hooks. The
-<a href="https://armaank.github.io/gsxform/dev/development/">development guide</a> covers the <code>make</code>
-targets, code style, branching, and the release process.</p>
-<h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
-<p>See the <a href="https://armaank.github.io/gsxform/dev/examples/">examples page</a> for how to set
-up and run the example notebooks.</p>
-<h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h2>
-<p>The original code of this repository is released under the
-<a href="https://github.com/armaank/gsxform/blob/main/LICENSE">BSD 3.0-Clause Licence</a>.
-Modifications, adaptations and derivative work is encouraged!</p>
-<h2 id="citation">Citation<a class="headerlink" href="#citation" title="Permanent link">&para;</a></h2>
-<p>If you use <code>gsxform</code>, please cite using the
-<a href="https://doi.org/10.5281/zenodo.7069113">Zenodo DOI</a></p>
 
 
 
@@ -1220,10 +923,10 @@ Modifications, adaptations and derivative work is encouraged!</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.indexes", "navigation.top", "navigation.tracking", "toc.follow", "search.highlight", "search.share", "search.suggest"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.top", "navigation.tracking", "toc.follow", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
