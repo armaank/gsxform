@@ -227,6 +227,7 @@ def test_padding_contents_ignored():  # type: ignore
             txform(x_noisy, W_noisy, mask), txform(x, W_adj, mask), atol=1e-5
         )
 
+
 def test_cache_keyed_on_mask():  # type: ignore
     """With cached=True, changing only the mask rebuilds the bank."""
 

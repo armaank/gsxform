@@ -54,7 +54,7 @@ class TightHannKernel:
             raise ValueError(
                 f"n_scales must be greater than {self.R - 1:g}, got {n_scales}"
             )
-        # dilation factor 
+        # dilation factor
         self.d = self.R * self.max_eig / (self.n_scales + 1 - self.R)
 
         # add a trailing axis so it broadcasts against the (batch, n_nodes)

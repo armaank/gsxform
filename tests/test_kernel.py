@@ -1,5 +1,4 @@
-"""testing suite for kernel.py
-"""
+"""testing suite for kernel.py"""
 
 import pytest
 import torch

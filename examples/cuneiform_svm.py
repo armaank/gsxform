@@ -10,13 +10,13 @@ def _(mo):
     # Classifying cuneiform signs with scattering features and an SVM
 
     Scattering transforms have no trainable parameters, so a common workflow is to compute
-    each graph's scattering coefficients once and hand them to a standard classifier from `scikit-learn`. 
+    each graph's scattering coefficients once and hand them to a standard classifier from `scikit-learn`.
     This notebook does that on the Cuneiform dataset, which consists of 267 graphs of handwritten cuneiform signs,
     each one of 30 sign classes (Kriege et al. 2018). Nodes are the wedges a sign is pressed
     from, and edges join touching wedges.
 
     This examples uses uses tight Hann scattering features and a support vector machine with an RBF
-    kernel from `scikit-learn`. 
+    kernel from `scikit-learn`.
     """)
     return
 
@@ -41,7 +41,7 @@ def _():
     from gsxform import TightHann
     from gsxform.pyg import ScatteringFeatures
 
-    plt.rcParams["figure.dpi"] = 50  
+    plt.rcParams["figure.dpi"] = 50
     ROOT = mo.notebook_dir().parent / "data"
     _ = torch.manual_seed(0)
     return (

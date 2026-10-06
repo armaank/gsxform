@@ -9,7 +9,7 @@ def _(mo):
     mo.md(r"""
     # Visualizing QM9 with graph scattering and PCA
 
-    This notebook illustrates how to use scattering transforms to visualize graph data. 
+    This notebook illustrates how to use scattering transforms to visualize graph data.
 
     This notebook embeds 30,000 small molecules from QM9 with a diffusion scattering transform and projects the embeddings onto their first two principal components, shaded by the structural property of each molecule.
     """)
@@ -66,7 +66,7 @@ def _(mo):
 
     QM9 holds about 130k small organic molecules with up to nine heavy atoms (C, N, O, F).
     PyG keeps every hydrogen as a node, so graphs have up to 29 atoms. Molocules in QM9
-    are labled with a variety of properties, and can be represented as graphs with atoms as nodes and bonds 
+    are labled with a variety of properties, and can be represented as graphs with atoms as nodes and bonds
     as edges, or as a string of characters (SMILES).
     """)
     return
@@ -132,7 +132,7 @@ def _(mo):
     1 + 3 + 9 + 27 = 40 paths, so each molecule becomes 5 x 40 = 200 coefficients.
 
     `GraphScattering` runs the transform directly on PyG mini-batches. Molecules of
-    different sizes are padded and masked. 
+    different sizes are padded and masked.
     """)
     return
 
@@ -192,7 +192,7 @@ def _(PCA, X, np, plt, props, sns):
     fig, axes = plt.subplots(1, 3, figsize=(10, 7))
     for ax, (name, values) in zip(axes.flat, props.items()):
         embedding_plot(ax, values, name)
-    axes.flat[-1].axis("off")  
+    axes.flat[-1].axis("off")
     fig.suptitle(
         "Molecular Properties in QM9 visualized via Diffusion scattering"
     )

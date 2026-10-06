@@ -25,7 +25,7 @@ class GraphScattering(nn.Module):
 
     Wraps any `ScatteringTransform` so it takes the usual PyG inputs: node
     features `[N_total, F]`, `edge_index`, and the `batch` vector. Graphs of
-    different sizes are padded to a common node count and masked internally. 
+    different sizes are padded to a common node count and masked internally.
     """
 
     def __init__(self, transform: ScatteringTransform) -> None:
@@ -56,9 +56,9 @@ class GraphScattering(nn.Module):
             Edges, shaped [2, E]
         batch: torch.Tensor, optional
             Graph assignment of each node, shaped [N_total] and sorted, as
-            produced by PyG's `DataLoader`. Defaults to None 
+            produced by PyG's `DataLoader`. Defaults to None
         edge_weight: torch.Tensor, optional
-            Weight of each edge, shaped [E]. Defaults to None 
+            Weight of each edge, shaped [E]. Defaults to None
 
         Returns
         -------

@@ -110,10 +110,10 @@ class ScatteringTransform(nn.Module):
 
         This is a base class, and implements only the logic to compute
         an arbitrary scattering transform. The method `get_wavelets`
-        must be implemented by the subclass. 
+        must be implemented by the subclass.
 
-        Scattering coefficients are ordered depth-major, then by parent path, 
-        then by scale. 
+        Scattering coefficients are ordered depth-major, then by parent path,
+        then by scale.
 
 
         Parameters
@@ -131,15 +131,15 @@ class ScatteringTransform(nn.Module):
         output: str
             "graph" pools each scattering path over the nodes, giving
             (batch, n_features, n_coefficients), the standard graph scattering transform.
-            "node" skips pooling and returns the graph signal 
+            "node" skips pooling and returns the graph signal
             (batch, n_features, n_coefficients, n_nodes), used for node-level tasks).
             Defaults to "graph"
         aggregation: str
-            How "graph" output pools over nodes. "mean" averages each path, the 
-            standard graph scattering transform. 
+            How "graph" output pools over nodes. "mean" averages each path, the
+            standard graph scattering transform.
             "moments" averages `|path| ** q` for each q in `moments`,
             following Gao, Wolf & Hirn 2019, giving n_coefficients *
-            len(moments) values per feature, coefficient-major, the so-called 
+            len(moments) values per feature, coefficient-major, the so-called
             geometric scattering transform. Defaults to "mean"
         moments: tuple[int, ...]
             Moment orders used by `aggregation="moments"`. Defaults to (1, 2, 3, 4)
@@ -314,24 +314,24 @@ class ScatteringTransform(nn.Module):
         if mask is None:
             mask = torch.ones(batch_size, n_nodes, dtype=torch.bool, device=x.device)
 
-        # apply scattering transform 
+        # apply scattering transform
         U = self._propagate(x, psi)
 
         # special case for node outputs, which are not pooled (hence no lowpass operator)
-        # directly returns the node 
+        # directly returns the node
         if self.output == "node":
             # padding can pick up rounding-level values from the filter bank
             return U.masked_fill(~mask[:, None, None, :], 0)
 
         lowpass = self.get_lowpass(mask, x.dtype)
 
-        # standard scattering transform, which pools over the nodes with a 
+        # standard scattering transform, which pools over the nodes with a
         # lowpass filter
         if self.aggregation == "mean":
             phi: torch.Tensor = einsum(U, lowpass, "b f c n, b n -> b f c")
             return phi
 
-        # moment aggregation, which pools over the nodes with a lowpass filter, then raised to the qth 
+        # moment aggregation, which pools over the nodes with a lowpass filter, then raised to the qth
         # power for a 'geometric' scattering transform
         moments = torch.stack(
             [
