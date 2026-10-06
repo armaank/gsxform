@@ -84,7 +84,7 @@ def test_tighthann_wavelets_symmetric():  # type: ignore
     assert torch.allclose(psi, psi.transpose(-2, -1), atol=1e-5)
 
 
-def test_tighthann_wavelets_frame_bounds()():  # type: ignore
+def test_tighthann_wavelets_frame_bounds():  # type: ignore
     """The spectral tightness carries over: sum_j psi_j^2 = C I."""
 
     for n_nodes in [16, 32]:
