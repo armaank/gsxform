@@ -1,3 +1,9 @@
+# Datasets downloaded by the example notebooks, kept at the repo root
+/data/
+# example pages rendered by hooks/marimo_examples.py, and marimo's session cache
+/.cache/
+__marimo__/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

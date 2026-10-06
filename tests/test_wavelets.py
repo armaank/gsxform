@@ -85,7 +85,7 @@ def test_tighthann_wavelets_symmetric():  # type: ignore
 
 
 def test_tighthann_wavelets_frame_bounds():  # type: ignore
-    """The spectral frame bounds carry over to the operators built from them."""
+    """The spectral tightness carries over: sum_j psi_j^2 = C I."""
 
     for n_nodes in [16, 32]:
         for n_scales in [3, 4, 5]:
@@ -93,15 +93,14 @@ def test_tighthann_wavelets_frame_bounds():  # type: ignore
             psi = build_tighthann(W_adj, n_scales)
 
             response = sum(psi[:, jj].matmul(psi[:, jj]) for jj in range(n_scales))
-            eigenvalues = torch.linalg.eigvalsh(response)
 
-            assert eigenvalues.min() >= FRAME_CONSTANT / 2 - 1e-4
-
-            assert eigenvalues.max() <= FRAME_CONSTANT + 1e-4
+            assert torch.allclose(
+                response, FRAME_CONSTANT * torch.eye(n_nodes), atol=1e-4
+            )
 
 
 def test_tighthann_wavelets_littlewood_paley():  # type: ignore
-    """Energy extracted from any signal stays inside the same frame bounds."""
+    """Every signal's extracted energy is exactly C times its own."""
 
     for n_nodes in [16, 32]:
         for n_scales in [3, 4, 5]:
@@ -110,6 +109,6 @@ def test_tighthann_wavelets_littlewood_paley():  # type: ignore
 
             ratio = littlewood_paley(psi, torch.rand((3, n_nodes)))
 
-            assert (ratio >= FRAME_CONSTANT / 2 - 1e-4).all()
-
-            assert (ratio <= FRAME_CONSTANT + 1e-4).all()
+            assert torch.allclose(
+                ratio, torch.full_like(ratio, FRAME_CONSTANT), atol=1e-4
+            )

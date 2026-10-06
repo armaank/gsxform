@@ -56,8 +56,16 @@ jobs:
       - uses: astral-sh/setup-uv@v10.2.0
         with:
           enable-cache: true
+      # the build runs the example notebooks; see docs.yml
+      - uses: actions/cache@v4
+        with:
+          path: |
+            data/
+            .cache/marimo-examples/
+          key: examples-${{ hashFiles('examples/*.py', 'gsxform/*.py') }}
+          restore-keys: examples-
       - name: Sync environment
-        run: uv sync --locked --group docs
+        run: uv sync --locked --extra pyg --group docs --group examples
       - name: Deploy versioned docs
         env:
           VERSION: ${{ needs.version.outputs.version }}

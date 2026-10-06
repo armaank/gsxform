@@ -47,6 +47,39 @@ uv add gsxform
 pip install gsxform
 ```
 
+### Optional: torch_geometric support
+
+The core package needs only PyTorch, but has adapters to work with
+existing models and daasets from `torch_geometric` (PyG)
+
+```python
+from gsxform import Diffusion
+
+phi = Diffusion(n_scales=4, n_layers=3)(x, W_adj)
+```
+
+If your graphs are already in [PyTorch Geometric](https://pyg.org) format (`Data`
+objects, `edge_index`, `DataLoader` batches), install the `pyg` extra:
+
+```bash
+uv add "gsxform[pyg]"
+# or
+pip install "gsxform[pyg]"
+```
+
+To use `gsxform` with PyG, you can either use:
+
+- `GraphScattering`, which wraps any transform as a module with the usual
+  `(x, edge_index, batch, edge_weight)` signature. Use it as a feature extractor or as
+  a layer inside a PyG model. It returns `[n_graphs, F·C]`, or `[n_nodes, F·C]` for
+  node output.
+- `ScatteringFeatures` as a dataset transform. It computes each graph's scattering
+  features once, when the dataset loads, and stores them on the `Data` object. Use it
+  when the features feed a separate classifier.
+
+See the [examples page](https://armaank.github.io/gsxform/dev/examples/) for how to use
+PyG and `gsxform` in tandem.
+
 ### Development version
 
 `gsxform` uses [`uv`](https://docs.astral.sh/uv/) to manage environments and
@@ -62,6 +95,11 @@ This creates the virtual environment, installs `gsxform` with development and
 documentation dependencies, and sets up the `pre-commit` hooks. The
 [development guide](https://armaank.github.io/gsxform/dev/development/) covers the `make`
 targets, code style, branching, and the release process.
+
+## Examples
+
+See the [examples page](https://armaank.github.io/gsxform/dev/examples/) for how to set
+up and run the example notebooks.
 
 
 ## License

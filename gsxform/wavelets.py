@@ -32,7 +32,7 @@ def diffusion_wavelets(T: torch.Tensor, n_scales: int) -> torch.Tensor:
         wavelet filter bank
     """
     # make n_node x n_node identity matrix
-    I_N = torch.eye(T.shape[1], device=T.device)
+    I_N = torch.eye(T.shape[1], device=T.device, dtype=T.dtype)
 
     # compute zero-eth order (J=0) wavelet filter
     # one half the normalized laplacian operator 1/2(I-D^-1/2WD^-1/2)
@@ -52,7 +52,10 @@ def diffusion_wavelets(T: torch.Tensor, n_scales: int) -> torch.Tensor:
 
 
 def tighthann_wavelets(
-    W_adj: torch.Tensor, n_scales: int, kernel: TightHannKernel
+    W_adj: torch.Tensor,
+    n_scales: int,
+    kernel: TightHannKernel,
+    spectra: tuple[torch.Tensor, torch.Tensor] | None = None,
 ) -> torch.Tensor:
     """Compute spectrum adapted tight Hann wavelets.
 
@@ -66,6 +69,9 @@ def tighthann_wavelets(
         Number of scales to use in wavelet transform
     kernel: TightHannKernel
         Adaptive kernel used in wavelet transform.
+    spectra: tuple[torch.Tensor, torch.Tensor], optional
+        Eigenvalues and eigenvectors of the normalized Laplacian of `W_adj`, as
+        returned by `compute_spectra`. Computed here if omitted.
 
     Returns
     -------
@@ -73,10 +79,12 @@ def tighthann_wavelets(
         wavelet filter bank
 
     """
-    E, V = compute_spectra(W_adj)
+    E, V = compute_spectra(W_adj) if spectra is None else spectra
 
     # compute wavelet coeffs
-    psi = torch.empty(V.shape[0], 0, V.shape[1], V.shape[2], device=V.device)
+    psi = torch.empty(
+        V.shape[0], 0, V.shape[1], V.shape[2], device=V.device, dtype=V.dtype
+    )
     for jj in range(0, n_scales):
         # compute adapted kernel
         adapted_kernel = kernel.get_adapted_kernel(E, jj + 1)
