@@ -30,8 +30,17 @@ jobs:
       - uses: astral-sh/setup-uv@v10.2.0
         with:
           enable-cache: true
+      # the build runs the example notebooks (hooks/marimo_examples.py)
+      # with cached datasets
+      - uses: actions/cache@v4
+        with:
+          path: |
+            data/
+            .cache/marimo-examples/
+          key: examples-${{ hashFiles('examples/*.py', 'gsxform/*.py') }}
+          restore-keys: examples-
       - name: Sync environment
-        run: uv sync --locked --group docs
+        run: uv sync --locked --extra pyg --group docs --group examples
 
       - name: Build documentation
         run: make docs
@@ -107,8 +116,15 @@ jobs:
       - uses: astral-sh/setup-uv@v10.2.0
         with:
           enable-cache: true
+      - uses: actions/cache@v4
+        with:
+          path: |
+            data/
+            .cache/marimo-examples/
+          key: examples-${{ hashFiles('examples/*.py', 'gsxform/*.py') }}
+          restore-keys: examples-
       - name: Sync environment
-        run: uv sync --locked --group docs
+        run: uv sync --locked --extra pyg --group docs --group examples
 
       - name: Configure git for mike
         run: |

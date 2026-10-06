@@ -50,9 +50,8 @@ dev = [
     "torch-geometric",
 ]
 examples = [
-    "ipykernel>=6",
+    "marimo>=0.25",
     "matplotlib>=3.8",
-    "nbconvert>=7",
     "rdkit>=2024.9",
     "scikit-learn>=1.4",
     "seaborn>=0.13",
@@ -61,7 +60,6 @@ docs = [
     "mkdocs>=1.6",
     "mkdocs-material>=9.5",
     "mkdocstrings[python]>=0.27",
-    "mkdocs-jupyter>=0.25",
     "mike>=2.2",
 ]
 

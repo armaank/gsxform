@@ -1,0 +1,13 @@
+extend = "../pyproject.toml"
+# marimo indents each cell body by 4 inside its function, and the export to
+# docs/examples/ strips that indent: 82 here is 78 in the docs, the width the
+# content column shows without clipping
+line-length = 82
+
+[lint]
+# B018: a bare expression is how a marimo cell displays its output (`fig`).
+# B905: `zip(..., strict=)` is noise in plotting loops.
+extend-ignore = ["B018", "B905", "D"]
+
+[lint.isort]
+known-first-party = ["gsxform"]
