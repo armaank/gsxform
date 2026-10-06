@@ -52,12 +52,6 @@
     
       <link rel="stylesheet" href="../css/custom.css">
     
-      <link rel="stylesheet" href="../css/ansi-colours.css">
-    
-      <link rel="stylesheet" href="../css/jupyter-cells.css">
-    
-      <link rel="stylesheet" href="../css/pandas-dataframe.css">
-    
     <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -301,23 +295,26 @@
       
         
       
-    
-    
-    
-      
-        
         
       
+        
+      
+        
+      
+        
+      
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
             
   
   
@@ -353,14 +350,126 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/example/" class="md-nav__link">
+      <a href="../examples/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Basic Plot
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/wavelets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Understanding graph wavelets and scattering transforms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/qm9_pca/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    QM9 embeddings with PCA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/cuneiform_svm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cuneiform classification with an SVM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/qm9_generation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generating molecules
   
 
     
@@ -398,23 +507,20 @@
       
         
       
-    
-    
-    
-      
-        
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -488,8 +594,6 @@
       
     
     
-    
-      
     
     
     <li class="md-nav__item md-nav__item--active md-nav__item--nested">
@@ -682,6 +786,34 @@
     
   
     Graph scattering transforms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pyg/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    torch_geometric adapters
   
 
     
@@ -978,9 +1110,7 @@ Shuman et. al 2015</p>
 <span class="normal">71</span>
 <span class="normal">72</span>
 <span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">74</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">n_scales</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">max_eig</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
@@ -1005,7 +1135,7 @@ Shuman et. al 2015</p>
 
     <span class="k">if</span> <span class="n">omega</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">omega</span> <span class="o">=</span> <span class="n">omega</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">max_eig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">omega</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_eig</span><span class="o">.</span><span class="n">float</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_eig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">omega</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_eig</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">omega</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">eig</span><span class="p">:</span> <span class="n">eig</span>
 
@@ -1013,9 +1143,7 @@ Shuman et. al 2015</p>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">"n_scales must be greater than </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">n_scales</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
-
-    <span class="c1"># dilation factor, might need to reverse this to account for swapped bounds...</span>
-    <span class="c1"># self.d = (self.M + 1 - self.R) / (self.R * self.max_eig)</span>
+    <span class="c1"># dilation factor</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_eig</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_scales</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="p">)</span>
 
     <span class="c1"># add a trailing axis so it broadcasts against the (batch, n_nodes)</span>
@@ -1063,7 +1191,6 @@ Shuman et. al 2015</p>
     <div class="doc doc-contents ">
 
         <p>Compute spectrum adapted kernels.</p>
-<p>return self.kernel(self.omega(eig) - self.d / self.R * (scale - self.R + 1))</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -1140,33 +1267,29 @@ by the wavelet transform.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>gsxform/kernel.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 78</span>
-<span class="normal"> 79</span>
-<span class="normal"> 80</span>
-<span class="normal"> 81</span>
-<span class="normal"> 82</span>
-<span class="normal"> 83</span>
-<span class="normal"> 84</span>
-<span class="normal"> 85</span>
-<span class="normal"> 86</span>
-<span class="normal"> 87</span>
-<span class="normal"> 88</span>
-<span class="normal"> 89</span>
-<span class="normal"> 90</span>
-<span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_adapted_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eig</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span>
+<span class="normal">96</span>
+<span class="normal">97</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_adapted_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eig</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Compute spectrum adapted kernels.</span>
-
-<span class="sd">    return self.kernel(self.omega(eig) - self.d / self.R * (scale - self.R + 1))</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1184,7 +1307,7 @@ by the wavelet transform.</p>
 
 <span class="sd">    """</span>
     <span class="n">adapted_kernel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="p">(</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">omega</span><span class="p">(</span><span class="n">eig</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span> <span class="o">*</span> <span class="p">(</span><span class="n">scale</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">omega</span><span class="p">(</span><span class="n">eig</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span> <span class="o">*</span> <span class="p">(</span><span class="n">scale</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">adapted_kernel</span>
 </code></pre></div></td></tr></table></div>
@@ -1255,7 +1378,7 @@ by the wavelet transform.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.indexes", "navigation.sections", "navigation.top", "navigation.tracking", "toc.follow", "search.highlight", "search.share", "search.suggest"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.indexes", "navigation.top", "navigation.tracking", "toc.follow", "search.highlight", "search.share", "search.suggest"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
       <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>

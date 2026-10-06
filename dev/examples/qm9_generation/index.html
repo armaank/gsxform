@@ -8,10 +8,10 @@
       
       
       
-        <link rel="canonical" href="https://armaank.github.io/gsxform/dev/examples/example/">
+        <link rel="canonical" href="https://armaank.github.io/gsxform/dev/examples/qm9_generation/">
       
       
-        <link rel="prev" href="../../development/">
+        <link rel="prev" href="../cuneiform_svm/">
       
       
         <link rel="next" href="../../graph/">
@@ -25,7 +25,7 @@
     
     
       
-        <title>Basic Plot - gsxform: Wavelet scattering transforms on graphs</title>
+        <title>Generating molecules - gsxform: Wavelet scattering transforms on graphs</title>
       
     
     
@@ -52,12 +52,6 @@
     
       <link rel="stylesheet" href="../../css/custom.css">
     
-      <link rel="stylesheet" href="../../css/ansi-colours.css">
-    
-      <link rel="stylesheet" href="../../css/jupyter-cells.css">
-    
-      <link rel="stylesheet" href="../../css/pandas-dataframe.css">
-    
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -74,6 +68,11 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
+      
+        
+        <a href="#generating-molecules-with-a-scattering-vae" class="md-skip">
+          Skip to content
+        </a>
       
     </div>
     <div data-md-component="announce">
@@ -111,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Basic Plot
+              Generating molecules
             
           </span>
         </div>
@@ -298,23 +297,26 @@
       
         
       
-    
-    
-    
-      
-        
         
       
+        
+      
+        
+      
+        
+      
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
             
   
   
@@ -347,6 +349,118 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wavelets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Understanding graph wavelets and scattering transforms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../qm9_pca/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    QM9 embeddings with PCA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cuneiform_svm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cuneiform classification with an SVM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -356,6 +470,8 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -364,7 +480,7 @@
   <span class="md-ellipsis">
     
   
-    Basic Plot
+    Generating molecules
   
 
     
@@ -401,23 +517,20 @@
       
         
       
-    
-    
-    
-      
-        
         
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -489,8 +602,6 @@
       
     
     
-    
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
@@ -621,6 +732,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pyg/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    torch_geometric adapters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -699,6 +838,8 @@
   
   
   
+    
+  
   
 </nav>
                   </div>
@@ -714,50 +855,42 @@
                   
 
 
-  
-  
 
+<h1 id="generating-molecules-with-a-scattering-vae">Generating molecules with a scattering VAE<a class="headerlink" href="#generating-molecules-with-a-scattering-vae" title="Permanent link">&para;</a></h1>
+<p>This notebook trains a generative model of small molecules. Sampling from it produces
+whole new molecules, atoms and bonds together, from nothing but a random latent
+vector.</p>
+<p>Coming soon!</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
-  <h1>Basic Plot</h1>
+<span class="c1"># PyG imports tqdm, which warns when notebook progress widgets are unavailable</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">"ignore"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"IProgress not found"</span><span class="p">)</span>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-<script>
-(function() {
-  function addWidgetsRenderer() {
-    var requireJsScript = document.createElement('script');
-    requireJsScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js';
+<span class="kn">import</span><span class="w"> </span><span class="nn">marimo</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mo</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rdkit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chem</span><span class="p">,</span> <span class="n">RDLogger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rdkit.Chem</span><span class="w"> </span><span class="kn">import</span> <span class="n">Draw</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCA</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">normalize</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">nn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch_geometric.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">Data</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch_geometric.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">QM9</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch_geometric.loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataLoader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torch_geometric.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">subgraph</span>
 
-    var mimeElement = document.querySelector('script[type="application/vnd.jupyter.widget-view+json"]');
-    var jupyterWidgetsScript = document.createElement('script');
-    var widgetRendererSrc = 'https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js';
-    var widgetState;
+<span class="kn">from</span><span class="w"> </span><span class="nn">gsxform</span><span class="w"> </span><span class="kn">import</span> <span class="n">Diffusion</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gsxform.pyg</span><span class="w"> </span><span class="kn">import</span> <span class="n">GraphScattering</span>
 
-    // Fallback for older version:
-    try {
-      widgetState = mimeElement && JSON.parse(mimeElement.innerHTML);
-
-      if (widgetState && (widgetState.version_major < 2 || !widgetState.version_major)) {
-        widgetRendererSrc = 'jupyter-js-widgets@*/dist/embed.js';
-      }
-    } catch(e) {}
-
-    jupyterWidgetsScript.src = widgetRendererSrc;
-
-    document.body.appendChild(requireJsScript);
-    document.body.appendChild(jupyterWidgetsScript);
-  }
-
-  document.addEventListener('DOMContentLoaded', addWidgetsRenderer);
-}());
-</script>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">"figure.dpi"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">50</span>  <span class="c1"># marimo renders figures at twice this</span>
+<span class="n">ROOT</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">notebook_dir</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"data"</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">RDLogger</span><span class="o">.</span><span class="n">DisableLog</span><span class="p">(</span><span class="s2">"rdApp.*"</span><span class="p">)</span>  <span class="c1"># invalid samples would each log an error</span>
 </code></pre></div>
-
-</div>
-</div>
 
 
 
@@ -813,7 +946,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.sections", "navigation.top", "navigation.tracking", "toc.follow", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.indexes", "navigation.top", "navigation.tracking", "toc.follow", "search.highlight", "search.share", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>

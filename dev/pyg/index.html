@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://armaank.github.io/gsxform/dev/graph/">
+        <link rel="canonical" href="https://armaank.github.io/gsxform/dev/pyg/">
       
       
-        <link rel="prev" href="../examples/qm9_generation/">
+        <link rel="prev" href="../scattering/">
       
       
-        <link rel="next" href="../kernel/">
+        <link rel="next" href="../changelog/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Graph utilities - gsxform: Wavelet scattering transforms on graphs</title>
+        <title>torch_geometric adapters - gsxform: Wavelet scattering transforms on graphs</title>
       
     
     
@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#graph-utility-api-documentation" class="md-skip">
+        <a href="#torch_geometric-api-documentation" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Graph utilities
+              torch_geometric adapters
             
           </span>
         </div>
@@ -553,37 +553,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Graph utilities
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../graph/" class="md-nav__link">
         
   
   
@@ -599,81 +572,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#gsxform.graph.adjacency_to_laplacian" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        adjacency_to_laplacian
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#gsxform.graph.normalize_adjacency" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        normalize_adjacency
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#gsxform.graph.normalize_laplacian" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        normalize_laplacian
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#gsxform.graph.lazy_diffusion" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        lazy_diffusion
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#gsxform.graph.compute_spectra" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        compute_spectra
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -828,10 +726,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../pyg/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    torch_geometric adapters
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -847,6 +772,82 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#gsxform.pyg.GraphScattering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GraphScattering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GraphScattering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gsxform.pyg.GraphScattering.forward" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        forward
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gsxform.pyg.ScatteringFeatures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ScatteringFeatures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ScatteringFeatures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gsxform.pyg.ScatteringFeatures.forward" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        forward
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -940,57 +941,58 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#gsxform.graph.adjacency_to_laplacian" class="md-nav__link">
+  <a href="#gsxform.pyg.GraphScattering" class="md-nav__link">
     <span class="md-ellipsis">
       
-        adjacency_to_laplacian
+        GraphScattering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GraphScattering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gsxform.pyg.GraphScattering.forward" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        forward
       
     </span>
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#gsxform.graph.normalize_adjacency" class="md-nav__link">
+  <a href="#gsxform.pyg.ScatteringFeatures" class="md-nav__link">
     <span class="md-ellipsis">
       
-        normalize_adjacency
+        ScatteringFeatures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ScatteringFeatures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gsxform.pyg.ScatteringFeatures.forward" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        forward
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#gsxform.graph.normalize_laplacian" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        normalize_laplacian
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#gsxform.graph.lazy_diffusion" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        lazy_diffusion
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#gsxform.graph.compute_spectra" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        compute_spectra
-      
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1014,23 +1016,33 @@
   
 
 
-<h1 id="graph-utility-api-documentation">Graph utility API documentation<a class="headerlink" href="#graph-utility-api-documentation" title="Permanent link">&para;</a></h1>
+<h1 id="torch_geometric-api-documentation">torch_geometric API documentation<a class="headerlink" href="#torch_geometric-api-documentation" title="Permanent link">&para;</a></h1>
+<p>Requires the optional dependency: <code>pip install gsxform[pyg]</code>.</p>
 
 
-<div class="doc doc-object doc-function">
+<div class="doc doc-object doc-class">
 
 
-<h2 id="gsxform.graph.adjacency_to_laplacian" class="doc doc-heading">
-            <span class="doc doc-object-name doc-function-name">adjacency_to_laplacian</span>
+
+<h2 id="gsxform.pyg.GraphScattering" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">GraphScattering</span>
 
 
-<a href="#gsxform.graph.adjacency_to_laplacian" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="doc-signature codehilite"><pre><span></span><code><span class="nf">adjacency_to_laplacian</span><span class="p">(</span><span class="n">W</span><span class="p">)</span>
+<a href="#gsxform.pyg.GraphScattering" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="doc-signature codehilite"><pre><span></span><code><span class="nf">GraphScattering</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="torch.nn.Module">Module</span></code></p>
 
-        <p>Convert an adjacency matrix into the graph Laplacian.</p>
+
+
+        <p>Run a scattering transform on torch_geometric's sparse batch layout.</p>
+<p>Wraps any <code>ScatteringTransform</code> so it takes the usual PyG inputs: node
+features <code>[N_total, F]</code>, <code>edge_index</code>, and the <code>batch</code> vector. Graphs of
+different sizes are padded to a common node count and masked internally.</p>
+
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -1046,14 +1058,14 @@
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>W</code>
+                <code>transform</code>
             </td>
             <td>
-                  <code><span title="torch.Tensor">Tensor</span></code>
+                  <code><a class="autorefs autorefs-internal" title="ScatteringTransform (gsxform.scattering.ScatteringTransform)" href="../scattering/#gsxform.scattering.ScatteringTransform">ScatteringTransform</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Batch of normalized graph adjacency matricies.</p>
+                <p>Scattering transform to apply, e.g. <code>Diffusion(4, 3)</code></p>
               </div>
             </td>
             <td>
@@ -1064,148 +1076,15 @@
     </table>
 
 
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="torch.Tensor">Tensor</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Batch of graph Laplacians.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
 
 
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>gsxform/graph.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 7</span>
-<span class="normal"> 8</span>
-<span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">adjacency_to_laplacian</span><span class="p">(</span><span class="n">W</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Convert an adjacency matrix into the graph Laplacian.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    W: torch.Tensor</span>
-<span class="sd">        Batch of normalized graph adjacency matricies.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    torch.Tensor</span>
-<span class="sd">        Batch of graph Laplacians.</span>
-
-<span class="sd">    """</span>
-    <span class="n">L</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag_embed</span><span class="p">(</span><span class="n">W</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">-</span> <span class="n">W</span>
-
-    <span class="k">return</span> <span class="n">L</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
 
 
-<h2 id="gsxform.graph.normalize_adjacency" class="doc doc-heading">
-            <span class="doc doc-object-name doc-function-name">normalize_adjacency</span>
 
 
-<a href="#gsxform.graph.normalize_adjacency" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="doc-signature codehilite"><pre><span></span><code><span class="nf">normalize_adjacency</span><span class="p">(</span><span class="n">W</span><span class="p">)</span>
-</code></pre></div>
-
-    <div class="doc doc-contents first">
-
-        <p>Normalize an adjacency matrix.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>W</code>
-            </td>
-            <td>
-                  <code><span title="torch.Tensor">Tensor</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Batch of adjacency matricies.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="torch.Tensor">Tensor</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Batch of normalized adjacency matricies.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>gsxform/graph.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
+                  <details class="mkdocstrings-source">
+                    <summary>Source code in <code>gsxform/pyg.py</code></summary>
+                    <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">31</span>
 <span class="normal">32</span>
 <span class="normal">33</span>
 <span class="normal">34</span>
@@ -1214,53 +1093,46 @@
 <span class="normal">37</span>
 <span class="normal">38</span>
 <span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">normalize_adjacency</span><span class="p">(</span><span class="n">W</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Normalize an adjacency matrix.</span>
+<span class="normal">40</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transform</span><span class="p">:</span> <span class="n">ScatteringTransform</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Initialize the adapter.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    W: torch.Tensor</span>
-<span class="sd">        Batch of adjacency matricies.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    torch.Tensor</span>
-<span class="sd">        Batch of normalized adjacency matricies.</span>
-
+<span class="sd">    transform: ScatteringTransform</span>
+<span class="sd">        Scattering transform to apply, e.g. `Diffusion(4, 3)`</span>
 <span class="sd">    """</span>
-    <span class="c1"># build degree vector</span>
-    <span class="n">d</span> <span class="o">=</span> <span class="n">W</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-    <span class="c1"># normalize</span>
-    <span class="n">d_invsqrt</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="n">d</span><span class="p">))</span>
-    <span class="n">W_norm</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="n">einsum</span><span class="p">(</span><span class="n">d_invsqrt</span><span class="p">,</span> <span class="n">W</span><span class="p">,</span> <span class="n">d_invsqrt</span><span class="p">,</span> <span class="s2">"b i, b i j, b j -&gt; b i j"</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">W_norm</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">transform</span>
 </code></pre></div></td></tr></table></div>
-            </details>
-    </div>
+                  </details>
 
-</div>
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
 
 <div class="doc doc-object doc-function">
 
 
-<h2 id="gsxform.graph.normalize_laplacian" class="doc doc-heading">
-            <span class="doc doc-object-name doc-function-name">normalize_laplacian</span>
+<h3 id="gsxform.pyg.GraphScattering.forward" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">forward</span>
 
 
-<a href="#gsxform.graph.normalize_laplacian" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="doc-signature codehilite"><pre><span></span><code><span class="nf">normalize_laplacian</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
+<a href="#gsxform.pyg.GraphScattering.forward" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature codehilite"><pre><span></span><code><span class="nf">forward</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">edge_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 
-    <div class="doc doc-contents first">
+    <div class="doc doc-contents ">
 
-        <p>Normalize an graph Laplacian.</p>
+        <p>Compute scattering features for a batch of graphs.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -1276,18 +1148,67 @@
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>L</code>
+                <code>x</code>
             </td>
             <td>
                   <code><span title="torch.Tensor">Tensor</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Batch of graph Laplacians.</p>
+                <p>Node features, shaped [N_total, F]</p>
               </div>
             </td>
             <td>
                 <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>edge_index</code>
+            </td>
+            <td>
+                  <code><span title="torch.Tensor">Tensor</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Edges, shaped [2, E]</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>batch</code>
+            </td>
+            <td>
+                  <code><span title="torch.Tensor">Tensor</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Graph assignment of each node, shaped [N_total] and sorted, as
+produced by PyG's <code>DataLoader</code>. Defaults to None</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>edge_weight</code>
+            </td>
+            <td>
+                  <code><span title="torch.Tensor">Tensor</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Weight of each edge, shaped [E]. Defaults to None</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
             </td>
           </tr>
       </tbody>
@@ -1309,7 +1230,10 @@
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Batch of normalized graph Laplacians.</p>
+                <p>[B, F * n_coefficients] for graph output, or
+[N_total, F * n_coefficients] for node output, feature-major. With
+moment aggregation, each coefficient contributes one column per
+moment.</p>
               </div>
             </td>
           </tr>
@@ -1318,8 +1242,36 @@
 
 
             <details class="mkdocstrings-source">
-              <summary>Source code in <code>gsxform/graph.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">70</span>
+              <summary>Source code in <code>gsxform/pyg.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
 <span class="normal">71</span>
 <span class="normal">72</span>
 <span class="normal">73</span>
@@ -1339,49 +1291,93 @@
 <span class="normal">87</span>
 <span class="normal">88</span>
 <span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">normalize_laplacian</span><span class="p">(</span><span class="n">L</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Normalize an graph Laplacian.</span>
+<span class="normal">90</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">edge_index</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+    <span class="n">batch</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">edge_weight</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Compute scattering features for a batch of graphs.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    L: torch.Tensor</span>
-<span class="sd">        Batch of graph Laplacians.</span>
+<span class="sd">    x: torch.Tensor</span>
+<span class="sd">        Node features, shaped [N_total, F]</span>
+<span class="sd">    edge_index: torch.Tensor</span>
+<span class="sd">        Edges, shaped [2, E]</span>
+<span class="sd">    batch: torch.Tensor, optional</span>
+<span class="sd">        Graph assignment of each node, shaped [N_total] and sorted, as</span>
+<span class="sd">        produced by PyG's `DataLoader`. Defaults to None</span>
+<span class="sd">    edge_weight: torch.Tensor, optional</span>
+<span class="sd">        Weight of each edge, shaped [E]. Defaults to None</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    torch.Tensor</span>
-<span class="sd">        Batch of normalized graph Laplacians.</span>
+<span class="sd">        [B, F * n_coefficients] for graph output, or</span>
+<span class="sd">        [N_total, F * n_coefficients] for node output, feature-major. With</span>
+<span class="sd">        moment aggregation, each coefficient contributes one column per</span>
+<span class="sd">        moment.</span>
 <span class="sd">    """</span>
-    <span class="c1"># build degree vector</span>
-    <span class="c1"># batch diagonal</span>
-    <span class="c1"># (https://pytorch.org/docs/stable/generated/torch.diagonal.html#torch.diagonal)</span>
-    <span class="n">d</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(</span><span class="n">L</span><span class="p">,</span> <span class="n">dim1</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim2</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-    <span class="c1"># normalize</span>
-    <span class="n">d_invsqrt</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="n">d</span><span class="p">))</span>
-    <span class="n">L_norm</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="n">einsum</span><span class="p">(</span><span class="n">d_invsqrt</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">d_invsqrt</span><span class="p">,</span> <span class="s2">"b i, b i j, b j -&gt; b i j"</span><span class="p">)</span>
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">batch</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">int</span><span class="p">(</span><span class="n">batch</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">+</span> <span class="mi">1</span>
 
-    <span class="k">return</span> <span class="n">L_norm</span>
+    <span class="n">x_dense</span><span class="p">,</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">to_dense_batch</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+    <span class="n">W_adj</span> <span class="o">=</span> <span class="n">to_dense_adj</span><span class="p">(</span>
+        <span class="n">edge_index</span><span class="p">,</span>
+        <span class="n">batch</span><span class="p">,</span>
+        <span class="n">edge_weight</span><span class="p">,</span>
+        <span class="n">max_num_nodes</span><span class="o">=</span><span class="n">x_dense</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">rearrange</span><span class="p">(</span><span class="n">x_dense</span><span class="p">,</span> <span class="s2">"b n f -&gt; b f n"</span><span class="p">),</span> <span class="n">W_adj</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="s2">"node"</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="s2">"b f c n -&gt; b n (f c)"</span><span class="p">)</span>
+        <span class="n">nodes</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">nodes</span>
+
+    <span class="n">graphs</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="n">rearrange</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="s2">"b f c -&gt; b (f c)"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">graphs</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
 
 </div>
 
-<div class="doc doc-object doc-function">
 
 
-<h2 id="gsxform.graph.lazy_diffusion" class="doc doc-heading">
-            <span class="doc doc-object-name doc-function-name">lazy_diffusion</span>
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
 
 
-<a href="#gsxform.graph.lazy_diffusion" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="doc-signature codehilite"><pre><span></span><code><span class="nf">lazy_diffusion</span><span class="p">(</span><span class="n">W</span><span class="p">)</span>
+
+<h2 id="gsxform.pyg.ScatteringFeatures" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">ScatteringFeatures</span>
+
+
+<a href="#gsxform.pyg.ScatteringFeatures" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="doc-signature codehilite"><pre><span></span><code><span class="nf">ScatteringFeatures</span><span class="p">(</span><span class="n">transform</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s1">'scattering'</span><span class="p">)</span>
 </code></pre></div>
 
     <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="torch_geometric.transforms.BaseTransform">BaseTransform</span></code></p>
 
-        <p>Build the lazy diffusion operator T = 1/2 (I+A).</p>
+
+
+        <p>Precompute scattering features as a torch_geometric dataset transform.</p>
+<p>Stores the scattering representation of each graph on the <code>Data</code> object,
+so a fixed transform is computed once per graph rather than every epoch,</p>
+<p>Graph output is stored shaped [1, D], so <code>DataLoader</code> batches it to [B, D];
+node output is stored shaped [N, D].</p>
+
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -1397,179 +1393,50 @@
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>W</code>
+                <code>transform</code>
             </td>
             <td>
-                  <code><span title="torch.Tensor">Tensor</span></code>
+                  <code><a class="autorefs autorefs-internal" title="ScatteringTransform (gsxform.scattering.ScatteringTransform)" href="../scattering/#gsxform.scattering.ScatteringTransform">ScatteringTransform</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Batch of adjacency matricies.</p>
+                <p>Scattering transform to apply, e.g. <code>Diffusion(4, 3)</code></p>
               </div>
             </td>
             <td>
                 <em>required</em>
             </td>
           </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="torch.Tensor">Tensor</span></code>
+                <code>attr</code>
+            </td>
+            <td>
+                  <code><a class="autorefs autorefs-external" href="https://docs.python.org/3/builtins/stdtypes.html#str">str</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Batch of lazy diffusion operators.</p>
+                <p>Name of the attribute the features are stored under. Defaults to
+"scattering"</p>
               </div>
+            </td>
+            <td>
+                  <code>&#39;scattering&#39;</code>
             </td>
           </tr>
       </tbody>
     </table>
 
 
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>gsxform/graph.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">lazy_diffusion</span><span class="p">(</span><span class="n">W</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Build the lazy diffusion operator T = 1/2 (I+A).</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    W: torch.Tensor</span>
-<span class="sd">        Batch of adjacency matricies.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    torch.Tensor</span>
-<span class="sd">        Batch of lazy diffusion operators.</span>
-
-<span class="sd">    """</span>
-    <span class="n">I_N</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">W</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">device</span><span class="o">=</span><span class="n">W</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">W</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-
-    <span class="n">T</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">I_N</span> <span class="o">+</span> <span class="n">normalize_adjacency</span><span class="p">(</span><span class="n">W</span><span class="p">))</span>
-
-    <span class="k">return</span> <span class="n">T</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
 
 
-<h2 id="gsxform.graph.compute_spectra" class="doc doc-heading">
-            <span class="doc doc-object-name doc-function-name">compute_spectra</span>
 
 
-<a href="#gsxform.graph.compute_spectra" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="doc-signature codehilite"><pre><span></span><code><span class="nf">compute_spectra</span><span class="p">(</span><span class="n">W</span><span class="p">)</span>
-</code></pre></div>
-
-    <div class="doc doc-contents first">
-
-        <p>Compute the spectra of graph Laplacian from its adjacency matrix.</p>
-<p>Performs an eigendecomposition (w/o assuming additional structure)
-using <code>torch.linalg.eigh</code> (previously used <code>torch.symeig</code>) on a normalized
-graph laplacian. Converts from the adjacency matrix to the laplacian
-internally.</p>
 
 
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                <code>W</code>
-            </td>
-            <td>
-                  <code><span title="torch.Tensor">Tensor</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Batch of graph adjacency matricies.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-    <p><span class="doc-section-title">Returns:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td>
-                  <code><span title="Tuple">Tuple</span>[<span title="torch.Tensor">Tensor</span>, <span title="torch.Tensor">Tensor</span>]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Batch of eigenvalues and eigenvectors of the graph Laplacian.</p>
-              </div>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>gsxform/graph.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
+                  <details class="mkdocstrings-source">
+                    <summary>Source code in <code>gsxform/pyg.py</code></summary>
+                    <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">104</span>
 <span class="normal">105</span>
 <span class="normal">106</span>
 <span class="normal">107</span>
@@ -1581,39 +1448,173 @@ internally.</p>
 <span class="normal">113</span>
 <span class="normal">114</span>
 <span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compute_spectra</span><span class="p">(</span><span class="n">W</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Compute the spectra of graph Laplacian from its adjacency matrix.</span>
-
-<span class="sd">    Performs an eigendecomposition (w/o assuming additional structure)</span>
-<span class="sd">    using `torch.linalg.eigh` (previously used `torch.symeig`) on a normalized</span>
-<span class="sd">    graph laplacian. Converts from the adjacency matrix to the laplacian</span>
-<span class="sd">    internally.</span>
+<span class="normal">116</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transform</span><span class="p">:</span> <span class="n">ScatteringTransform</span><span class="p">,</span> <span class="n">attr</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"scattering"</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Initialize the dataset transform.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    W: torch.Tensor</span>
-<span class="sd">        Batch of graph adjacency matricies.</span>
+<span class="sd">    transform: ScatteringTransform</span>
+<span class="sd">        Scattering transform to apply, e.g. `Diffusion(4, 3)`</span>
+<span class="sd">    attr: str</span>
+<span class="sd">        Name of the attribute the features are stored under. Defaults to</span>
+<span class="sd">        "scattering"</span>
+<span class="sd">    """</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">scattering</span> <span class="o">=</span> <span class="n">GraphScattering</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">attr</span> <span class="o">=</span> <span class="n">attr</span>
+</code></pre></div></td></tr></table></div>
+                  </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="gsxform.pyg.ScatteringFeatures.forward" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">forward</span>
+
+
+<a href="#gsxform.pyg.ScatteringFeatures.forward" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="doc-signature codehilite"><pre><span></span><code><span class="nf">forward</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Add scattering features to one graph.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>data</code>
+            </td>
+            <td>
+                  <code><span title="torch_geometric.data.Data">Data</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Graph with node features <code>x</code> and <code>edge_index</code>, and optionally
+<code>edge_weight</code></p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="torch_geometric.data.Data">Data</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The same graph, with the features stored under <code>attr</code></p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>gsxform/pyg.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Data</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Add scattering features to one graph.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data: Data</span>
+<span class="sd">        Graph with node features `x` and `edge_index`, and optionally</span>
+<span class="sd">        `edge_weight`</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    Tuple[torch.Tensor, torch.Tensor]</span>
-<span class="sd">        Batch of eigenvalues and eigenvectors of the graph Laplacian.</span>
+<span class="sd">    Data</span>
+<span class="sd">        The same graph, with the features stored under `attr`</span>
 <span class="sd">    """</span>
-    <span class="c1"># compute laplacian</span>
-    <span class="n">L</span> <span class="o">=</span> <span class="n">adjacency_to_laplacian</span><span class="p">(</span><span class="n">W</span><span class="p">)</span>
-    <span class="c1"># normalize laplacian</span>
-    <span class="n">L_norm</span> <span class="o">=</span> <span class="n">normalize_laplacian</span><span class="p">(</span><span class="n">L</span><span class="p">)</span>
-    <span class="c1"># perform eigen decomp</span>
-    <span class="c1"># come out in ascending order,</span>
-    <span class="n">E</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">L_norm</span><span class="p">,</span> <span class="n">UPLO</span><span class="o">=</span><span class="s2">"L"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">"ScatteringFeatures needs node features; for featureless graphs "</span>
+            <span class="s2">"add some first, e.g. torch_geometric.transforms.Constant()"</span>
+        <span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">E</span><span class="p">,</span> <span class="n">V</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="n">data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scattering</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">,</span>
+            <span class="n">edge_weight</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">"edge_weight"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">data</span>
 </code></pre></div></td></tr></table></div>
             </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
     </div>
 
 </div>
