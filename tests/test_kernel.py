@@ -1,7 +1,4 @@
 """testing suite for kernel.py
-
-TODO:
-    - test func passing for hann kernel
 """
 
 import pytest
@@ -43,25 +40,8 @@ def test_per_graph_max_eig():  # type: ignore
 FRAME_CONSTANT = 9 / 8
 
 
-def test_frame_constant_across_the_covered_band():  # type: ignore
-    """Where R translates overlap, the squared responses sum to the Corollary 2 constant."""
-
-    for n_scales in [4, 5, 6]:
-        kernel = TightHannKernel(n_scales, torch.tensor(2.0))
-
-        # the top of the band is always fully covered; the low end is not, see below
-        eig = torch.linspace(1.5, 2.0, 200)
-        response = sum(
-            kernel.get_adapted_kernel(eig, scale + 1) ** 2 for scale in range(n_scales)
-        )
-
-        assert torch.allclose(
-            response, torch.full_like(response, FRAME_CONSTANT), atol=1e-4
-        )
-
-
 def test_frame_bounds():  # type: ignore
-    """Test Hann frame bounds."""
+    """The squared responses sum to the Corollary 2 constant on all of [0, max_eig]."""
 
     for n_scales in [3, 4, 5, 6]:
         for max_eig in [1.0, 1.5, 2.0]:
@@ -73,13 +53,8 @@ def test_frame_bounds():  # type: ignore
                 for scale in range(n_scales)
             )
 
-            assert response.min() >= FRAME_CONSTANT / 2 - 1e-5
-
-            assert response.max() <= FRAME_CONSTANT + 1e-5
-
-            # the deficit sits at the bottom of the spectrum, and is exactly half
-            assert torch.isclose(
-                response[0], torch.tensor(FRAME_CONSTANT / 2), atol=1e-5
+            assert torch.allclose(
+                response, torch.full_like(response, FRAME_CONSTANT), atol=1e-5
             )
 
 

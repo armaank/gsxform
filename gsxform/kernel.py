@@ -54,9 +54,7 @@ class TightHannKernel:
             raise ValueError(
                 f"n_scales must be greater than {self.R - 1:g}, got {n_scales}"
             )
-
-        # dilation factor, might need to reverse this to account for swapped bounds...
-        # self.d = (self.M + 1 - self.R) / (self.R * self.max_eig)
+        # dilation factor 
         self.d = self.R * self.max_eig / (self.n_scales + 1 - self.R)
 
         # add a trailing axis so it broadcasts against the (batch, n_nodes)
@@ -78,8 +76,6 @@ class TightHannKernel:
     def get_adapted_kernel(self, eig: torch.Tensor, scale: int) -> torch.Tensor:
         """Compute spectrum adapted kernels.
 
-        return self.kernel(self.omega(eig) - self.d / self.R * (scale - self.R + 1))
-
         Parameters
         ----------
         eig: torch.Tensor
@@ -96,6 +92,6 @@ class TightHannKernel:
 
         """
         adapted_kernel = self.kernel(
-            self.omega(eig) - self.d / self.R * (scale - self.R + 1)
+            self.omega(eig) - self.d / self.R * (scale - self.R)
         )
         return adapted_kernel
